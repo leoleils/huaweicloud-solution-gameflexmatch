@@ -1,0 +1,1933 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: Application Gateway
+  description: |
+    app gateway服务，提供应用进程、server session、client session的增删改查接口
+schemes:
+  - https
+host: scase.myhuaweicloud.com
+basePath: /v1
+tags:
+  - name: AppProcess管理接口
+  - name: ServerSession管理接口
+  - name: ClientSession管理接口
+  - name: InstanceConfiguration管理接口
+paths:
+  '/app-processes':
+    post:
+      tags:
+        - AppProcess管理接口
+      operationId: RegisterAppProcess
+      summary: 注册App Process
+      description: Register app process
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: RegisterAppProcessRequestBody
+          description: App Process object that needs to be created
+          required: true
+          schema:
+            $ref: '#/definitions/RegisterAppProcessRequestBody'
+      responses:
+        '200':
+          description: App Process Info
+          schema:
+            $ref: '#/definitions/RegisterAppProcessResponseBody'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+    get:
+      tags:
+        - AppProcess管理接口
+      operationId: ListAppProcesses
+      summary: 查询AppProcess列表
+      description: Get App Process list
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: offset
+          type: integer
+          description: 分页偏移量，为0表示第一页，为1表示从第二页开始显示
+          required: false
+          minimum: 0
+          maximum: 2147483647
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return
+          required: false
+          minimum: 1
+          maximum: 100
+        - in: query
+          name: sort
+          type: string
+          description: 'The sort type, created_at%3Adesc表示列表以创建时间降序排列'
+          enum:
+            - created_at%3Adesc
+          required: false
+        - in: query
+          name: fleet_id
+          type: string
+          description: The fleet id
+          minLength: 1
+          maxLength: 128
+          required: false
+        - in: query
+          name: instance_id
+          type: string
+          description: The instance id
+          minLength: 36
+          maxLength: 36
+          required: false
+      responses:
+        '200':
+          description: Process List Information
+          schema:
+            $ref: '#/definitions/ListAppProcessResponseBody'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  '/app-processes/{process_id}':
+    put:
+      tags:
+        - AppProcess管理接口
+      operationId: UpdateAppProcess
+      summary: 修改AppProcess
+      description: Update App Process
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - name: process_id
+          in: path
+          description: ID of Process
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 128
+        - in: body
+          name: UpdateAppProcessRequestBody
+          description: Process object that needs to be modified
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateAppProcessRequestBody'
+      responses:
+        '204':
+          description: Process Information
+          schema:
+            $ref: '#/definitions/UpdateAppProcessResponseBody'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+    get:
+      tags:
+        - AppProcess管理接口
+      operationId: ShowAppProcess
+      summary: 查询AppProcess信息
+      description: Get App Process info by id
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - name: process_id
+          in: path
+          description: ID of App Process
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 128
+      responses:
+        '200':
+          description: App Process Information
+          schema:
+            $ref: '#/definitions/ShowAppProcessResponseBody'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  '/app-processes/{process_id}/state':
+    put:
+      tags:
+        - AppProcess管理接口
+      operationId: UpdateAppProcessState
+      summary: 修改AppProcess状态
+      description: Update App Process State
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - name: process_id
+          in: path
+          description: ID of App Process
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 128
+        - in: body
+          name: UpdateAppProcessStateRequestBody
+          description: App process state that needs to be modified
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateAppProcessStateRequestBody'
+      responses:
+        '204':
+          description: App Process Information
+          schema:
+            $ref: '#/definitions/UpdateAppProcessStateResponseBody'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  '/app-process-counts':
+    get:
+      tags:
+        - AppProcess管理接口
+      operationId: ShowAppProcessCounts
+      summary: 查询App process的统计信息
+      description: Show app process counts
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      parameters:
+        - in: query
+          name: fleet_id
+          type: string
+          description: The fleet id
+          minLength: 1
+          maxLength: 128
+      responses:
+        '200':
+          description: App Process States
+          schema:
+            $ref: '#/definitions/ShowAppProcessCountResponseBody'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  '/server-sessions':
+    post:
+      tags:
+        - ServerSession管理接口
+      operationId: CreateServerSession
+      summary: 新建Server session
+      description: Create server session
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: CreateServerSessionRequestBody
+          description: Server Session object that needs to be created
+          required: true
+          schema:
+            $ref: '#/definitions/CreateServerSessionRequestBody'
+      responses:
+        '200':
+          description: Server Session Info
+          schema:
+            $ref: '#/definitions/CreateServerSessionRespBody'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+    get:
+      tags:
+        - ServerSession管理接口
+      operationId: ListServerSessions
+      summary: 查询ServerSession列表
+      description: Get Server Session list
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: offset
+          type: integer
+          description: 分页偏移量，为0表示第一页，为1表示从第二页开始显示
+          minimum: 0
+          maximum: 2147483647
+          required: false
+        - in: query
+          name: limit
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: The numbers of items to return
+          required: false
+        - in: query
+          name: sort
+          type: string
+          description: 'The sort type, created_at%3Adesc表示列表以创建时间降序排列'
+          enum:
+            - created_at%3Adesc
+          required: false
+        - in: query
+          name: fleet_id
+          type: string
+          minLength: 1
+          maxLength: 128
+          description: The fleet id
+          required: false
+        - in: query
+          name: instance_id
+          minLength: 36
+          maxLength: 36
+          type: string
+          description: The instance id
+          required: false
+        - in: query
+          name: process_id
+          minLength: 36
+          maxLength: 36
+          type: string
+          description: The process id
+          required: false
+        - name: state
+          in: query
+          required: false
+          description: |-
+            根据服务器会话的状态进行过滤。
+            * ACTIVE:      活跃
+            * ACTIVATING:  激活中
+            * TERMINATED:  终止
+            * TERMINATING: 终止中
+            * ERROR:       异常
+          type: string
+          enum:
+            - ACTIVE
+            - ACTIVATING
+            - TERMINATED
+            - TERMINATING
+            - ERROR
+      responses:
+        '200':
+          description: Server Session List Information
+          schema:
+            $ref: '#/definitions/ListServerSessionsRespBody'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  '/server-sessions/{server_session_id}':
+    put:
+      tags:
+        - ServerSession管理接口
+      operationId: UpdateServerSession
+      summary: 修改ServerSession
+      description: Update Server Session
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - name: server_session_id
+          in: path
+          description: ID of Server Session
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 128
+        - in: body
+          name: UpdateServerSessionRequestBody
+          description: Server Session object that needs to be modified
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateServerSessionRequestBody'
+      responses:
+        '204':
+          description: Server Session Information
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+    get:
+      tags:
+        - ServerSession管理接口
+      operationId: ShowServerSession
+      summary: 获取ServerSession
+      description: Get Server Session
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - name: server_session_id
+          in: path
+          description: ID of Server Session
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 128
+      responses:
+        '200':
+          description: Server Session Information
+          schema:
+            $ref: '#/definitions/ShowServerSessionRespBody'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  '/server-sessions/{server_session_id}/state':
+    put:
+      tags:
+        - ServerSession管理接口
+      operationId: UpdateServerSessionState
+      summary: 修改ServerSession状态
+      description: Update Server Session State
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - name: server_session_id
+          in: path
+          description: ID of Server Session
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 128
+        - in: body
+          name: UpdateServerSessionStateRequestBody
+          description: Server Session state that needs to be modified
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateServerSessionStateRequestBody'
+      responses:
+        '204':
+          description: Server Session Information
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  /client-sessions:
+    post:
+      tags:
+        - ClientSession管理接口
+      operationId: CreateClientSession
+      summary: 新建Client session
+      description: Create client session
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: CreateClientSessionRequestBody
+          description: Client Session object that needs to be created
+          required: true
+          schema:
+            $ref: '#/definitions/CreateClientSessionRequestBody'
+      responses:
+        '200':
+          description: Client Session Info
+          schema:
+            $ref: '#/definitions/CreateClientSessionResponseBody'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+    get:
+      tags:
+        - ClientSession管理接口
+      operationId: ListClientSessions
+      summary: 查询ClientSession列表
+      description: Get Client Session list
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: offset
+          type: integer
+          description: 分页偏移量，为0表示第一页，为1表示从第二页开始显示
+          required: false
+          minimum: 0
+          maximum: 2147483647
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return
+          required: false
+          minimum: 1
+          maximum: 100
+        - in: query
+          name: sort
+          type: string
+          description: 'The sort type, created_at%3Adesc'
+          required: false
+          enum:
+            - created_at%3Adesc
+        - in: query
+          name: server_session_id
+          type: string
+          description: The server session id
+          minLength: 1
+          maxLength: 128
+          required: true
+      responses:
+        '200':
+          description: Client Session List Information
+          schema:
+            $ref: '#/definitions/ClientSessionList'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  '/client-sessions/batch-create':
+    post:
+      tags:
+        - ClientSession管理接口
+      operationId: BatchCreateClientSessions
+      summary: 批量新建Client session
+      description: Batch create client session，批量创建要么全部成功，要么全部失败，不返回部分成功
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: BatchCreateClientSessionsRequestBody
+          description: Client Session objects that needs to be created
+          required: true
+          schema:
+            $ref: '#/definitions/BatchCreateClientSessionRequestBody'
+      responses:
+        '200':
+          description: Client Sessions Info
+          schema:
+            $ref: '#/definitions/ClientSessionList'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  '/client-sessions/{client_session_id}':
+    put:
+      tags:
+        - ClientSession管理接口
+      operationId: UpdateClientSession
+      summary: 修改ClientSession
+      description: Update Client Session
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - name: client_session_id
+          in: path
+          description: ID of Client Session
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 128
+        - in: body
+          name: UpdateClientSessionRequestBody
+          description: Client Session object that needs to be modified
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateClientSessionRequestBody'
+      responses:
+        '204':
+          description: Client Session Information
+          schema:
+            $ref: '#/definitions/ClientSession'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+    get:
+      tags:
+        - ClientSession管理接口
+      operationId: ShowClientSession
+      summary: 获取ClientSession
+      description: Get Client Session
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - name: client_session_id
+          in: path
+          description: ID of Client Session
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 128
+      responses:
+        '200':
+          description: Client Session Information
+          schema:
+            $ref: '#/definitions/ClientSession'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  '/client-sessions/{client_session_id}/state':
+    put:
+      tags:
+        - ClientSession管理接口
+      operationId: UpdateClientSessionState
+      summary: 修改ClientSession状态
+      description: Update Client Session State
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - name: client_session_id
+          in: path
+          description: ID of Client Session
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 128
+        - in: body
+          name: UpdateClientSessionStateRequestBody
+          description: Client Session state that needs to be modified
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateClientSessionStateRequestBody'
+      responses:
+        '204':
+          description: Client Session Information
+          schema:
+            $ref: '#/definitions/ClientSession'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  '/instance-scaling-group/{instance_scaling_group_id}/instance-configuration':
+    get:
+      tags:
+        - InstanceConfiguration管理接口
+      operationId: ShowInstanceConfiguration
+      summary: 获取InstanceConfiguration管理接口
+      description: Get Instance Configuration管理接口
+      x-is-registered: 'N'
+      x-support-sdk: 'N'
+      produces:
+        - application/json
+      parameters:
+        - name: instance_scaling_group_id
+          in: path
+          description: ID of Scaling Group
+          required: true
+          type: string
+          pattern: '[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}'
+      responses:
+        '200':
+          description: Instance Configuration
+          schema:
+            $ref: '#/definitions/InstanceConfiguration'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-request-id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+definitions:
+  RegisterAppProcessRequestBody:
+    description: 创建app process请求的body体
+    properties:
+      pid:
+        type: integer
+        description: 进程ID，通常pid的最大值可以通过/proc/sys/kernel/pid_max文件查看，为32768
+        minimum: 1
+        maximum: 32768
+        example: 3664
+      instance_id:
+        type: string
+        description: 进程所属的server的ID
+        minLength: 1
+        maxLength: 128
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+      scaling_group_id:
+        type: string
+        description: 进程所属的fleet的ID
+        minLength: 1
+        maxLength: 128
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+      fleet_id:
+        type: string
+        description: 进程所属的fleet的ID
+        minLength: 1
+        maxLength: 128
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+      ip_address:
+        type: string
+        description: AuxProxy所在虚拟机的公网IP，需符合IP地址的规范
+        example: 100.10.10.90
+        pattern: '(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}'
+      private_ip:
+        type: string
+        description: AuxProxy所在虚拟机的私网IP，需符合IP地址的规范
+        example: 192.168.0.90
+        pattern: '(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}'
+      aux_proxy_port:
+        type: integer
+        description: AuxProxy对外暴露服务的端口（需要符合端口要求：1~65535）
+        minimum: 0
+        maximum: 65535
+        example: 10001
+      max_server_session_num:
+        type: integer
+        description: >-
+          进程支持创建的最大server session数，游戏场景1个，搜索场景假设一个节点一个进程，那么一个进程最多1000个server
+          session（因为一个节点默认1000个shard），暂时先设为50个
+        minimum: 1
+        maximum: 50
+        example: 50
+      new_server_session_protection_policy:
+        type: string
+        description: >-
+          server
+          session的保护策略，NO_PROTECTION表示缩容时可以直接干掉ServerSession，TIME_LIMIT_PROTECTION表示给进程一段时间自己退出，超时后直接干掉，FULL_PROTECTION表示ACTIVE状态的server
+          session不能被直接干掉
+        enum:
+          - NO_PROTECTION
+          - TIME_LIMIT_PROTECTION
+          - FULL_PROTECTION
+        example: NO_PROTECTION
+      server_session_protection_time_limit_minutes:
+        type: integer
+        description: server session删除时，等待其返回结果的时长
+        minimum: 5
+        maximum: 1440
+        example: 5
+      server_session_activation_timeout_seconds:
+        type: integer
+        description: server session激活时长
+        minimum: 1
+        maximum: 600
+        example: 1
+      biz_pid:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 32768
+        description: 业务进程ID
+        example: 1012
+      launch_path:
+        type: string
+        minLength: 1
+        maxLength: 262144
+        description: 启动路径
+        example: /local/app/lucene.sh
+      parameters:
+        type: string
+        description: 启动参数
+        minLength: 1
+        maxLength: 262144
+        example: ''
+    required:
+      - pid
+      - instance_id
+      - scaling_group_id
+      - fleet_id
+      - ip_address
+      - private_ip
+      - aux_proxy_port
+      - max_server_session_num
+      - new_server_session_protection_policy
+      - server_session_protection_time_limit_minutes
+      - server_session_activation_timeout_seconds
+      - biz_pid
+      - launch_path
+  RegisterAppProcessResponseBody:
+    description: 创建app process返回的body体
+    type: object
+    properties:
+      app_process:
+        $ref: '#/definitions/AppProcess'
+  ListAppProcessResponseBody:
+    type: object
+    properties:
+      count:
+        type: integer
+        description: 最大值为int32的最大值
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      app_process:
+        $ref: '#/definitions/AppProcessList'
+  ShowAppProcessResponseBody:
+    type: object
+    properties:
+      app_process:
+        $ref: '#/definitions/AppProcess'
+  ShowAppProcessCountResponseBody:
+    type: object
+    properties:
+      app_process_states:
+        $ref: '#/definitions/AppProcessCounts'
+  UpdateAppProcessRequestBody:
+    description: 创建app process请求的body体
+    properties:
+      state:
+        type: string
+        description: 进程所处的状态（AVTIVATING、ACTIVE、TERMINATING、TERMINATED、ERROR）
+        enum:
+          - AVTIVATING
+          - ACTIVE
+          - TERMINATING
+          - TERMINATED
+          - ERROR
+        example: AVTIVATING
+      port:
+        type: integer
+        description: 进程提供服务的接口（需要符合端口要求：0~65535）
+        minimum: 1
+        maximum: 65535
+        example: 8080
+      grpc_port:
+        type: integer
+        description: 进程提供auxproxy访问的接口（需要符合端口要求：0~65535）
+        minimum: 1
+        maximum: 65535
+        example: 8081
+      log_path:
+        type: array
+        description: 存放进程日志的路径
+        items:
+          type: string
+          example: /tmp/log/logfile
+          pattern: ^\/(\w+\/?)+$
+          minLength: 0
+          maxLength: 1000
+        minItems: 0
+        maxItems: 100
+    required:
+      - state
+      - port
+      - grpc_port
+  UpdateAppProcessResponseBody:
+    type: object
+    properties:
+      app_process:
+        $ref: '#/definitions/AppProcess'
+  UpdateAppProcessStateRequestBody:
+    description: 创建app process state请求的body体
+    type: object
+    required:
+      - state
+    properties:
+      state:
+        type: string
+        description: 进程所处的状态（ACTIVE、TERMINATING、TERMINATED、ERROR）
+        enum:
+          - ACTIVE
+          - TERMINATING
+          - TERMINATED
+          - ERROR
+        example: ACTIVE
+  UpdateAppProcessStateResponseBody:
+    type: object
+    properties:
+      server_session:
+        $ref: '#/definitions/AppProcess'
+  AppProcessList:
+    type: array
+    items:
+      $ref: '#/definitions/AppProcess'
+    minItems: 0
+    maxItems: 100
+  AppProcessCounts:
+    type: object
+    properties:
+      total_count:
+        type: integer
+        description: 所有的进程数
+        example: 10
+        minimum: 0
+        maximum: 2147483647
+      process_counts:
+        type: array
+        description: 进程按照状态分类，每种状态的进程数量
+        items:
+          $ref: '#/definitions/ProcessCount'
+        minItems: 0
+        maxItems: 5
+  ProcessCount:
+    type: object
+    properties:
+      state:
+        type: string
+        description: 进程所处的状态（AVTIVATING、ACTIVE、TERMINATING、TERMINATED、ERROR）
+        enum:
+          - AVTIVATING
+          - ACTIVE
+          - TERMINATING
+          - TERMINATED
+          - ERROR
+        example: ACTIVE
+      count:
+        type: integer
+        description: 进程统计数
+        example: 10
+        minimum: 0
+        maximum: 2147483647
+  AppProcess:
+    description: App Process
+    type: object
+    properties:
+      app_process_id:
+        type: string
+        description: 进程唯一标识ID
+        minLength: 1
+        maxLength: 128
+        example: app-process-ddaa6012-6f88-43c9-b886-ffbcb5d7f90d
+      pid:
+        type: integer
+        description: 进程ID，通常pid的最大值可以通过/proc/sys/kernel/pid_max文件查看，为32768
+        minimum: 1
+        maximum: 32768
+        example: 3664
+      instance_id:
+        type: string
+        description: 进程所属的server的ID
+        minLength: 36
+        maxLength: 36
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+      scaling_group_id:
+        type: string
+        description: 进程所属的伸缩组的ID
+        minLength: 36
+        maxLength: 36
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+      fleet_id:
+        type: string
+        description: 进程所属的fleet的ID
+        minLength: 1
+        maxLength: 128
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+      ip_address:
+        type: string
+        description: AuxProxy所在虚拟机的公网IP，需符合IP地址的规范
+        pattern: '(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}'
+        example: 100.10.10.90
+      private_ip:
+        type: string
+        description: AuxProxy所在虚拟机的私网IP，需符合IP地址的规范
+        pattern: '(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}'
+        example: 192.168.0.90
+      port:
+        type: integer
+        description: 进程提供服务的接口（需要符合端口要求：1~65535）
+        minimum: 0
+        maximum: 65535
+        example: '8080'
+      grpc_port:
+        type: integer
+        description: 进程提供auxproxy访问的接口（需要符合端口要求：1~65535）
+        minimum: 0
+        maximum: 65535
+        example: '8081'
+      aux_proxy_port:
+        type: integer
+        description: AuxProxy对外暴露服务的端口（需要符合端口要求：1~65535）
+        minimum: 0
+        maximum: 65535
+        example: '10001'
+      log_path:
+        type: array
+        description: 存放进程日志的路径
+        items:
+          type: string
+          example: /tmp/log/logfile
+          pattern: ^\/(\w+\/?)+$
+          minLength: 0
+          maxLength: 1000
+        minItems: 0
+        maxItems: 100
+      state:
+        type: string
+        description: 进程所处的状态（AVTIVATING、ACTIVE、TERMINATING、TERMINATED、ERROR）
+        enum:
+          - AVTIVATING
+          - ACTIVE
+          - TERMINATING
+          - TERMINATED
+          - ERROR
+        example: ACTIVE
+      new_server_session_protection_policy:
+        type: string
+        description: >-
+          server
+          session的保护策略，NO_PROTECTION表示缩容时可以直接干掉ServerSession，TIME_LIMIT_PROTECTION表示给进程一段时间自己退出，超时后直接干掉，FULL_PROTECTION表示ACTIVE状态的server
+          session不能被直接干掉
+        enum:
+          - NO_PROTECTION
+          - TIME_LIMIT_PROTECTION
+          - FULL_PROTECTION
+        example: NO_PROTECTION
+      server_session_protection_time_limit_minutes:
+        type: integer
+        description: server session的保护时长
+        minimum: 5
+        maximum: 1440
+        default: 5
+      server_session_activation_timeout_seconds:
+        type: integer
+        description: server session的活跃时长
+        minimum: 1
+        maximum: 600
+      max_server_session_num:
+        type: integer
+        description: server session的最大数目
+        minimum: 1
+        maximum: 2147483647
+        example: 1
+      server_session_count:
+        type: integer
+        description: server session的当前数目
+        minimum: 0
+        maximum: 2147483647
+        example: 0
+  CreateServerSessionRequestBody:
+    description: 创建server session请求的body体
+    type: object
+    required:
+      - fleet_id
+      - max_client_session_num
+    properties:
+      name:
+        type: string
+        minLength: 0
+        maxLength: 1024
+        description: server session的名字，不要求唯一
+        example: game-s1
+      creator_id:
+        type: string
+        description: '游戏服务器会话名称，最大长度不超过1024个ASCII字符,不要求唯一'
+        minLength: 0
+        maxLength: 1024
+        example: name1
+      fleet_id:
+        type: string
+        description: 进程所属的fleet的ID
+        minLength: 1
+        maxLength: 128
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+      session_properties:
+        type: array
+        description: 服务器会话属性列表
+        minItems: 0
+        maxItems: 16
+        items:
+          $ref: '#/definitions/KeyValue'
+      session_data:
+        type: string
+        description: 游戏服务器会话属性详情，最大长度不超过4096个ASCII字符
+        minLength: 0
+        maxLength: 4096
+        example: cookie
+      max_client_session_num:
+        type: integer
+        format: int32
+        description: 最大客户端会话数量，最小值不小于0
+        minimum: 1
+        maximum: 1024
+        example: 1
+  ListServerSessionsRespBody:
+    type: object
+    properties:
+      count:
+        type: integer
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+        description: 返回的server session的数目
+      server_sessions:
+        $ref: '#/definitions/ServerSessionList'
+  ServerSessionList:
+    type: array
+    minItems: 0
+    maxItems: 100
+    items:
+      $ref: '#/definitions/ServerSession'
+  UpdateServerSessionRespBody:
+    type: object
+    properties:
+      server_session:
+        $ref: '#/definitions/ServerSession'
+  CreateServerSessionRespBody:
+    type: object
+    properties:
+      server_session:
+        $ref: '#/definitions/ServerSession'
+  ShowServerSessionRespBody:
+    type: object
+    properties:
+      server_session:
+        $ref: '#/definitions/ServerSession'
+  UpdateServerSessionStateRespBody:
+    type: object
+    properties:
+      server_session:
+        $ref: '#/definitions/ServerSession'
+  ServerSession:
+    description: Server Session：游戏房间、游戏局对象、搜索Shard
+    type: object
+    required:
+      - sessionID
+    properties:
+      name:
+        type: string
+        description: server session的名字，不要求唯一
+        minLength: 1
+        maxLength: 1024
+      server_session_id:
+        type: string
+        description: server session的ID
+        minLength: 1
+        maxLength: 128
+        example: server-session-5c17a2f9-f34a-40c9-aeb3-7b5b437f414d
+      creator_id:
+        type: string
+        description: 创建者的ID
+        minLength: 1
+        maxLength: 1024
+        example: creator is bian
+      process_id:
+        type: string
+        description: server session所属的process的ID
+        minLength: 1
+        maxLength: 128
+        example: app-process-ddaa6012-6f88-43c9-b886-ffbcb5d7f90d
+      instance_id:
+        type: string
+        description: server session所属的instance的ID
+        minLength: 1
+        maxLength: 128
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+      fleet_id:
+        type: string
+        description: 进程所属的fleet的ID
+        minLength: 1
+        maxLength: 128
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+      pid:
+        type: string
+        description: 进程所属的fleet的ID
+        minLength: 1
+        maxLength: 128
+        example: '2271'
+      state:
+        type: string
+        description: server session所处的状态（activating、active、terminating、terminated、error）
+        enum:
+          - ACTIVATING
+          - ACTIVE
+          - TERMINATING
+          - TERMINATED
+          - ERROR
+        example: ACTIVE
+      state_reason:
+        type: string
+        minLength: 0
+        maxLength: 262144
+        description: server session所处的状态原因
+        example: active by process
+      server_session_properties:
+        type: array
+        description: session携带的属性
+        items:
+          $ref: '#/definitions/KeyValue'
+        minItems: 0
+        maxItems: 16
+      server_session_data:
+        type: string
+        description: session携带的数据
+        minLength: 0
+        maxLength: 262144
+        example: cookie
+      client_session_count:
+        type: integer
+        description: 当前的client session数目
+        minimum: 0
+        maximum: 2147483647
+        example: 0
+      max_client_session_num:
+        description: 支持的最大client session数目
+        type: integer
+        minimum: 0
+        maximum: 2147483647
+        example: 2
+      ip_address:
+        type: string
+        description: AuxProxy所在虚拟机的公网IP，需符合IP地址的规范
+        pattern: '(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}'
+        example: 100.10.10.90
+      port:
+        type: integer
+        description: 进程提供服务的接口（需要符合端口要求：1~65535）
+        minimum: 0
+        maximum: 65535
+        example: '8080'
+      client_session_creation_policy:
+        type: string
+        description: 'client session的创建策略（ACCEPT_ALL, DENY_ALL）'
+        enum:
+          - ACCEPT_ALL
+          - DENY_ALL
+        example: ACCEPT_ALL
+      server_session_protection_policy:
+        type: string
+        description: >-
+          server
+          session的保护策略，NO_PROTECTION表示缩容时可以直接干掉ServerSession，TIME_LIMIT_PROTECTION表示给进程一段时间自己退出，超时后直接干掉，FULL_PROTECTION表示ACTIVE状态的server
+          session不能被直接干掉
+        enum:
+          - NO_PROTECTION
+          - TIME_LIMIT_PROTECTION
+          - FULL_PROTECTION
+        example: TIME_LIMIT_PROTECTION
+      server_session_protection_time_limit_minutes:
+        type: integer
+        description: server session删除时，等待其返回结果的时长
+        minimum: 5
+        maximum: 1440
+        example: 5
+      server_session_activation_timeout_seconds:
+        type: integer
+        description: server session激活时长
+        minimum: 1
+        maximum: 600
+        example: 600
+  UpdateServerSessionRequestBody:
+    description: 更新server session请求的body体
+    properties:
+      max_client_session_num:
+        type: integer
+        description: 一个服务器会话支持的最大客户端会话数
+        minimum: 1
+        maximum: 1024
+        example: 1
+      name:
+        type: string
+        description: server session的名字，不要求唯一
+        minLength: 1
+        maxLength: 1024
+        example: name-1
+      client_session_creation_policy:
+        type: string
+        example: ACCEPT_ALL
+        description: |-
+          * ACCEPT_ALL: 接受所有新创建client session的请求
+          * DENY_ALL:   拒绝所有新创建client session的请求
+        enum:
+          - ACCEPT_ALL
+          - DENY_ALL
+      server_session_protection_policy:
+        type: string
+        description: >-
+          server session的保护策略，支持NO_PROTECTION
+          和TIME_LIMIT_PROTECTION；前者表示不保护，后者表示在时间内保护
+        enum:
+          - NO_PROTECTION
+          - TIME_LIMIT_PROTECTION
+        example: TIME_LIMIT_PROTECTION
+      server_session_protection_time_limit_minutes:
+        type: integer
+        format: int32
+        description: >-
+          server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
+        minimum: 5
+        maximum: 1440
+        default: 5
+        example: 5
+  UpdateServerSessionStateRequestBody:
+    description: 更新server session state请求的body体
+    type: object
+    required:
+      - state
+    properties:
+      state:
+        type: string
+        description: server session 所处的状态（ACTIVATING、ACTIVE、TERMINATED、ERROR）
+        enum:
+          - ACTIVATING
+          - ACTIVE
+          - TERMINATED
+          - ERROR
+        example: ACTIVE
+      state_reason:
+        type: string
+        description: server session 所处状态的原因
+        minLength: 1
+        maxLength: 255
+        example: active by process
+  CreateClientSessionRequestBody:
+    required:
+      - client_id
+    description: 创建client session请求的body体
+    type: object
+    properties:
+      server_session_id:
+        type: string
+        description: server session的ID
+        example: server-session-5c17a2f9-f34a-40c9-aeb3-7b5b437f414d
+        minLength: 1
+        maxLength: 128
+      client_data:
+        type: string
+        description: 与player相关的数据，系统不使用该数据
+        minLength: 0
+        maxLength: 128
+        example: client-data
+      client_id:
+        type: string
+        description: 与player有关的数据，player唯一id
+        minLength: 1
+        maxLength: 128
+        example: client-1
+  CreateClientSessionResponseBody:
+    type: object
+    properties:
+      client_session:
+        $ref: '#/definitions/ClientSession'
+  BatchCreateClientSessionRequestBody:
+    properties:
+      server_session_id:
+        type: string
+        description: server session的ID
+        example: server-session-5c17a2f9-f34a-40c9-aeb3-7b5b437f414d
+        minLength: 1
+        maxLength: 128
+      clients:
+        type: array
+        description: 客户端信息列表
+        minItems: 1
+        maxItems: 25
+        items:
+          $ref: '#/definitions/Client'
+    required:
+      - clients
+  Client:
+    required:
+      - client_id
+    properties:
+      client_id:
+        type: string
+        description: 客户端id
+        minLength: 1
+        maxLength: 128
+        example: client-1
+      client_data:
+        type: string
+        description: 客户端自定义数据
+        minLength: 0
+        maxLength: 128
+        example: data-1
+  ClientSessionList:
+    type: array
+    items:
+      $ref: '#/definitions/ClientSession'
+    minItems: 1
+    maxItems: 10000
+  ClientSession:
+    description: Client Session：游戏玩家
+    type: object
+    required:
+      - client_session_id
+      - server_session_id
+    properties:
+      client_session_id:
+        type: string
+        description: client session的ID，以"clientsession-"开头
+        minLength: 36
+        maxLength: 36
+        example: client-session-54e3b4c4-7043-410c-ae20-6b0458da8a64
+      server_session_id:
+        type: string
+        description: 所属server session的ID
+        example: server-session-5c17a2f9-f34a-40c9-aeb3-7b5b437f414d
+        minLength: 36
+        maxLength: 36
+      process_id:
+        type: string
+        description: 所属app process的ID
+        example: app-process-ddaa6012-6f88-43c9-b886-ffbcb5d7f90d
+        minLength: 36
+        maxLength: 36
+      fleet_id:
+        type: string
+        description: 进程所属的fleet的ID
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+        minLength: 1
+        maxLength: 128
+      ip_address:
+        type: string
+        description: AuxProxy所在虚拟机的公网IP，需符合IP地址的规范
+        example: 100.10.10.90
+        minLength: 7
+        maxLength: 12
+      port:
+        type: integer
+        description: 进程提供服务的接口（需要符合端口要求：1~65535）
+        minimum: 0
+        maximum: 65535
+        example: '8080'
+      client_data:
+        type: string
+        description: 与player相关的数据，租户自定义，系统不使用该数据
+        minLength: 0
+        maxLength: 128
+        example: client-data
+      client_id:
+        description: 租户自定义的玩家ID
+        type: string
+        minLength: 1
+        maxLength: 128
+        example: client-1
+      state:
+        type: string
+        description: client session所处的状态（reserved、active、completed、timeout）
+        enum:
+          - RESERVED
+          - ACTIVE
+          - COMPLETED
+          - TIMEOUT
+  UpdateClientSessionRequestBody:
+    description: 更新client session请求的body体
+    type: object
+    required:
+      - state
+    properties:
+      state:
+        type: string
+        description: client session所处的状态（reserved、active、completed、timeout）
+        enum:
+          - RESERVED
+          - ACTIVE
+          - COMPLETED
+          - TIMEOUT
+        example: RESERVED
+  UpdateClientSessionStateRequestBody:
+    description: 更新client session state请求的body体
+    type: object
+    required:
+      - state
+    properties:
+      state:
+        type: string
+        description: client session的状态(RESERVED、ACTIVE、COMPLETED、TIMEOUT)
+        enum:
+          - RESERVED
+          - ACTIVE
+          - COMPLETED
+          - TIMEOUT
+        example: RESERVED
+  KeyValue:
+    description: KV键值对
+    required:
+      - key
+      - value
+    properties:
+      key:
+        type: string
+        description: 属性名称，最大长度不超过32个ASCII字符
+        minLength: 1
+        maxLength: 32
+        example: key
+      value:
+        type: string
+        description: 属性值，最大长度不超过96个ASCII字符
+        minLength: 1
+        maxLength: 96
+        example: value
+  InstanceConfiguration:
+    description: 实例配置
+    properties:
+      runtime_configuration:
+        description: 运行时配置
+        $ref: '#/definitions/RuntimeConfiguration'
+      server_session_protection_policy:
+        type: string
+        enum:
+          - NO_PROTECTION
+          - FULL_PROTECTION
+          - TIME_LIMIT_PROTECTION
+        default: NO_PROTECTION
+        description: >-
+          终止应用进程时的ServerSession保护策略：不保护NO_PROTECTION、完全保护FULL_PROTECTION、时限保护TIME_LIMIT_PROTECTION。默认是不保护,
+          即不管应用进程上的ServerSession是否是Active, 都可以终止应用进程.
+      server_session_protection_time_limit_minutes:
+        type: integer
+        minimum: 5
+        maximum: 1440
+        default: 5
+        description: >-
+          服务器会话保护时间限制分钟数，server_session_protection_policy字段为TIME_LIMIT_PROTECTION时有效，设置为0等同于NO_PROTECTION。
+  RuntimeConfiguration:
+    properties:
+      process_configurations:
+        items:
+          $ref: '#/definitions/ProcessConfiguration'
+        description: 进程相关配置
+        type: array
+        minItems: 1
+        maxItems: 50
+      server_session_activation_timeout_seconds:
+        description: 应用会话进程超时，最小值1，最大值600，单位秒
+        minimum: 1
+        maximum: 600
+        default: 600
+        type: integer
+        format: int32
+      max_concurrent_server_sessions_per_process:
+        type: integer
+        format: int32
+        description: 单进程最大并发server session数量
+        default: 1
+        minimum: 1
+        maximum: 50
+    required:
+      - process_configurations
+  ProcessConfiguration:
+    description: 应用进程描述
+    properties:
+      launch_path:
+        type: string
+        description: 应用进程启动路径
+        example: 'C://Game/startup.exe'
+        minLength: 0
+        maxLength: 1024
+      parameters:
+        type: string
+        description: 应用进程启动入参
+        example: '--port=1234'
+        minLength: 0
+        maxLength: 1024
+      concurrent_executions:
+        type: integer
+        description: 并发应用进程数
+        example: 1
+        minimum: 1
+        maximum: 50
+    required:
+      - launch_path
+  ErrorRsp:
+    description: 失败时返回的错误对象
+    required:
+      - error_code
+      - error_msg
+    properties:
+      error_code:
+        description: 错误码
+        type: string
+        minLength: 8
+        maxLength: 36
+      error_msg:
+        description: 错误描述
+        type: string
+        minLength: 2
+        maxLength: 512

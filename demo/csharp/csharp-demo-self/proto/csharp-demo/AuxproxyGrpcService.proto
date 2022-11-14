@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+package auxproxyService;
+option go_package = "./;auxproxyservice";
+
+message ProcessReadyRequest {
+  repeated string logPathsToUpload = 1;
+  int32 clientPort = 2;
+  int32 grpcPort = 3;
+  int32 pid = 4;
+}
+
+message ActivateServerSessionRequest {
+  string serverSessionId = 1;
+  int32 maxClients = 2;
+}
+
+message AcceptClientSessionRequest {
+  string serverSessionId = 1;
+  string clientSessionId = 2;
+}
+
+message RemoveClientSessionRequest {
+  string serverSessionId = 1;
+  string clientSessionId = 2;
+}
+
+message ClientSession {
+  string clientSessionId = 1;
+  string clientId = 2;
+  string serverSessionId = 3;
+  string fleetId = 4;
+  string ipAddress = 5;
+  string status = 6;
+  string creationTime = 7;
+  string terminationTime = 8;
+  int32 port = 9;
+  string clientData = 10;
+}
+
+message DescribeClientSessionsRequest {
+  string serverSessionId = 1;
+  string clientId = 2;
+  string clientSessionId = 3;
+  string clientSessionStatusFilter = 4;
+  string nextToken = 5;
+  int32 limit = 6;
+}
+
+message DescribeClientSessionsResponse {
+  string nextToken = 1;
+  repeated ClientSession clientSession = 2;
+  Error error = 3;
+}
+
+message UpdateClientSessionCreationPolicyRequest {
+  string serverSessionId = 1;
+  string newClientSessionCreationPolicy = 2;
+}
+
+
+message  TerminateServerSessionRequest {
+ string serverSessionId = 1;
+}
+
+message ProcessEndingRequest {
+  int32 pid = 1;
+}
+
+message Error {
+  string errorCode = 1;
+  string errorMsg = 2;
+}
+
+message AuxProxyResponse {
+  Error error = 1;
+}
+
+service ScaseGrpcSdkService {
+  rpc ProcessReady (ProcessReadyRequest) returns (AuxProxyResponse) {}
+
+  rpc ActivateServerSession(ActivateServerSessionRequest) returns (AuxProxyResponse) {}
+
+  rpc AcceptClientSession(AcceptClientSessionRequest) returns (AuxProxyResponse) {}
+
+  rpc RemoveClientSession(RemoveClientSessionRequest) returns (AuxProxyResponse) {}
+
+  rpc DescribeClientSessions(DescribeClientSessionsRequest) returns (DescribeClientSessionsResponse) {}
+
+  rpc UpdateClientSessionCreationPolicy(UpdateClientSessionCreationPolicyRequest) returns (AuxProxyResponse) {}
+
+  rpc TerminateServerSession(TerminateServerSessionRequest) returns (AuxProxyResponse) {}
+
+  rpc ProcessEnding(ProcessEndingRequest) returns (AuxProxyResponse) {}
+}
+
+

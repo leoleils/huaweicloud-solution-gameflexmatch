@@ -1,0 +1,10 @@
+{
+    "keys": {
+        "auxproxy": {
+            "enable": false
+        },
+        "aass": {
+            "enable": false
+        }
+    }
+}

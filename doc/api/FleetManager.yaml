@@ -1,0 +1,2576 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: Fleet Manager
+  description: 应用进程队列管理
+host: scase.myhuaweicloud.com
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+consumes:
+  - application/json; charset=UTF-8
+tags:
+  - name: 应用进程队列管理
+  - name: 伸缩策略管理
+  - name: 服务器会话管理
+  - name: 客户端会话管理
+  - name: 应用进程管理
+  - name: 应用包管理
+parameters:
+  xAuthToken:
+    name: X-Auth-Token
+    in: header
+    type: string
+    description: |
+      用户Token。
+
+      通过调用IAM服务获取用户Token接口获取（响应消息头中X-Subject-Token的值）。
+      [IAM token获取](https://support.huaweicloud.com/api-iam/iam_30_0001.html)
+    required: true
+    minLength: 1
+    maxLength: 16384
+  contentType:
+    name: Content-Type
+    in: header
+    required: true
+    type: string
+    minLength: 1
+    maxLength: 64
+    description: |
+      MIME类型；带请求体的请求该字段需为 application/json;charset=utf-8
+  projectId:
+    name: project_id
+    in: path
+    type: string
+    description: |
+      项目ID，获取方法请参考[获取项目ID]()
+    required: true
+    minLength: 1
+    maxLength: 64
+  fleetId:
+    name: fleet_id
+    in: path
+    description: 应用进程队列的id，由创建应用进程队列接口返回，格式为uuid，例如：77317ac6-acd8-11ec-a7e0-6805cab276a1
+    required: true
+    type: string
+    minLength: 1
+    maxLength: 64
+  offset:
+    name: offset
+    in: query
+    required: false
+    type: integer
+    format: int32
+    minimum: 0
+    maximum: 10
+    default: 0
+    description: 分页偏移量，为0表示第一页，为1表示从第二页开始显示
+  limit:
+    name: limit
+    in: query
+    required: false
+    type: integer
+    format: int32
+    minimum: 1
+    maximum: 100
+    default: 100
+    description: 单页显示的数据条数
+  serverSessionId:
+    name: server_session_id
+    in: path
+    required: true
+    type: string
+    description: 服务器会话id，通过创建服务器会话接口返回，全局唯一，uuid格式，例如：77317ac6-acd8-11ec-a7e0-6805cab276a1
+    minLength: 1
+    maxLength: 64
+  clientSessionId:
+    name: client_session_id
+    in: path
+    required: true
+    type: string
+    description: 客户端会话id，通过创建客户端会话接口返回，全局唯一，uuid格式，例如：77317ac6-acd8-11ec-a7e0-6805cab276a1
+    minLength: 1
+    maxLength: 64
+paths:
+  '/{project_id}/fleets':
+    post:
+      tags:
+        - 应用进程队列管理
+      operationId: CreateFleet
+      summary: 创建应用进程队列
+      description: 创建应用进程队列
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - in: body
+          name: CreateFleetRequestBody
+          description: 创建应用进程队列请求体
+          required: true
+          schema:
+            $ref: '#/definitions/CreateFleetRequestBody'
+      responses:
+        '201':
+          description: 创建成功响应
+          schema:
+            $ref: '#/definitions/CreateFleetResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    get:
+      tags:
+        - 应用进程队列管理
+      operationId: ListFleets
+      summary: 查询应用进程队列列表
+      description: 查询应用进程队列列表
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
+      responses:
+        '200':
+          description: 应用进程队列列表
+          schema:
+            $ref: '#/definitions/ListFleetsResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/{project_id}/fleets/{fleet_id}':
+    delete:
+      tags:
+        - 应用进程队列管理
+      operationId: DeleteFleet
+      summary: 删除应用进程队列
+      description: Delete Fleet by ID
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+      responses:
+        '204':
+          description: 删除应用进程队列成功
+          schema:
+            type: string
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    get:
+      tags:
+        - 应用进程队列管理
+      operationId: ShowFleet
+      summary: 查询应用队列基本信息
+      description: 查询应用队列基本信息
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+      responses:
+        '200':
+          description: 查询应用进程队列详情响应
+          schema:
+            $ref: '#/definitions/ShowFleetResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    put:
+      tags:
+        - 应用进程队列管理
+      operationId: UpdateFleet
+      summary: 更新应用队列基本信息
+      description: 更新应用队列基本信息
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+        - in: body
+          name: UpdateFleetRequestBody
+          description: Fleet object that needs to be modified
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateFleetAttributesReuqestBody'
+      responses:
+        '204':
+          description: 更新应用队列基本信息成功
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/{project_id}/fleets/{fleet_id}/inbound-permissions':
+    get:
+      tags:
+        - 应用进程队列管理
+      operationId: ShowFleetInboundPermissions
+      summary: 查询应用队列入站规则
+      description: 查询应用队列入站规则
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+      responses:
+        '200':
+          description: 应用进程队列安全组信息
+          schema:
+            $ref: '#/definitions/ShowInboundPermissionResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    put:
+      tags:
+        - 应用进程队列管理
+      operationId: UpdateFleetInboundPermissions
+      summary: 更新应用队列入站规则
+      description: 更新应用队列入站规则
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+        - in: body
+          name: UpdateFleetInboundPermissionsRequestBody
+          description: Fleet object that needs to be modified
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateFleetInboundPermissionsRequestBody'
+      responses:
+        '204':
+          description: 更新应用进程队列安全组成功
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/{project_id}/fleets/{fleet_id}/runtime-configuration':
+    get:
+      tags:
+        - 应用进程队列管理
+      operationId: ShowFleetRuntimeConfiguration
+      summary: 查询应用队列运行配置
+      description: 查询应用队列运行配置
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+      responses:
+        '200':
+          description: 应用进程队列运行配置详情
+          schema:
+            $ref: '#/definitions/FleetRuntimeConfigurationResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    put:
+      tags:
+        - 应用进程队列管理
+      operationId: UpdateFleetRuntimeConfiguration
+      summary: 更新应用队列运行配置
+      description: 更新应用队列运行配置
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+        - in: body
+          name: UpdateFleetRuntimeConfigurationRequestBody
+          description: Fleet object that needs to be modified
+          required: true
+          schema:
+            $ref: '#/definitions/RuntimeConfiguration'
+      responses:
+        '204':
+          description: 更新应用进程队列运行配置成功
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/{project_id}/fleets/{fleet_id}/instance-capacity':
+    get:
+      tags:
+        - 应用进程队列管理
+      summary: 获取应用进程队列的容量信息
+      description: 获取应用进程队列的容量信息
+      operationId: ShowFleetInstanceCapacity
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+      responses:
+        '200':
+          description: 应用进程队列实例容量信息
+          schema:
+            $ref: '#/definitions/ShowFleetCapacityResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    put:
+      tags:
+        - 应用进程队列管理
+      operationId: UpdateFleetInstanceCapacity
+      summary: 更新应用队列容量
+      description: 更新应用队列容量
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+        - in: body
+          name: UpdateFleetInstanceCapacityRequestBody
+          description: Fleet object that needs to be modified
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateFleetInstanceCapacityRequestBody'
+      responses:
+        '204':
+          description: 更新应用进程队列实例容量成功
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/{project_id}/fleets/{fleet_id}/process-counts':
+    get:
+      tags:
+        - 应用进程队列管理
+      summary: 获取处于不同状态的应用进程数量信息
+      description: 获取处于不同状态的应用进程数量信息
+      operationId: ListFleetProcesses
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+      responses:
+        '200':
+          description: 应用进程队列处于不同状态的进程数量信息
+          schema:
+            $ref: '#/definitions/ProcessCountsResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/{project_id}/fleets/{fleet_id}/scaling-policies':
+    post:
+      tags:
+        - 伸缩策略管理
+      summary: 创建弹性伸缩策略
+      description: 创建弹性伸缩策略
+      operationId: CreateScalingPolicy
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+        - name: CreateScalingPolicyRequestBody
+          in: body
+          description: 创建弹性策略请求体
+          required: true
+          schema:
+            $ref: '#/definitions/CreateScalingPolicyRequestBody'
+      responses:
+        '201':
+          description: 更新弹性伸缩策略成功响应
+          schema:
+            $ref: '#/definitions/CreateScalingPolicyResponsetBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    get:
+      tags:
+        - 伸缩策略管理
+      summary: 获取弹性伸缩配置列表
+      description: 获取弹性伸缩策略列表
+      operationId: ListScalingPolicies
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
+      responses:
+        '200':
+          description: 应用进程队列的弹性伸缩策略列表
+          schema:
+            $ref: '#/definitions/ListScalingPolicyResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/{project_id}/fleets/{fleet_id}/scaling-policies/{policy_id}':
+    put:
+      tags:
+        - 伸缩策略管理
+      summary: 修改弹性伸缩策略
+      description: 修改弹性伸缩策略
+      operationId: UpdateScalingPolicy
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+        - name: policy_id
+          in: path
+          required: true
+          type: string
+          description: 弹性伸缩策略id
+          minLength: 1
+          maxLength: 128
+        - name: UpdateScalingPolicyRequestBody
+          in: body
+          description: 更新弹性伸缩策略请求体
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateScalingPolicyRequestBody'
+      responses:
+        '204':
+          description: 更新应用进程队列弹性伸缩策略成功
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    delete:
+      tags:
+        - 伸缩策略管理
+      operationId: DeleteScalingPolicy
+      summary: 删除弹性伸缩策略
+      description: 删除弹性伸缩策略
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/fleetId'
+        - name: policy_id
+          in: path
+          required: true
+          type: string
+          description: 弹性伸缩策略id
+          minLength: 1
+          maxLength: 128
+      responses:
+        '204':
+          description: 删除弹性伸缩策略成功
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/{project_id}/server-sessions':
+    post:
+      tags:
+        - 服务器会话管理
+      summary: 创建服务器会话
+      description: 创建服务器会话
+      operationId: CreateServerSession
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - name: CreateServerSessionRequestBody
+          in: body
+          description: 创建服务器请求体
+          required: true
+          schema:
+            $ref: '#/definitions/CreateServerSessionRequestBody'
+      responses:
+        '201':
+          description: 创建服务会话成功响应
+          schema:
+            $ref: '#/definitions/CreateServerSessionResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    get:
+      tags:
+        - 服务器会话管理
+      summary: 获取服务器会话列表
+      description: 获取服务器会话列表
+      operationId: ListServerSessions
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
+        - name: fleet_id
+          in: query
+          description: >-
+            应用进程队列的id，由创建应用进程队列接口返回，格式为uuid，例如：77317ac6-acd8-11ec-a7e0-6805cab276a1
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 64
+        - name: state
+          in: query
+          required: false
+          description: |
+            根据服务器会话的状态进行过滤。
+            * ACTIVE:      活跃
+            * ACTIVATING:  激活中
+            * TERMINATED:  终止
+            * TERMINATING: 终止中
+            * ERROR:       异常
+          type: string
+          enum:
+            - ACTIVE
+            - ACTIVATING
+            - TERMINATED
+            - TERMINATING
+            - ERROR
+      responses:
+        '200':
+          description: 服务器会话详情列表
+          schema:
+            $ref: '#/definitions/ListServerSessionResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/{project_id}/server-sessions/{server_session_id}':
+    get:
+      tags:
+        - 服务器会话管理
+      operationId: ShowSession
+      summary: 获取服务器会话详情
+      description: 获取服务器会话详情
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/serverSessionId'
+      responses:
+        '200':
+          description: 服务器会话详情
+          schema:
+            $ref: '#/definitions/ShowServerSessionResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    put:
+      tags:
+        - 服务器会话管理
+      summary: 更新服务器会话
+      description: 更新服务器会话
+      operationId: UpdateServerSession
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/serverSessionId'
+        - name: UpdateServerSessionRequestBody
+          in: body
+          description: 更新服务器会话请求体
+          required: false
+          schema:
+            $ref: '#/definitions/UpdateServerSessionRequestBody'
+      responses:
+        '204':
+          description: 更新服务器会话成功
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/{project_id}/server-sessions/{server_session_id}/client-sessions':
+    post:
+      tags:
+        - 客户端会话管理
+      summary: 创建客户端会话
+      description: 创建客户端会话
+      operationId: CreateClientSession
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/serverSessionId'
+        - name: CreateClientSessionRequestBody
+          in: body
+          description: 创建客户端会话请求体
+          required: true
+          schema:
+            $ref: '#/definitions/CreateClientSessionRequestBody'
+      responses:
+        '201':
+          description: 创建客户端会话成功响应
+          schema:
+            $ref: '#/definitions/CreateClientSessionResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    get:
+      tags:
+        - 客户端会话管理
+      summary: 获取客户端会话列表
+      description: 获取客户端会话列表
+      operationId: ListClientSessions
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/serverSessionId'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
+      responses:
+        '200':
+          description: 客户端会话详情列表
+          schema:
+            $ref: '#/definitions/ListClientSessionResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/{project_id}/server-sessions/{server_session_id}/client-sessions/batch-create':
+    post:
+      tags:
+        - 客户端会话管理
+      summary: 批量创建客户端会话
+      description: 批量创建客户端会话
+      operationId: BatchCreateClientSessions
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/serverSessionId'
+        - name: BatchCreateClientSessionsRequestBody
+          in: body
+          description: 创建客户端会话请求体
+          required: true
+          schema:
+            $ref: '#/definitions/BatchCreateClientSessionRequestBody'
+      responses:
+        '201':
+          description: 批量创建客户端会话成功响应
+          schema:
+            $ref: '#/definitions/BatchCreateClientSessionResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/{project_id}/server-sessions/{server_session_id}/client-sessions/{client_session_id}':
+    get:
+      tags:
+        - 客户端会话管理
+      operationId: ShowClientSession
+      summary: 获取客户端会话详情
+      description: 获取客户端会话详情
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/serverSessionId'
+        - $ref: '#/parameters/clientSessionId'
+        - $ref: '#/parameters/xAuthToken'
+      responses:
+        '200':
+          description: 客户端会话详情列表
+          schema:
+            $ref: '#/definitions/ShowClientSessionResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  '/v1/{project_id}/app-processes':
+    get:
+      tags:
+        - 应用进程管理
+      summary: 获取应用进程列表
+      description: 获取应用进程列表
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      operationId: ListAppProcess
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
+        - name: fleet_id
+          in: query
+          required: true
+          description: >-
+            应用进程队列的id，由创建应用进程队列接口返回，格式为fleet-uuid，例如：fleet-77317ac6-acd8-11ec-a7e0-6805cab276a1
+          type: string
+          minLength: 1
+          maxLength: 64
+        - $ref: '#/parameters/xAuthToken'
+      responses:
+        '200':
+          description: 响应进程列表
+          schema:
+            $ref: '#/definitions/ListProcessResponseBody'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  '/v1/{project_id}/builds':
+    get:
+      tags:
+        - 应用包管理
+      operationId: ListBuilds
+      summary: 查询应用包列表
+      description: 查询应用包列表
+      produces:
+        - application/json
+      parameters:
+        - name: X-Auth-Token
+          in: header
+          required: true
+          description: 用户token，通过IAM服务获取用户token接口获取（响应消息头中的X-Subject-Token的值）
+          type: string
+          minLength: 1
+          maxLength: 16384
+        - name: project_id
+          in: path
+          description: ID of project
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+        - name: offset
+          in: query
+          required: false
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 10
+        - name: limit
+          in: query
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 100
+      responses:
+        '200':
+          description: Build列表
+          schema:
+            $ref: '#/definitions/ListBuildsResponseBody'
+          headers:
+            X-Request-Id:
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_id-timestamp-hostname
+              type: string
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '503':
+          description: ''
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_id-timestamp-hostname
+              type: string
+  '/v1/{project_id}/build/{build_id}':
+    get:
+      tags:
+        - 应用包管理
+      operationId: ShowBuild
+      summary: 查询应包详情
+      description: 查询应包详情
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - name: X-Auth-Token
+          in: header
+          required: true
+          description: 用户token，通过IAM服务获取用户token接口获取（响应消息头中的X-Subject-Token的值）
+          type: string
+          minLength: 1
+          maxLength: 16384
+        - name: project_id
+          in: path
+          description: ID of project
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+        - name: build_id
+          in: path
+          description: ID of Build
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+      responses:
+        '200':
+          description: 查询应用包详情响应
+          schema:
+            $ref: '#/definitions/Build'
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '503':
+          description: ''
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+              type: string
+definitions:
+  CreateFleetRequestBody:
+    description: 创建应用进程队列请求体
+    properties:
+      name:
+        type: string
+        description: 应用进程队列的名称. 可以不唯一.
+        minLength: 1
+        maxLength: 1024
+        example: MyDemo
+      description:
+        type: string
+        description: 应用进程队列描述
+        minLength: 1
+        maxLength: 1024
+        example: this is a demo
+      build_id:
+        type: string
+        description: 应用包id，创建后不支持修改
+        example: build-52d872a5-acd3-11ec-a7e0-6805cab276a1
+        minLength: 1
+        maxLength: 64
+      region:
+        type: string
+        default: cn-north-4
+        example: cn-north-4
+        description: |-
+          应用进程队列所在的region，只支持北京四region
+          * cn-north-4: 北京四
+        enum:
+          - cn-north-4
+      bandwidth:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 200
+        default: 1
+        example: 100
+        description: 应用队列单实例公网出带宽最大值，默认1，单位Mbps，范围1-200，可提单提高配额
+      instance_specification:
+        type: string
+        description: |-
+          实例规格，当前只支持2种标准型 
+          * scase.standard.4u8g
+          * scase.standard.8u16g
+        default: scase.standard.4u8g
+        example: scase.standard.4u8g
+        enum:
+          - scase.standard.4u8g
+          - scase.standard.8u16g
+      server_session_protection_policy:
+        type: string
+        description: >-
+          服务服务器会话保护策略
+
+          * NO_PROTECTION:         不保护，缩容时如果有会话在实例上运行，直接缩容    
+
+          * FULL_PROTECTION:       完全保护，缩容时如果有会话在实例上运行，等待会话结束再缩容
+
+          * TIME_LIMIT_PROTECTION:
+          限时保护，缩容时如果有会话在实例上运行，等待一定时间后缩容，等待时间由server_session_protection_time_limit_minutes指定
+        example: NO_PROTECTION
+        enum:
+          - NO_PROTECTION
+          - FULL_PROTECTION
+          - TIME_LIMIT_PROTECTION
+      server_session_protection_time_limit_minutes:
+        type: integer
+        format: int32
+        description: >-
+          server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
+        minimum: 5
+        maximum: 1440
+        default: 5
+        example: 5
+      resource_creation_limit_policy:
+        $ref: '#/definitions/ResourceCreationLimitPolicy'
+        description: 对客户端在指定时间内可以创建的服务器会话数量进行限制的策略。通过这个策略，你可以控制客户端消耗可用资源的能力。
+      runtime_configuration:
+        $ref: '#/definitions/RuntimeConfiguration'
+        description: 应用进程队列的运行时配置信息
+      inbound_permissions:
+        type: array
+        minItems: 1
+        maxItems: 50
+        description: 访问配置，即允许外部访问应用进程的IP地址和端口描述
+        items:
+          $ref: '#/definitions/IpPermission'
+    required:
+      - name
+      - build_id
+      - runtime_configuration
+      - inbound_permissions
+  CreateFleetResponseBody:
+    required:
+      - fleet
+    properties:
+      fleet:
+        $ref: '#/definitions/Fleet'
+  ShowFleetResponseBody:
+    required:
+      - fleet
+    properties:
+      fleet:
+        $ref: '#/definitions/Fleet'
+  ProcessConfiguration:
+    description: 应用进程描述
+    properties:
+      launch_path:
+        type: string
+        description: 应用进程启动程序路径，linux风格文件路径
+        example: /home/scase/start_up.sh
+        minLength: 0
+        maxLength: 1024
+      parameters:
+        type: string
+        description: 应用进程启动入参
+        example: '--port=1234'
+        minLength: 0
+        maxLength: 1024
+      concurrent_executions:
+        type: integer
+        description: 并发应用进程数
+        example: 1
+        minimum: 1
+        maximum: 50
+    required:
+      - launch_path
+      - parameters
+      - concurrent_executions
+  Fleet:
+    description: 应用进程队列
+    properties:
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 1
+        maxLength: 64
+        example: fleet-77317ac6-acd8-11ec-a7e0-6805cab276a1
+      name:
+        type: string
+        description: 应用进程队列的名称. 可以不唯一.
+        minLength: 1
+        maxLength: 1024
+        example: MyDemo
+      description:
+        type: string
+        description: 应用队列描述
+        minLength: 1
+        maxLength: 1024
+        example: this is a demo
+      region:
+        type: string
+        default: cn-north-4
+        description: 应用进程队列所在的region，只支持北京四region - cn-north-4 北京四
+        enum:
+          - cn-north-4
+        example: cn-north-4
+      state:
+        type: string
+        description: |-
+          队列状态 
+          * CREATING:     创建中 
+          * ACTIVE:       活跃 
+          * ERROR:        错误
+          * DELETING:     删除中 
+          * TERMINATED:   已终止
+        enum:
+          - CREATING
+          - ACTIVE
+          - ERROR
+          - DELETING
+          - TERMINATED
+        example: CREATING
+      build_id:
+        type: string
+        description: 应用包id，创建后不支持修改，用户创建应用包后返回的id
+        example: build-52d872a5-acd3-11ec-a7e0-6805cab276a1
+        minLength: 1
+        maxLength: 64
+      bandwidth_size:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 200
+        default: 1
+        example: 1
+        description: 应用队列单实例公网出带宽最大值，默认1Mbps，范围1-200Mbps，可提单提高配额
+      instance_specification:
+        type: string
+        description: |-
+          实例规格，当前只支持2种标准型 
+          * scase.standard.4u8g 
+          * scase.standard.8u16g
+        default: scase.standard.4u8g
+        example: scase.standard.4u8g
+        enum:
+          - scase.standard.4u8g
+          - scase.standard.8u16g
+      operating_system:
+        type: string
+        description: 操作系统类型
+        minLength: 1
+        maxLength: 128
+        example: linux
+      server_session_protection_policy:
+        type: string
+        description: >-
+          服务服务器会话保护策略
+
+          * NO_PROTECTION:         不保护，缩容时如果有会话在实例上运行，直接缩容    
+
+          * FULL_PROTECTION:       完全保护，缩容时如果有会话在实例上运行，等待会话结束再缩容
+
+          * TIME_LIMIT_PROTECTION:
+          限时保护，缩容时如果有会话在实例上运行，等待一定时间后缩容，等待时间由server_session_protection_time_limit_minutes指定
+        example: NO_PROTECTION
+        enum:
+          - NO_PROTECTION
+          - FULL_PROTECTION
+          - TIME_LIMIT_PROTECTION
+      server_session_protection_time_limit_minutes:
+        type: integer
+        format: int32
+        description: >-
+          server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
+        minimum: 5
+        maximum: 1440
+        default: 5
+        example: 5
+      enable_auto_scaling:
+        type: boolean
+        description: 是否使能自动弹性伸缩，默认值为true，为false时策略仍旧存在，但是不会触发弹性伸缩动作
+        default: 'true'
+        example: 'true'
+      resource_creation_limit_policy:
+        $ref: '#/definitions/ResourceCreationLimitPolicy'
+      creation_time:
+        type: string
+        description: '应用进程队列创建时间，结束时间，UTC时间，遵循RFC3339规范，例如2019-12-09T06:10:29Z'
+        minLength: 1
+        maxLength: 32
+        example: '2020-06-28T00:00:00Z'
+  IpPermission:
+    properties:
+      protocol:
+        description: |
+          传输层协议 
+          * TCP: TCP协议
+          * UDP: UDP协议
+        type: string
+        example: TCP
+        enum:
+          - TCP
+          - UDP
+      ip_range:
+        type: string
+        description: IP 段范围，合法的 CIDR 地址类型，只支持IPv4，如所有IPv4来源：0.0.0.0/0
+        example: 0.0.0.0/0
+        minLength: 9
+        maxLength: 18
+      from_port:
+        type: integer
+        minimum: 1025
+        maximum: 60000
+        description: 起始端口号
+        example: 1025
+      to_port:
+        type: integer
+        minimum: 1025
+        maximum: 60000
+        example: 1025
+        description: 结束端口号
+    required:
+      - protocol
+      - ip_range
+      - from_port
+      - to_port
+  ErrorRsp:
+    description: 失败时返回的错误对象
+    properties:
+      error_code:
+        description: 错误码
+        type: string
+        minLength: 8
+        maxLength: 36
+      error_msg:
+        description: 错误描述
+        type: string
+        minLength: 2
+        maxLength: 512
+    required:
+      - error_code
+      - error_msg
+  ListFleetsResponseBody:
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 应用队列总数
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      fleets:
+        description: 应用进程队列数组
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/Fleet'
+        type: array
+    description: 1、把基本信息返回回来
+    required:
+      - count
+      - fleets
+  RuntimeConfiguration:
+    properties:
+      server_session_activation_timeout_seconds:
+        type: integer
+        format: int32
+        description: 下发创建server session请求到server session的状态变为可用状态的超时时间，默认600秒
+        minimum: 1
+        maximum: 600
+        default: 600
+        example: 600
+      max_concurrent_server_sessions_per_process:
+        type: integer
+        format: int32
+        description: 单进程最大并发server session数量
+        default: 1
+        minimum: 1
+        maximum: 50
+        example: 1
+      process_configurations:
+        description: 进程配置信息
+        minItems: 1
+        maxItems: 50
+        items:
+          $ref: '#/definitions/ProcessConfiguration'
+        type: array
+  ResourceCreationLimitPolicy:
+    properties:
+      policy_period_in_minutes:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 60
+        default: 1
+        example: 1
+        description: >-
+          同一个creator_id在policy_period_in_minutes指定的时间段内最多只能创建new_sessions_per_creator个服务器会话
+      new_sessions_per_creator:
+        type: integer
+        format: int32
+        description: 同一个creator_id能在policy_period_in_minutes字段指定的时间段内能创建的最大服务器会话数
+        minimum: 1
+        maximum: 60
+        default: 1
+        example: 1
+  UpdateFleetAttributesReuqestBody:
+    properties:
+      name:
+        type: string
+        minLength: 1
+        maxLength: 1024
+        example: fleet-1
+        description: 应用进程队名称
+      description:
+        type: string
+        minLength: 1
+        maxLength: 1024
+        description: 应用进程队列描述信息
+        example: 描述信息
+      server_session_protection_policy:
+        type: string
+        description: >-
+          服务服务器会话保护策略
+
+          * NO_PROTECTION:         不保护，缩容时如果有会话在实例上运行，直接缩容    
+
+          * FULL_PROTECTION:       完全保护，缩容时如果有会话在实例上运行，等待会话结束再缩容
+
+          * TIME_LIMIT_PROTECTION:
+          限时保护，缩容时如果有会话在实例上运行，等待一定时间后缩容，等待时间由server_session_protection_time_limit_minutes指定
+        example: NO_PROTECTION
+        enum:
+          - NO_PROTECTION
+          - FULL_PROTECTION
+          - TIME_LIMIT_PROTECTION
+      server_session_protection_time_limit_minutes:
+        type: integer
+        format: int32
+        description: >-
+          server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
+        minimum: 5
+        maximum: 1440
+        default: 5
+        example: 5
+      enable_auto_scaling:
+        type: boolean
+        description: 是否使能自动弹性伸缩，默认值为true，为false时策略仍旧存在，但是不会触发弹性伸缩动作
+        default: 'true'
+        example: 'true'
+      resource_creation_limit_policy:
+        $ref: '#/definitions/ResourceCreationLimitPolicy'
+  ShowInboundPermissionResponseBody:
+    properties:
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 1
+        maxLength: 64
+        example: fleet-77317ac6-acd8-11ec-a7e0-6805cab276a1
+      inbound_permissions:
+        type: array
+        description: 安全组规则列表
+        minItems: 1
+        maxItems: 50
+        items:
+          $ref: '#/definitions/IpPermission'
+  UpdateFleetInboundPermissionsRequestBody:
+    properties:
+      inbound_permission_authorizations:
+        type: array
+        minItems: 0
+        maxItems: 50
+        description: 新增的安全组规则列表
+        items:
+          $ref: '#/definitions/IpPermission'
+      inbound_permission_revocations:
+        type: array
+        minItems: 0
+        maxItems: 50
+        description: 删除的安全组规则列表
+        items:
+          $ref: '#/definitions/IpPermission'
+  FleetRuntimeConfigurationResponseBody:
+    properties:
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 1
+        maxLength: 64
+        example: fleet-77317ac6-acd8-11ec-a7e0-6805cab276a1
+      runtime_configuration:
+        $ref: '#/definitions/RuntimeConfiguration'
+  FleetEvent:
+    properties:
+      event_id:
+        type: string
+        minLength: 1
+        maxLength: 64
+        example: 53503686-a9af-11ec-828d-fa163ee7efa6
+        description: 事件id
+      event_code:
+        type: string
+        minLength: 1
+        maxLength: 64
+        enum:
+          - FLEET_CREATED
+          - FLEET_STATE_ACTIVE
+          - FLEET_SCALING_EVENT
+          - FLEET_STATE_ERROR
+          - FLEET_STATE_DELETING
+          - FLEET_STATE_TERMINATED
+        description: |
+          * FLEET_CREATED:          接收到fleet创建请求，并开始创建fleet资源 -
+          * FLEET_STATE_ACTIVE:     创建fleet资源成功成功，fleet进入活跃状态 -
+          * FLEET_SCALING_EVENT:    fleet发生弹性伸缩事件 
+          * FLEET_STATE_ERROR:      fleet发生异常 
+          * FLEET_STATE_DELETING:   fleet接收到删除请求，开始清理资源 
+          * FLEET_STATE_TERMINATED: fleet删除流程完成
+        example: FLEET_CREATED
+      event_time:
+        type: string
+        minLength: 1
+        maxLength: 128
+        description: '事件发生时间，UTC时间，遵循RFC3339规范，例如2019-12-09T06:10:29Z'
+        example: '2020-06-28T00:00:00Z'
+      message:
+        type: string
+        minLength: 1
+        maxLength: 128
+        description: 事件描述信息
+        example: 应用进程队列开始创建
+  ListFleetEventResponseBody:
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 事件总数
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      events:
+        type: array
+        description: 事件列表
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/FleetEvent'
+  ShowFleetCapacityResponseBody:
+    properties:
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 1
+        maxLength: 64
+        example: fleet-77317ac6-acd8-11ec-a7e0-6805cab276a1
+      instance_capacity:
+        $ref: '#/definitions/InstanceCapacity'
+  InstanceCapacity:
+    properties:
+      minimum:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 200
+        description: 应用进程队列在所在region的最小实例数
+        example: 1
+      maximum:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 200
+        description: 应用进程队列在所在region的最大实例数
+        example: 1
+      desired:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 200
+        description: 应用进程队列在所在region的目标实例数量
+        example: 1
+  UpdateFleetInstanceCapacityRequestBody:
+    properties:
+      minimum:
+        type: integer
+        format: int32
+        description: 更新后最小进程数
+        minimum: 0
+        maximum: 200
+        example: 1
+      maximum:
+        type: integer
+        format: int32
+        description: 更新后最大进程数
+        minimum: 0
+        maximum: 200
+        example: 1
+      desired:
+        type: integer
+        format: int32
+        description: 更新后期望进程数
+        minimum: 0
+        maximum: 200
+        example: 1
+    required:
+      - minimum
+      - maximum
+      - desired
+  CreateScalingPolicyRequestBody:
+    properties:
+      name:
+        type: string
+        description: 伸缩策略名称
+        minLength: 1
+        maxLength: 1024
+        example: name-1
+      policy_type:
+        type: string
+        enum:
+          - TARGET_BASED
+        description: |-
+          伸缩策略类型，只支持基于目标的策略 
+          * TARGET_BASED: 基于目标的策略，只能有一个基于目标的策略
+        example: TARGET_BASED
+      target_based_configuration:
+        $ref: '#/definitions/TargetBasedConfiguration'
+    required:
+      - name
+      - policy_type
+      - target_based_configuration
+  TargetBasedConfiguration:
+    description: 基于目标的伸缩策略配置内容
+    properties:
+      metric_name:
+        type: string
+        description: |
+          指标名称，取值范围
+          * PERCENT_AVAILABLE_SERVER_SESSIONS:   空闲server session百分比
+        enum:
+          - PERCENT_AVAILABLE_SERVER_SESSIONS
+        default: PERCENT_AVAILABLE_SERVER_SESSIONS
+        example: PERCENT_AVAILABLE_SERVER_SESSIONS
+      target_value:
+        type: integer
+        format: int32
+        description: 目标资源空闲百分比，取值1-100
+        minimum: 1
+        maximum: 100
+        example: 30
+    required:
+      - metric_name
+      - target_value
+  ScalingPolicy:
+    properties:
+      policy_id:
+        type: string
+        description: 弹性伸缩策略的id
+        minLength: 1
+        maxLength: 128
+        example: 77317ac6-acd8-11ec-a7e0-6805cab276a1
+      name:
+        type: string
+        description: 伸缩策略名称
+        minLength: 1
+        maxLength: 1024
+        example: policy-name1
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 1
+        maxLength: 64
+        example: fleet-77317ac6-acd8-11ec-a7e0-6805cab276a1
+      policy_type:
+        type: string
+        description: |
+          策略类型   
+          * TARGET_BASED: 基于目标的策略
+        enum:
+          - TARGET_BASED
+        example: TARGET_BASED
+      target_based_configuration:
+        $ref: '#/definitions/TargetBasedConfiguration'
+    required:
+      - policy_id
+      - name
+      - fleet_id
+      - policy_type
+      - target_based_configuration
+  ListScalingPolicyResponseBody:
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 策略个数
+        minimum: 0
+        maximum: 50
+        example: 1
+      scaling_policies:
+        type: array
+        minItems: 0
+        maxItems: 50
+        description: 弹性伸缩策略列表
+        items:
+          $ref: '#/definitions/ScalingPolicy'
+  UpdateScalingPolicyRequestBody:
+    properties:
+      name:
+        type: string
+        description: 伸缩策略名称
+        minLength: 1
+        maxLength: 1024
+        example: policy-name1
+      target_based_configuration:
+        $ref: '#/definitions/TargetBasedConfiguration'
+  CreateServerSessionRequestBody:
+    properties:
+      creator_id:
+        type: string
+        description: 创建者ID，最大长度不超过1024个ASCII字符
+        minLength: 0
+        maxLength: 1024
+        example: id1
+      name:
+        type: string
+        description: 游戏服务器会话名称，最大长度不超过1024个ASCII字符
+        minLength: 0
+        maxLength: 1024
+        example: name1
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 1
+        maxLength: 64
+        example: 77317ac6-acd8-11ec-a7e0-6805cab276a1
+      server_session_properties:
+        type: array
+        minItems: 0
+        maxItems: 16
+        description: 服务器会话属性列表
+        items:
+          $ref: '#/definitions/ServerSessionProperty'
+      server_session_data:
+        type: string
+        description: 游戏服务器会话属性详情，最大长度不超过4096个ASCII字符
+        minLength: 0
+        maxLength: 4096
+        example: data-1
+      max_client_session_count:
+        type: integer
+        format: int32
+        description: 最大客户端会话数量，最小值不小于0
+        minimum: 1
+        maximum: 1024
+        example: 1
+      idempotency_token:
+        type: string
+        description: 幂等token，最大长度不超过48个ASCII字符
+        minLength: 0
+        maxLength: 48
+        example: token1
+    required:
+      - fleet_id
+      - max_client_session_count
+  ServerSessionProperty:
+    properties:
+      key:
+        type: string
+        description: 属性名称，最大长度不超过32个ASCII字符
+        minLength: 1
+        maxLength: 32
+        example: key
+      value:
+        type: string
+        description: 属性值，最大长度不超过96个ASCII字符
+        minLength: 1
+        maxLength: 96
+        example: value
+    required:
+      - key
+      - value
+  ServerSession:
+    properties:
+      server_session_id:
+        type: string
+        description: 服务器会话的id，全局唯一
+        minLength: 1
+        maxLength: 64
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+      name:
+        type: string
+        description: server session的名字，不要求唯一
+        minLength: 1
+        maxLength: 1024
+        example: session_name1
+      creator_id:
+        type: string
+        description: 创建者的ID
+        minLength: 1
+        maxLength: 1024
+        example: creatorId1
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 1
+        maxLength: 64
+        example: fleet-77317ac6-acd8-11ec-a7e0-6805cab276a1
+      server_session_properties:
+        type: array
+        minItems: 0
+        maxItems: 16
+        items:
+          $ref: '#/definitions/ServerSessionProperty'
+        description: 服务器会话属性
+      server_session_data:
+        type: string
+        description: session携带的数据
+        minLength: 0
+        maxLength: 262144
+        example: data-1
+      current_client_session_count:
+        type: integer
+        description: 当前客户端会话数量
+        minimum: 0
+        maximum: 1024
+        example: 1
+      max_client_session_count:
+        type: integer
+        description: 一个服务器会话支持的最大客户端会话数
+        minimum: 0
+        maximum: 1024
+        example: 1
+      state:
+        type: string
+        description: |
+          服务器会话当前所属的状态 
+          * ACTIVATING:  激活中 
+          * ACTIVE:      活跃 
+          * TERMINATING: 终止中 
+          * TERMINATED:  终止 
+          * ERROR:       异常
+        enum:
+          - ACTIVATING
+          - ACTIVE
+          - TERMINATING
+          - TERMINATED
+          - ERROR
+        example: ACTIVATING
+      state_reason:
+        type: string
+        description: 状态为ERROR时这个字段表示错误信息
+        minLength: 1
+        maxLength: 1024
+        example: error info
+      ip_address:
+        type: string
+        description: 公网IP，需符合IP地址的规范
+        example: 100.10.10.90
+        minLength: 7
+        maxLength: 15
+      port:
+        type: integer
+        format: int32
+        description: 进程提供服务的接口（需要符合端口要求：1025~60000）
+        example: 8080
+        minimum: 1025
+        maximum: 60000
+      client_session_creation_policy:
+        description: |
+          新建客户端会话的策略  
+          * ACCEPT_ALL: 接受所有新建客户端会话的请求  
+          * DENY_ALL: 拒绝所有新建客户端会话的请求
+        type: string
+        enum:
+          - ACCEPT_ALL
+          - DENY_ALL
+        example: ACCEPT_ALL
+      server_session_protection_policy:
+        type: string
+        description: >
+          服务服务器会话保护策略
+
+          * NO_PROTECTION:         不保护，缩容时如果有会话在实例上运行，直接缩容    
+
+          * FULL_PROTECTION:       完全保护，缩容时如果有会话在实例上运行，等待会话结束再缩容
+
+          * TIME_LIMIT_PROTECTION:
+          限时保护，缩容时如果有会话在实例上运行，等待一定时间后缩容，等待时间由server_session_protection_time_limit_minutes指定
+        example: NO_PROTECTION
+        enum:
+          - NO_PROTECTION
+          - FULL_PROTECTION
+          - TIME_LIMIT_PROTECTION
+      server_session_protection_time_limit_minutes:
+        type: integer
+        format: int32
+        description: >
+          server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
+        minimum: 5
+        maximum: 1440
+        default: 5
+        example: 5
+      creation_time:
+        description: 标识serversession创建的时间，UTC时间，遵循RFC3339规范
+        type: string
+        minLength: 0
+        maxLength: 2048
+        example: '2020-06-28T00:00:00Z'
+      termination_time:
+        description: 标识serversession终止的时间，UTC时间，遵循RFC3339规范
+        type: string
+        minLength: 0
+        maxLength: 2048
+        example: '2020-06-28T00:00:00Z'
+    required:
+      - name
+      - server_session_id
+      - creator_id
+      - fleet_id
+      - current_client_session_count
+      - max_client_session_count
+      - state
+      - state_reason
+      - client_session_creation_policy
+      - creation_time
+      - termination_time
+  ListServerSessionResponseBody:
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 服务器会话个数
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      server_sessions:
+        description: 服务器会话列表
+        minItems: 0
+        maxItems: 100
+        type: array
+        items:
+          $ref: '#/definitions/ServerSession'
+  BatchCreateClientSessionRequestBody:
+    properties:
+      clients:
+        type: array
+        description: 客户端信息列表
+        minItems: 1
+        maxItems: 25
+        items:
+          $ref: '#/definitions/Client'
+    required:
+      - clients
+  Client:
+    required:
+      - client_id
+    properties:
+      client_id:
+        type: string
+        description: 客户端id
+        minLength: 1
+        maxLength: 128
+        example: client-1
+      client_data:
+        type: string
+        description: 客户端自定义数据
+        minLength: 0
+        maxLength: 128
+        example: data-1
+  BatchCreateClientSessionResponseBody:
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 客户端会话数量
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      client_sessions:
+        description: 客户端会话列表
+        type: array
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/ClientSession'
+    required:
+      - count
+  ClientSession:
+    properties:
+      client_session_id:
+        type: string
+        description: 客户端会话的id，全局唯一
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+        minLength: 1
+        maxLength: 64
+      server_session_id:
+        type: string
+        description: 服务器会话的id，全局唯一
+        minLength: 1
+        maxLength: 64
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+      client_id:
+        description: 租户自定义的玩家ID
+        type: string
+        minLength: 1
+        maxLength: 128
+        example: client-1
+      client_data:
+        type: string
+        description: 与player相关的数据，租户自定义，系统不使用该数据
+        minLength: 0
+        maxLength: 128
+        example: data-1
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 1
+        maxLength: 64
+        example: fleet-77317ac6-acd8-11ec-a7e0-6805cab276a1
+      ip_address:
+        type: string
+        description: AuxProxy所在虚拟机的公网IP，需符合IP地址的规范
+        example: 100.10.10.90
+        minLength: 7
+        maxLength: 15
+      port:
+        type: integer
+        minimum: 1025
+        maximum: 60000
+        description: 进程提供服务的接口（需要符合端口要求：1~60000）
+        example: 8080
+      state:
+        type: string
+        description: |
+          client session所处的状态 
+          * RESERVED:   收到创建请求，客户端尚未接入服务器会话 
+          * ACTIVE:     客户端接入服务器会话 
+          * COMPLETED:  客户端已断开
+        enum:
+          - RESERVED
+          - ACTIVE
+          - COMPLETED
+      creation_time:
+        description: 标识clientsession创建的时间，UTC时间，遵循RFC3339规范
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: '2020-06-28T00:00:00Z'
+      termination_time:
+        description: 标识clientsession终止的时间，UTC时间，遵循RFC3339规范
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: '2020-06-28T00:00:00Z'
+  ListClientSessionResponseBody:
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 客户端会话数量
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      client_sessions:
+        type: array
+        minItems: 0
+        maxItems: 100
+        description: 客户端会话列表
+        items:
+          $ref: '#/definitions/ClientSession'
+  UpdateServerSessionRequestBody:
+    properties:
+      name:
+        type: string
+        description: server session的名字，不要求唯一
+        minLength: 1
+        maxLength: 1024
+        example: name-1
+      max_client_session_count:
+        type: integer
+        description: 一个服务器会话支持的最大客户端会话数
+        minimum: 1
+        maximum: 1024
+        example: 1
+      client_session_creation_policy:
+        type: string
+        example: ACCEPT_ALL
+        description: |-
+          * ACCEPT_ALL: 接受所有新创建client session的请求
+          * DENY_ALL:   拒绝所有新创建client session的请求
+        enum:
+          - ACCEPT_ALL
+          - DENY_ALL
+      server_session_protection_policy:
+        type: string
+        description: >-
+          服务服务器会话保护策略 * NO_PROTECTION:         不保护，缩容时如果有会话在实例上运行，直接缩容      *
+          TIME_LIMIT_PROTECTION:
+          限时保护，缩容时如果有会话在实例上运行，等待一定时间后缩容，等待时间由server_session_protection_time_limit_minutes指定
+        example: NO_PROTECTION
+        enum:
+          - NO_PROTECTION
+          - FULL_PROTECTION
+          - TIME_LIMIT_PROTECTION
+      server_session_protection_time_limit_minutes:
+        type: integer
+        format: int32
+        description: >-
+          server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
+        minimum: 5
+        maximum: 1440
+        default: 5
+        example: 5
+  ProcessCountsResponseBody:
+    properties:
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 1
+        maxLength: 64
+        example: fleet-77317ac6-acd8-11ec-a7e0-6805cab276a1
+      process_counts:
+        type: array
+        minItems: 0
+        maxItems: 10
+        description: 应用进程状态信息数组
+        items:
+          $ref: '#/definitions/ProcessCount'
+    required:
+      - fleet_id
+  ProcessCount:
+    required:
+      - state
+      - count
+    properties:
+      state:
+        type: string
+        description: |
+          进程状态
+          * ACTIVATING:  激活中 
+          * ACTIVE:      活跃 
+          * TERMINATING: 终止中 
+          * TERMINATED:  终止
+          * ERROR:       错误
+        enum:
+          - ACTIVATING
+          - ACTIVE
+          - TERMINATING
+          - TERMINATED
+          - ERROR
+        example: ACTIVATING
+      count:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 2147483647
+        description: 处于某种状态的应用进程的数量
+  CreateClientSessionRequestBody:
+    required:
+      - client_id
+    properties:
+      client_id:
+        type: string
+        description: 客户端id，同一个server session下，client id唯一
+        minLength: 1
+        maxLength: 128
+        example: client-1
+      client_data:
+        type: string
+        description: 客户端自定义数据
+        minLength: 0
+        maxLength: 128
+        example: data-1
+  CreateScalingPolicyResponsetBody:
+    properties:
+      scaling_policy:
+        $ref: '#/definitions/ScalingPolicy'
+    required:
+      - scaling_policy
+  CreateServerSessionResponseBody:
+    required:
+      - server_session
+    properties:
+      server_session:
+        $ref: '#/definitions/ServerSession'
+  ShowServerSessionResponseBody:
+    required:
+      - server_session
+    properties:
+      server_session:
+        $ref: '#/definitions/ServerSession'
+  CreateClientSessionResponseBody:
+    required:
+      - client_session
+    properties:
+      client_session:
+        $ref: '#/definitions/ClientSession'
+  ShowClientSessionResponseBody:
+    required:
+      - client_session
+    properties:
+      client_session:
+        $ref: '#/definitions/ClientSession'
+  ListProcessResponseBody:
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 应用进程数量
+        example: 1
+        maximum: 2147483647
+        minimum: 0
+      app_processes:
+        type: array
+        items:
+          $ref: '#/definitions/Process'
+        description: 应用进程数组
+        minItems: 0
+        maxItems: 100
+    required:
+      - count
+      - app_processes        
+  Process:
+    description: 单个应用进程
+    properties:
+      id:
+        type: string
+        description: 进程唯一标识ID
+        example: app-process-a6abeeb5-8098-4833-a891-ec1b3ddccabb
+        minLength: 1
+        maxLength: 64
+      ip:
+        type: string
+        description: 公网IP，需符合IP地址的规范
+        example: 100.10.10.90
+        minLength: 7
+        maxLength: 15
+      port:
+        type: integer
+        format: int32
+        minimum: 1025
+        maximum: 60000
+        example: 8080
+        description: 进程提供服务的接口（需要符合端口要求：1025~60000）
+      state:
+        type: string
+        enum:
+          - CREATING
+          - ACTIVE
+          - ERROR
+          - DELETING
+          - TERMINATED
+        example: CREATING
+        description: |-
+          进程状态 
+          * CREATING:     创建中 
+          * ACTIVE:       活跃 
+          * ERROR:        错误
+          * DELETING:     删除中 
+          * TERMINATED:   已终止
+      server_session_count:
+        type: integer
+        format: int32
+        description: 已占用服务端会话数
+        example: 1
+        minimum: 0
+        maximum: 1024
+      max_server_session_num:
+        type: integer
+        format: int32
+        description: 最大服务端会话数
+        example: 1
+        minimum: 0
+        maximum: 1024
+  ListBuildsResponseBody:
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 应用队列总数
+      builds:
+        items:
+          $ref: '#/definitions/Build'
+        type: array
+    description: 应用包列表
+    required:
+      - count
+      - builds
+  Build:
+    description: |-
+      应用包
+    properties:
+      build_id:
+        type: string
+        description: 应用包的ID
+      name:
+        type: string
+        description: 应用包名称. Project下唯一
+        minLength: 1
+        maxLength: 512
+        example: MyDemo
+      description:
+        type: string
+        description: 应用包描述
+        minLength: 2
+        maxLength: 512
+        example: this is a demo
+      state:
+        type: string
+        description: 应用包状态（初始化、就绪、校验失败）
+        enum:
+          - INITIALIZED
+          - READY
+          - FAILED
+      size:
+        type: integer
+        description: 应用包大小（bytes）
+        example: 123456
+      creation_time:
+        type: string
+        description: 创建时间
+      version:
+        type: string
+        description: 应用包版本
+      operating_system:
+        type: string
+        description: 操作系统类型
+      bind_fleet_num:
+        type: integer
+        description: 关联的应用队列个数      

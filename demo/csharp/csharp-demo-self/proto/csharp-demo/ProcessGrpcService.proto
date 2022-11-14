@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package processService;
+
+message HealthCheckRequest {
+
+}
+
+message HealthCheckResponse {
+  bool healthStatus = 1;
+}
+
+message SessionProperty {
+  string key = 1;
+  string value = 2;
+}
+
+message ServerSession {
+  string serverSessionId = 1;
+  string fleetId = 2;
+  string name = 3;
+  int32 maxClients = 4;
+  bool joinable = 5;
+  repeated SessionProperty sessionProperties = 6;
+  int32 port = 7;
+  string ipAddress = 8;
+  string sessionData = 9;
+}
+
+message StartServerSessionRequest {
+  ServerSession serverSession  = 1;
+}
+
+message ProcessTerminateRequest {
+  int64 terminationTime = 1;
+}
+
+message ProcessResponse {
+
+}
+
+service ProcessGrpcSdkService {
+  rpc OnHealthCheck (HealthCheckRequest) returns (HealthCheckResponse) {}
+
+  rpc OnStartServerSession(StartServerSessionRequest) returns (ProcessResponse) {}
+
+  rpc OnProcessTerminate(ProcessTerminateRequest) returns (ProcessResponse) {}
+
+}
