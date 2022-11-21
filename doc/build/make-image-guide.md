@@ -26,16 +26,16 @@
     chmod 750 auxproxy-{version}
     chmod 750 auxproxy-cleanup.sh
     chmod 750 auxproxy-start.sh
-    # 2. 新建log文件夹
-    # TODO:先测试不创建有什么影响
 
-    # 3. 新建security文件夹，生成密匙文件
+    # 2. 新建security文件夹，生成密匙文件
     mkdir -p /etc/auxproxy/security
     cd /etc/auxproxy/security
     openssl genrsa -out tls.key 3072
     openssl req -new -key tls.key -out tls.csr
     openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
-
+    
+    # 3. 上传json文件
+    # 上传client_hmac_conf.json与server_hmac_conf.json文件，样例见 /doc/build/auxproxy/security
     # 4. 在/etc/systemed/system下新建auxproxy.service，修改权限
     # auxproxy.service 样例见 /doc/build/auxproxy
     # 启动auxproxy.service保证镜像自动拉起

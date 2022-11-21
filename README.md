@@ -24,7 +24,6 @@ MetaSpace平台由四个服务组件组成：
         |   |-- api                 -- api技术文档
         |   |-- build               -- 测试环境部署指导
         |   |-- developer           -- 开发者对接指南(c#)
-        |   |-- manager             -- 管理面使用流程
         |-- img                     
         |-- tools                   -- 使用脚本工具
         |   |-- gcm_dec_enc         -- 密码的加密解密工具
