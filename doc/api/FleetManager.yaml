@@ -1827,21 +1827,21 @@ definitions:
       minimum:
         type: integer
         format: int32
-        description: 更新后最小进程数
+        description: 更新后最小实例数
         minimum: 0
         maximum: 200
         example: 1
       maximum:
         type: integer
         format: int32
-        description: 更新后最大进程数
+        description: 更新后最大实例数
         minimum: 0
         maximum: 200
         example: 1
       desired:
         type: integer
         format: int32
-        description: 更新后期望进程数
+        description: 更新后期望实例数
         minimum: 0
         maximum: 200
         example: 1
