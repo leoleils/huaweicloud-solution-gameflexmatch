@@ -34,7 +34,8 @@ MetaSpace平台由四个服务组件组成：
 2. 提供了`C#`语言的开发者对接指南，详见 `doc/developer`
 
 ## API技术文档
-提供了fleetmanager/appgateway/aass的API技术文档的Yaml文件，可以在[swagger](https://editor.swagger.io/)中导入查看
+提供了`fleetmanager`/`appgateway`/`aass`的API技术文档的`Yaml`文件，可以在[swagger](https://editor.swagger.io/)中导入查看，
+参考文档见：`/doc/api/`
 
 ## 部署指南
 1. 准备华为云资源
@@ -51,6 +52,9 @@ MetaSpace平台由四个服务组件组成：
         | 资源账号 |        RDS        | 2vCPUs/4GB |   1   |
         | 资源账号 | Gauss(for Influx) | 2vCPUs/4GB |   1   |
 
+        RDS可以按需选择单机或主备节点
+        influxdb选择集群(默认3节点)
+
    + 在华为云`ECS`云服务中购买`3`台`ECS`，分别部署`MetaSpace`服务组件，并放通安全组相关端口：
         |        |   服务组件   | 监听端口 | 是否必须配置EIP |
         | :----: | :----------: | :------: | :-------------: |
@@ -58,12 +62,14 @@ MetaSpace平台由四个服务组件组成：
         | ECS-02 |     aass     |   9091   |        N        |
         | ECS-03 | fleetmanager |  31002   |        Y        |
         入方向至少需要保障`60003`端口和`31002`端口开放
+
    + 准备RDS数据库，默认端口为`3306`，依次为三个服务组件(`appgateway`/`aass`/`fleetmanager`)创建数据库，创建用户并授予**读写权限**
    + 创建GaussDB(for Influx)：选择购买InfluxDB，并开启SSL安全连接，使用默认证书即可，为服务组件创建数据库(`aass`/`appgateway`)
    + 创建AK与SK，参考链接[管理IAM用户访问密匙](https://support.huaweicloud.com/usermanual-iam/iam_02_0003.html)
+   + 新建密匙对，用于弹性伸缩实例的密匙验证登录
 
 2. 将源码下载到本地，编译`linux`可执行的二进制文件，**以下步骤中{var}中的变量需按具体情况更改**
-   
+   本地直接编译默认不提供加密操作，若需安全加密则需自定义添加
 ```sh
     # 设置编译的可执行文件的操作系统
     go env -w GOOS=linux/window

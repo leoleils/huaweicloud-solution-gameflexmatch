@@ -7,7 +7,9 @@
     # 1. 建立文件夹
     mkdir -p /local/app/{app-name}
     cd /local/app/{app-name}
-    # 2. 上传应用包的可执行文件到该路径下如application.sh，并修改权限
+    # 2. 上传应用包的二进制可执行文件到该路径下如application，并修改权限
+    chmod 750 application
+    # 3. 上传应用的启动脚本到同一目录下如application.sh，并修改权限
     chmod 750 application.sh
 ```
 
@@ -38,6 +40,11 @@
     # auxproxy.service 样例见 /doc/build/auxproxy
     # 启动auxproxy.service保证镜像自动拉起
     systemctl enable auxproxy.service
+    systemctl start auxproxy.service
+
+    # 验证是否配置成功：
+    ps -aux | grep auxproxy
+    ps -aux | grep {application-name}
 
     # 5. 重启后auxproxy应用即自动拉起
 ```
