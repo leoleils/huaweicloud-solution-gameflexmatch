@@ -19,7 +19,10 @@ func getLogWriter() zapcore.WriteSyncer {
 	}
 	defer file.Close()
 
-    file.Chmod(0600)
+    err = file.Chmod(0600)
+	if err != nil {
+		return zapcore.AddSync(file)
+	}
 	return zapcore.AddSync(file)
 }
 

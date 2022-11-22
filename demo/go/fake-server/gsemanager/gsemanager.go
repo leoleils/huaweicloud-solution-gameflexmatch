@@ -194,7 +194,10 @@ func (g *gsemanager) TerminateGameServerSession() (*grpcsdk.AuxProxyResponse, er
 // 6. ProcessEnding
 func (g *gsemanager) ProcessEnding() (*grpcsdk.AuxProxyResponse, error) {
 	logger.Info("start to ProcessEnding")
-	pid, _ := strconv.ParseInt(g.pid, 10, 32)
+	pid, err := strconv.ParseInt(g.pid, 10, 32)
+	if err != nil {
+		logger.Error("str parse file")
+	}
 	req := &grpcsdk.ProcessEndingRequest{
 		Pid: int32(pid),
 	}

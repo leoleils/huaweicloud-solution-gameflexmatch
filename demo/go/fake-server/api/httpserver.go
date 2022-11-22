@@ -75,7 +75,7 @@ func (h *httpProcess) GetHttpPort() int {
 	return h.httpPort
 }
 
-func (h *httpProcess) writeResp(code int32, message string, result interface{}) (string, error) {
+func (h *httpProcess) writeResp(code int32, message string, result interface{}) string {
 	resp := &response{
 		Code:    code,
 		Message: message,
@@ -83,7 +83,10 @@ func (h *httpProcess) writeResp(code int32, message string, result interface{}) 
 	}
 
 	resultStr, err := json.Marshal(resp)
-	return string(resultStr), err
+	if err != nil {
+		logger.Error("json marshal fail")
+	}
+	return string(resultStr)
 }
 
 func (h *httpProcess) getContext() context.Context {
@@ -98,11 +101,7 @@ func (h *httpProcess) process_err(w http.ResponseWriter, err error) {
 		errMsg = st.Message()
 		code = int32(st.Code())
 	}
-	resp, err := h.writeResp(code, errMsg, nil)
-	if err != nil {
-		logger.Error("write response fail")
-		return
-	}
+	resp := h.writeResp(code, errMsg, nil)
 	fmt.Fprintf(w, "%s", resp)
 	return
 }
@@ -111,11 +110,7 @@ func (h *httpProcess) Login(w http.ResponseWriter, req *http.Request) {
 	playSessionId := req.URL.Query().Get("playerSessionId")
 
 	if playSessionId == "" {
-		resp, err := h.writeResp(http.StatusBadRequest, "playerSessionId cant be empty", nil)
-		if err != nil {
-			logger.Error("write response fail")
-			return
-		}
+		resp := h.writeResp(http.StatusBadRequest, "playerSessionId cant be empty", nil)
 		fmt.Fprintf(w, "%s", resp)
 		return
 	}
@@ -128,11 +123,7 @@ func (h *httpProcess) Login(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
-	if err != nil {
-		logger.Error("write response fail")
-		return
-	}
+	successMsg := h.writeResp(SUCCESS, SUCCESSMSG, nil)
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
@@ -141,7 +132,7 @@ func (h *httpProcess) LoginOut(w http.ResponseWriter, req *http.Request) {
 	playSessionId := req.URL.Query().Get("playerSessionId")
 
 	if playSessionId == "" {
-		resp, _ := h.writeResp(http.StatusBadRequest, "playerSessionId cant be empty", nil)
+		resp := h.writeResp(http.StatusBadRequest, "playerSessionId cant be empty", nil)
 		fmt.Fprintf(w, "%s", resp)
 		return
 	}
@@ -153,11 +144,7 @@ func (h *httpProcess) LoginOut(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
-	if err != nil {
-		logger.Error("write response fail")
-		return
-	}
+	successMsg := h.writeResp(SUCCESS, SUCCESSMSG, nil)
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
@@ -171,11 +158,7 @@ func (h *httpProcess) TerminateSession(w http.ResponseWriter, req *http.Request)
 		return
 	}
 
-	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
-	if err != nil {
-		logger.Error("write response fail")
-		return
-	}
+	successMsg := h.writeResp(SUCCESS, SUCCESSMSG, nil)
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
@@ -188,11 +171,7 @@ func (h *httpProcess) EndProcess(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
-	if err != nil {
-		logger.Error("write response fail")
-		return
-	}
+	successMsg := h.writeResp(SUCCESS, SUCCESSMSG, nil)
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
@@ -221,11 +200,7 @@ func (h *httpProcess) DescribePlayerSessions(w http.ResponseWriter, req *http.Re
 		return
 	}
 
-	result, err := h.writeResp(SUCCESS, SUCCESSMSG, resp)
-	if err != nil {
-		logger.Error("write response fail")
-		return
-	}
+	result := h.writeResp(SUCCESS, SUCCESSMSG, resp)
 	fmt.Fprintf(w, "%s", result)
 	return
 }
@@ -241,11 +216,7 @@ func (h *httpProcess) UpdatePlayerSessionCreationPolicy(w http.ResponseWriter, r
 		return
 	}
 
-	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
-	if err != nil {
-		logger.Error("write response fail")
-		return
-	}
+	successMsg := h.writeResp(SUCCESS, SUCCESSMSG, nil)
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
@@ -254,15 +225,11 @@ func (h *httpProcess) ReportCustomData(w http.ResponseWriter, req *http.Request)
 	currentCustomCountStr := req.URL.Query().Get("currentCustomCount")
 	maxCustomCountStr := req.URL.Query().Get("maxCustomCount")
 
-	currentCustomCount, errCurrent := (strconv.Atoi(currentCustomCountStr))
-	maxCustomCount, errMax := (strconv.Atoi(maxCustomCountStr))
+	currentCustomCount, errCurrent := strconv.Atoi(currentCustomCountStr)
+	maxCustomCount, errMax := strconv.Atoi(maxCustomCountStr)
 
 	if errCurrent != nil || errMax != nil {
-		resp, err := h.writeResp(http.StatusBadRequest, "currentCustomCount 或者 maxCustomCount必须是整数", nil)
-		if err != nil {
-			logger.Error("write response fail")
-			return
-		}
+		resp := h.writeResp(http.StatusBadRequest, "currentCustomCount 或者 maxCustomCount必须是整数", nil)
 		fmt.Fprintf(w, "%s", resp)
 		return
 	}
@@ -275,11 +242,7 @@ func (h *httpProcess) ReportCustomData(w http.ResponseWriter, req *http.Request)
 		return
 	}
 
-	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
-	if err != nil {
-		logger.Error("write response fail")
-		return
-	}
+	successMsg := h.writeResp(SUCCESS, SUCCESSMSG, nil)
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
@@ -298,21 +261,13 @@ func (h *httpProcess) SetHealthStatus(w http.ResponseWriter, req *http.Request) 
 		rpcServerIns.healthStatus = true
 	}
 
-	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
-	if err != nil {
-		logger.Error("write response fail")
-		return
-	}
+	successMsg := h.writeResp(SUCCESS, SUCCESSMSG, nil)
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
 
 func (h *httpProcess) HelloWorld(w http.ResponseWriter, req *http.Request) {
-	successMsg, err := h.writeResp(SUCCESS, "hello,world", nil)
-	if err != nil {
-		logger.Error("write response fail")
-		return
-	}
+	successMsg := h.writeResp(SUCCESS, "hello,world", nil)
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
