@@ -5,8 +5,7 @@
 `MetaSpace`是一个服务端应用托管平台，支持灵活的服务器伸缩、灰度发布、就近接入、跨地域容灾等多种特性，帮助开发者快速构建稳定、低延时的服务端应用，兼容所有`gRPC`支持的服务框架的部署与运行。
 
 ## 逻辑架构
-
-![逻辑架构图](./img/architecture.jpg "逻辑架构图")
+<img src="./img/architecture.jpg" width="80%">
 
 MetaSpace平台由四个服务组件组成：
 + [FleetManager](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-fleetmanager): 负责应用进程的全句话动态部署及管理，支持配置动态部署策略，基于成本或时延优化应用分布，负责弹性伸缩策略的配置和服务端会话、客户端会话与应用包的管理，服务端应用的灰度发布等
