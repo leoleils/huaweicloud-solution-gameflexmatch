@@ -11,11 +11,6 @@ steps:
   #在代码仓下载后，代码检查启动前
   pre_codecheck:
     - checkout # 检出当前源码库 单仓
-    - sh:
-        command: |
-          cd code/build/  # 如果没有自定义代码下载路径，codecheck默认下载路径为code，执行编译脚本时，需要先cd code
-          sh build.sh
-        effect_tool: binscope # 针对binscope下载完代码后执行的编译脚本
 tool_params:
   secsolar:
     source_dir: ./
@@ -30,5 +25,5 @@ tool_params:
 params:
   - name: exclude  # 排除检查文件目录
     value: (.+\.pb.go)   # 使用正则表达式，注意括号不能去掉
-  - name: includePaths
-    value: demo/go/fake-server
+  - name: includePaths  # 指定代码检查路径
+    value: ./demo/go/fake-server
