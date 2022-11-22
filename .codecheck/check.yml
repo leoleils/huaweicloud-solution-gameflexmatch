@@ -10,7 +10,8 @@ env:
 steps:
   #在代码仓下载后，代码检查启动前
   pre_codecheck:
-    - checkout # 检出当前源码库 单仓
+    - checkout: # 检出当前源码库 单仓
+      path: demo/go/fake-server
 tool_params:
   secsolar:
     source_dir: ./
@@ -26,4 +27,4 @@ params:
   - name: exclude  # 排除检查文件目录
     value: (.+\.pb.go)   # 使用正则表达式，注意括号不能去掉
   - name: includePaths  # 指定代码检查路径
-    value: demo/go
+    value: demo/go/fake-server
