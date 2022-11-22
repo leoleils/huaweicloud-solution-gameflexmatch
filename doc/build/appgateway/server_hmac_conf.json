@@ -1,0 +1,11 @@
+{
+    "auth_enable": false,
+    "keys": [
+        {
+            "enable": false
+        },
+        {
+            "enable": false
+        }
+    ]
+}

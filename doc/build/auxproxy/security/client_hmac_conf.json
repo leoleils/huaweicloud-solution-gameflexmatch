@@ -1,0 +1,9 @@
+{
+    "keys": {
+        "agw": {
+            "enable": false,
+            "ak": "auxproxy_ak_assigned_by_agw",
+            "sk": ""
+        }
+    }
+}
