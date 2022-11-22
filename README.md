@@ -11,14 +11,13 @@
 MetaSpace平台由四个服务组件组成：
 + [FleetManager](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-fleetmanager): 负责应用进程的全句话动态部署及管理，支持配置动态部署策略，基于成本或时延优化应用分布，负责弹性伸缩策略的配置和服务端会话、客户端会话与应用包的管理，服务端应用的灰度发布等
 + [AppGateway](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-appgateway): 负责应用进程、会话与客户端连接的管理，通过与`AuxProxy`通信获得应用进程信息，决策进程资源的调度
-+ [AASS](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-aass): 负责弹性伸缩组和弹性伸缩策略的管理与执行，以及服务端应用资源的监控，调用`AS`(弹性伸缩服务)实现资源的弹性伸缩
++ [AASS](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-aass): 负责弹性伸缩组和弹性伸缩策略的管理与执行，以及服务端应用资源的监控，调用华为云`AS`(弹性伸缩服务)实现资源的弹性伸缩
 + [AuxProxy](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-auxproxy): 在扩容出的实例中自动拉起，负责应用进程的创建、进程状态的上报以及应用进程的通信
 
 ## 组织结构
 
     |-- huaweicloud-solution-metaspace
         |-- demo
-        |   |-- csharp              -- c#语言的服务端SDK Demo
         |   |-- go                  -- go语言的服务单SDK Demo
         |-- doc
         |   |-- api                 -- api技术文档
@@ -29,7 +28,7 @@ MetaSpace平台由四个服务组件组成：
         |   |-- gcm_dec_enc         -- 密码的加密解密工具
         |   |-- vpc_peering         -- vpc之间创建对等连接工具
 ## 服务端SDK-Demo
-1. 提供`C#`与`go`语言的服务端`SDK Demo`，可以与`Metaspace`平台进行无缝对接
+1. 提供了`go`语言的服务端`SDK Demo`，可以与`Metaspace`平台进行无缝对接
 2. 提供了`C#`语言的开发者对接指南，详见 `doc/developer`
 
 ## API技术文档
