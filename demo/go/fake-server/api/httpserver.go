@@ -89,6 +89,19 @@ func (h *httpProcess) getContext() context.Context {
 	return context.Background()
 }
 
+func (h *httpProcess) process_err(w http.ResponseWriter, err error){
+	code := int32(http.StatusInternalServerError)
+	errMsg := err.Error()
+	st, ok := status.FromError(err)
+	if ok {
+		errMsg = st.Message()
+		code = int32(st.Code())
+	}
+	resp, _ := h.writeResp(code, errMsg, nil)
+	fmt.Fprintf(w, "%s", resp)
+	return
+}
+
 func (h *httpProcess) Login(w http.ResponseWriter, req *http.Request) {
 	playSessionId := req.URL.Query().Get("playerSessionId")
 
@@ -102,15 +115,7 @@ func (h *httpProcess) Login(w http.ResponseWriter, req *http.Request) {
 	_, err := gseManager.AcceptPlayerSession(playSessionId)
 
 	if err != nil {
-		code := int32(http.StatusInternalServerError)
-		errMsg := err.Error()
-		st, ok := status.FromError(err)
-		if ok {
-			errMsg = st.Message()
-			code = int32(st.Code())
-		}
-		resp, _ := h.writeResp(code, errMsg, nil)
-		fmt.Fprintf(w, "%s", resp)
+		h.process_err(w, err)
 		return
 	}
 
@@ -131,15 +136,7 @@ func (h *httpProcess) LoginOut(w http.ResponseWriter, req *http.Request) {
 	gseManager := gsemanager.GetGseManager()
 	_, err := gseManager.RemovePlayerSession(playSessionId)
 	if err != nil {
-		code := int32(http.StatusInternalServerError)
-		errMsg := err.Error()
-		st, ok := status.FromError(err)
-		if ok {
-			errMsg = st.Message()
-			code = int32(st.Code())
-		}
-		resp, _ := h.writeResp(code, errMsg, nil)
-		fmt.Fprintf(w, "%s", resp)
+		h.process_err(w, err)
 		return
 	}
 
@@ -153,15 +150,7 @@ func (h *httpProcess) TerminateSession(w http.ResponseWriter, req *http.Request)
 	_, err := gseManager.TerminateGameServerSession()
 
 	if err != nil {
-		code := int32(http.StatusInternalServerError)
-		errMsg := err.Error()
-		st, ok := status.FromError(err)
-		if ok {
-			errMsg = st.Message()
-			code = int32(st.Code())
-		}
-		resp, _ := h.writeResp(code, errMsg, nil)
-		fmt.Fprintf(w, "%s", resp)
+		h.process_err(w, err)
 		return
 	}
 
@@ -174,15 +163,7 @@ func (h *httpProcess) EndProcess(w http.ResponseWriter, req *http.Request) {
 	gseManager := gsemanager.GetGseManager()
 	_, err := gseManager.ProcessEnding()
 	if err != nil {
-		code := int32(http.StatusInternalServerError)
-		errMsg := err.Error()
-		st, ok := status.FromError(err)
-		if ok {
-			errMsg = st.Message()
-			code = int32(st.Code())
-		}
-		resp, _ := h.writeResp(code, errMsg, nil)
-		fmt.Fprintf(w, "%s", resp)
+		h.process_err(w, err)
 		return
 	}
 
@@ -207,15 +188,7 @@ func (h *httpProcess) DescribePlayerSessions(w http.ResponseWriter, req *http.Re
 	logger.Info("DescribePlayerSessions resp is ", zap.Any("resp", resp))
 
 	if err != nil {
-		code := int32(http.StatusInternalServerError)
-		errMsg := err.Error()
-		st, ok := status.FromError(err)
-		if ok {
-			errMsg = st.Message()
-			code = int32(st.Code())
-		}
-		resp, _ := h.writeResp(code, errMsg, nil)
-		fmt.Fprintf(w, "%s", resp)
+		h.process_err(w, err)
 		return
 	}
 
@@ -231,15 +204,7 @@ func (h *httpProcess) UpdatePlayerSessionCreationPolicy(w http.ResponseWriter, r
 	_, err := gseManager.UpdatePlayerSessionCreationPolicy(newPolicy)
 
 	if err != nil {
-		code := int32(http.StatusInternalServerError)
-		errMsg := err.Error()
-		st, ok := status.FromError(err)
-		if ok {
-			errMsg = st.Message()
-			code = int32(st.Code())
-		}
-		resp, _ := h.writeResp(code, errMsg, nil)
-		fmt.Fprintf(w, "%s", resp)
+		h.process_err(w, err)
 		return
 	}
 
@@ -265,15 +230,7 @@ func (h *httpProcess) ReportCustomData(w http.ResponseWriter, req *http.Request)
 	_, err := gseManager.ReportCustomData(int32(currentCustomCount), int32(maxCustomCount))
 
 	if err != nil {
-		code := int32(http.StatusInternalServerError)
-		errMsg := err.Error()
-		st, ok := status.FromError(err)
-		if ok {
-			errMsg = st.Message()
-			code = int32(st.Code())
-		}
-		resp, _ := h.writeResp(code, errMsg, nil)
-		fmt.Fprintf(w, "%s", resp)
+		h.process_err(w, err)
 		return
 	}
 
