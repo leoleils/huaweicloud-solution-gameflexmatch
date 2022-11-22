@@ -6,12 +6,13 @@ import (
 	"fake-server/gsemanager"
 	"fake-server/logger"
 	"fmt"
-	"go.uber.org/zap"
-	"google.golang.org/grpc/status"
 	"net"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"go.uber.org/zap"
+	"google.golang.org/grpc/status"
 )
 
 const (
@@ -89,7 +90,7 @@ func (h *httpProcess) getContext() context.Context {
 	return context.Background()
 }
 
-func (h *httpProcess) process_err(w http.ResponseWriter, err error){
+func (h *httpProcess) process_err(w http.ResponseWriter, err error) {
 	code := int32(http.StatusInternalServerError)
 	errMsg := err.Error()
 	st, ok := status.FromError(err)
@@ -97,7 +98,11 @@ func (h *httpProcess) process_err(w http.ResponseWriter, err error){
 		errMsg = st.Message()
 		code = int32(st.Code())
 	}
-	resp, _ := h.writeResp(code, errMsg, nil)
+	resp, err := h.writeResp(code, errMsg, nil)
+	if err != nil {
+		logger.Error("write response fail")
+		return
+	}
 	fmt.Fprintf(w, "%s", resp)
 	return
 }
@@ -106,7 +111,11 @@ func (h *httpProcess) Login(w http.ResponseWriter, req *http.Request) {
 	playSessionId := req.URL.Query().Get("playerSessionId")
 
 	if playSessionId == "" {
-		resp, _ := h.writeResp(http.StatusBadRequest, "playerSessionId cant be empty", nil)
+		resp, err := h.writeResp(http.StatusBadRequest, "playerSessionId cant be empty", nil)
+		if err != nil {
+			logger.Error("write response fail")
+			return
+		}
 		fmt.Fprintf(w, "%s", resp)
 		return
 	}
@@ -119,7 +128,11 @@ func (h *httpProcess) Login(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	successMsg, _ := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	if err != nil {
+		logger.Error("write response fail")
+		return
+	}
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
@@ -140,7 +153,11 @@ func (h *httpProcess) LoginOut(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	successMsg, _ := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	if err != nil {
+		logger.Error("write response fail")
+		return
+	}
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
@@ -154,7 +171,11 @@ func (h *httpProcess) TerminateSession(w http.ResponseWriter, req *http.Request)
 		return
 	}
 
-	successMsg, _ := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	if err != nil {
+		logger.Error("write response fail")
+		return
+	}
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
@@ -167,7 +188,11 @@ func (h *httpProcess) EndProcess(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	successMsg, _ := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	if err != nil {
+		logger.Error("write response fail")
+		return
+	}
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
@@ -179,7 +204,11 @@ func (h *httpProcess) DescribePlayerSessions(w http.ResponseWriter, req *http.Re
 	playerSessionStatusFilter := req.URL.Query().Get("playerSessionStatusFilter")
 	nextToken := req.URL.Query().Get("nextToken")
 	limitStr := req.URL.Query().Get("limit")
-	limit, _ := strconv.Atoi(limitStr)
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		logger.Error("str atoi fail")
+		return
+	}
 
 	gseManager := gsemanager.GetGseManager()
 	resp, err := gseManager.DescribePlayerSessions(gameServerSessionId, playerId, playerSessionId, playerSessionStatusFilter,
@@ -192,7 +221,11 @@ func (h *httpProcess) DescribePlayerSessions(w http.ResponseWriter, req *http.Re
 		return
 	}
 
-	result, _ := h.writeResp(SUCCESS, SUCCESSMSG, resp)
+	result, err := h.writeResp(SUCCESS, SUCCESSMSG, resp)
+	if err != nil {
+		logger.Error("write response fail")
+		return
+	}
 	fmt.Fprintf(w, "%s", result)
 	return
 }
@@ -208,7 +241,11 @@ func (h *httpProcess) UpdatePlayerSessionCreationPolicy(w http.ResponseWriter, r
 		return
 	}
 
-	successMsg, _ := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	if err != nil {
+		logger.Error("write response fail")
+		return
+	}
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
@@ -221,7 +258,11 @@ func (h *httpProcess) ReportCustomData(w http.ResponseWriter, req *http.Request)
 	maxCustomCount, errMax := (strconv.Atoi(maxCustomCountStr))
 
 	if errCurrent != nil || errMax != nil {
-		resp, _ := h.writeResp(http.StatusBadRequest, "currentCustomCount 或者 maxCustomCount必须是整数", nil)
+		resp, err := h.writeResp(http.StatusBadRequest, "currentCustomCount 或者 maxCustomCount必须是整数", nil)
+		if err != nil {
+			logger.Error("write response fail")
+			return
+		}
 		fmt.Fprintf(w, "%s", resp)
 		return
 	}
@@ -234,14 +275,22 @@ func (h *httpProcess) ReportCustomData(w http.ResponseWriter, req *http.Request)
 		return
 	}
 
-	successMsg, _ := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	if err != nil {
+		logger.Error("write response fail")
+		return
+	}
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
 
 func (h *httpProcess) SetHealthStatus(w http.ResponseWriter, req *http.Request) {
 	statusStr := req.URL.Query().Get("healthStatus")
-	status, _ := (strconv.Atoi(statusStr))
+	status, err := (strconv.Atoi(statusStr))
+	if err != nil {
+		logger.Error("strconv atoi fail")
+		return
+	}
 
 	if status == 0 {
 		rpcServerIns.healthStatus = false
@@ -249,13 +298,21 @@ func (h *httpProcess) SetHealthStatus(w http.ResponseWriter, req *http.Request) 
 		rpcServerIns.healthStatus = true
 	}
 
-	successMsg, _ := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	successMsg, err := h.writeResp(SUCCESS, SUCCESSMSG, nil)
+	if err != nil {
+		logger.Error("write response fail")
+		return
+	}
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }
 
 func (h *httpProcess) HelloWorld(w http.ResponseWriter, req *http.Request) {
-	successMsg, _ := h.writeResp(SUCCESS, "hello,world", nil)
+	successMsg, err := h.writeResp(SUCCESS, "hello,world", nil)
+	if err != nil {
+		logger.Error("write response fail")
+		return
+	}
 	fmt.Fprintf(w, "%s", successMsg)
 	return
 }

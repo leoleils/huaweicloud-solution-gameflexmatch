@@ -25,7 +25,6 @@ type rpcService struct {
 	grpcsdk.UnsafeProcessGrpcSdkServiceServer
 }
 
-//func GetRpcService() grpcsdk.GameServerGrpcSdkServiceServer {
 func GetRpcService() *rpcService {
 	once.Do(func() {
 		rpcServerIns = new(rpcService)
