@@ -96,7 +96,7 @@ MetaSpace平台由四个服务组件组成：
     mv auxproxy auxproxy-{version}
 ```
 
-1. 通过openssl获取自签名证书，可在任一台`ECS`下操作，三个服务组件使用相同的自签名证书：
+3. 通过openssl获取自签名证书，可在任一台`ECS`下操作，三个服务组件使用相同的自签名证书：
 
 ```sh
     # 1. 创建tlsSecret文件夹
