@@ -39,7 +39,7 @@ MetaSpace平台由四个服务组件组成：
 ## 部署指南
 1. 准备华为云资源
    + 管理账号与资源账号：管理账号用于`MetaSpace`的管理面服务组件的管理与执行，资源账号用于计算资源的申请
-   + 资源账号委托给管理账号：
+   + 创建委托资源账号委托给管理账号：
       - 创建委托可以参考链接[创建委托（委托方操作）](https://support.huaweicloud.com/intl/zh-cn/usermanual-iam/iam_06_0002.html)，并将资源账号委托给管理账号；
       - 授予该委托`DEW KeypairFullAccess`权限
       - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见`doc/build/agency.json`
@@ -202,8 +202,10 @@ MetaSpace平台由四个服务组件组成：
 7. 应用镜像制作详见 `doc/build/make-image-guide.md`
 8. 应用的资源数据导入详见 `doc/build/user-data-import.md`
 
-## 管理面运维使用指导
-详见 /doc/manager
+## 日志导出功能
+Metaspace平台可以借助华为云LTS服务，实现服务组件以及托管应用的日志转存功能
+详细过程步骤请[参考链接](https://support.huaweicloud.com/usermanual-lts/lts_04_1031.html)
+
 ## 辅助工具
 1. 加密工具：提供了加密敏感数据的工具，有需要可自行嵌入进源码中
 2. 对等连接工具：提供了两个`VPC`创建对等连接的工具
