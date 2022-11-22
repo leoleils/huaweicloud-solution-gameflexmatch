@@ -52,5 +52,5 @@ func main() {
 	case <-sigChan:
 		os.Exit(1)
 	}
-	defer close(sigChan)
+	
 }

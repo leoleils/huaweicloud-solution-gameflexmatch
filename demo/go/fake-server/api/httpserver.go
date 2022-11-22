@@ -249,7 +249,7 @@ func (h *httpProcess) ReportCustomData(w http.ResponseWriter, req *http.Request)
 
 func (h *httpProcess) SetHealthStatus(w http.ResponseWriter, req *http.Request) {
 	statusStr := req.URL.Query().Get("healthStatus")
-	status, err := (strconv.Atoi(statusStr))
+	status, err := strconv.Atoi(statusStr)
 	if err != nil {
 		logger.Error("strconv atoi fail")
 		return
