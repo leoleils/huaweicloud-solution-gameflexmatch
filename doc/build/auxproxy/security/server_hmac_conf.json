@@ -1,0 +1,10 @@
+{
+    "auth_enable": false,
+    "expire_seconds": 600,
+    "keys": [
+        {
+            "ak": "agw_ak_assigned_by_auxproxy",
+            "sk": ""
+        }
+    ]
+}

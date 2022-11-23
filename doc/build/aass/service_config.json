@@ -1,0 +1,18 @@
+{
+  "web": {
+    "http_port": 9091
+  },
+  "service_endpoint": {
+    "app_gateway": "{appgateway_host}:{appgateway_port}"
+  },
+  "default_configuration": {
+    "influx_measurement": "process",
+    "monitor_duration": "30s",
+    "work_node": {
+      "task_over_task_interval_seconds": 60,
+      "heart_beat_task_interval_seconds": 300,
+      "dead_check_task_interval_seconds": 300,
+      "max_dead_minutes": 10
+    }
+  }
+}

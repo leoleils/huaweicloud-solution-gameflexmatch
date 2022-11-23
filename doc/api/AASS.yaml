@@ -1,0 +1,1132 @@
+swagger: "2.0"
+info:
+  version: v1
+  title: AASS
+  description: |-
+    负责Region内的实例伸缩组及其伸缩策略的管理，其中伸缩策略为实例伸缩组的属性。
+    负责基于伸缩策略对实例进行弹性伸缩活动。
+    Region级的内部服务，仅面向FleetManager与APPGateway，不面向外部用户。
+basePath: /v1
+tags:
+  - name: InstanceScalingGroup
+  - name: ScalingPolicy
+schemes:
+  - https
+x-service-scope: region
+paths:
+  "/{project_id}/instance-scaling-groups":
+    post:
+      tags:
+        - InstanceScalingGroup
+      operationId: CreateInstanceScalingGroup
+      summary: 创建实例伸缩组
+      description: 创建实例伸缩组1
+      x-is-registered: "N"
+      x-support-sdk: "N"
+      produces:
+        - application/json
+      parameters:
+        - $ref: "#/parameters/projectId"
+        - in: body
+          name: CreateInstanceScalingGroupRequestBody
+          description: 创建实例伸缩组的请求体
+          required: true
+          schema:
+            $ref: "#/definitions/CreateInstanceScalingGroupReqBody"
+      x-request-examples-text-1: |-
+        {
+          "instance_scaling_group_name": "my-group",
+          "min_instance_number": 0,
+          "max_instance_number": 0,
+          "desire_instance_number": 0,
+          "cool_down_time": 0,
+          "subnet_id": "1d07cdc9-d9ce-d30a-e74c-d4ff97edd590",
+          "vpc_id": "9f33ada0-532c-a198-4a53-e6f2c9705f42",
+          "instance_type": "VM",
+          "vm_template": {
+              "available_flavor_ids": [
+                  "c3.large.2",
+                  "c6.large.2"
+              ],
+              "image_id": "673f0a4d-4df3-d5b2-a6b2-f7692ea25ab1",
+              "disks": [
+                  {
+                      "size": 32768,
+                      "volume_type": "SATA",
+                      "disk_type": "SYS"
+                  }
+              ],
+              "security_groups": [
+                  {
+                      "id": "ed357e1a-6703-8c34-6e34-15ebb4031d82"
+                  }
+              ],
+              "eip": {
+                  "ip_type": "5_bgp",
+                  "bandwidth": {
+                      "size": 10,
+                      "share_type": "WHOLE"
+                  }
+              },
+              "key_name": "string"
+          },
+          "instance_configuration": {
+              "runtime_configuration": {
+                  "process_configurations": [
+                      {
+                          "launch_path": "C://Game/startup.exe",
+                          "parameters": "--port=1234",
+                          "concurrent_executions": 50
+                      }
+                  ],
+                  "server_session_activation_timeout_seconds": 600,
+                  "max_concurrent_server_sessions_per_process": 50
+              },
+              "server_session_protection_policy": "NO_PROTECTION",
+              "server_session_protection_time_limit_minutes": 5
+          },
+          "fleet_id": "b21e52e9-b333-b68b-5edd-9453dfdd326f",
+          "enable_auto_scaling": false,
+          "agency": {
+              "name": "IAMAgency",
+              "domain_id": "a8327883-6b07-4497-9c61-68d03ee193a1"
+          }
+        }
+      responses:
+        "201":
+          description: ""
+          schema:
+            $ref: "#/definitions/CreateInstanceScalingGroupRespBody"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "400":
+          description: Error response
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+    get:
+      tags:
+        - InstanceScalingGroup
+      operationId: ListInstanceScalingGroup
+      summary: 查询实例伸缩列表
+      description: 查询实例伸缩列表
+      x-is-registered: "N"
+      x-support-sdk: "N"
+      produces:
+        - application/json
+      parameters:
+        - $ref: "#/parameters/projectId"
+        - $ref: "#/parameters/scalingGroupName"
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/offset"
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: "#/definitions/ListInstanceScalingGroupRespBody"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "400":
+          description: Error response.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "404":
+          description: Resource not found.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  "/{project_id}/instance-scaling-groups/{instance_scaling_group_id}":
+    delete:
+      tags:
+        - InstanceScalingGroup
+      operationId: DeleteInstanceScalingGroup
+      summary: 删除实例伸缩组
+      description: 指定实例伸缩组ID，删除实例伸缩组
+      x-is-registered: "N"
+      x-support-sdk: "N"
+      produces:
+        - application/json
+      parameters:
+        - $ref: "#/parameters/projectId"
+        - $ref: "#/parameters/scalingGroupId"
+      responses:
+        "204":
+          description: ""
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "400":
+          description: Error response.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "404":
+          description: Resource not found.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+    put:
+      tags:
+        - InstanceScalingGroup
+      operationId: UpdateInstanceScalingGroup
+      summary: 更新实例伸缩组
+      description: 指定实例伸缩组ID，更新实例伸缩组
+      x-is-registered: "N"
+      x-support-sdk: "N"
+      produces:
+        - application/json
+      parameters:
+        - $ref: "#/parameters/projectId"
+        - $ref: "#/parameters/scalingGroupId"
+        - name: UpdateInstanceScalingGroupRequestBody
+          in: body
+          required: true
+          description: 更新实例伸缩组的请求体
+          schema:
+            $ref: "#/definitions/UpdateInstanceScalingGroupReqBody"
+      x-request-examples-text-1: |-
+        {
+          "min_instance_number": 1,
+          "max_instance_number": 10,
+          "desire_instance_number": 1,
+          "cool_down_time": 10,
+          "instance_configuration": {
+              "runtime_configuration": {
+                  "process_configurations": [
+                      {
+                          "launch_path": "C://Game/startup.exe",
+                          "parameters": "--port=1234",
+                          "concurrent_executions": 1
+                      }
+                  ],
+                  "server_session_activation_timeout_seconds": 600,
+                  "max_concurrent_server_sessions_per_process": 1
+              },
+              "server_session_protection_policy": "NO_PROTECTION",
+              "server_session_protection_time_limit_minutes": 5
+          },
+          "disable_auto_scaling": false
+        }
+      responses:
+        "204":
+          description: ""
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "400":
+          description: Error response.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "404":
+          description: Resource not found.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+    get:
+      tags:
+        - InstanceScalingGroup
+      operationId: ShowInstanceScalingGroup
+      summary: 查询实例伸缩组基本信息
+      description: 查询实例伸缩组基本信息
+      x-is-registered: "N"
+      x-support-sdk: "N"
+      produces:
+        - application/json
+      parameters:
+        - $ref: "#/parameters/projectId"
+        - $ref: "#/parameters/scalingGroupId"
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: "#/definitions/ShowInstanceScalingGroupRespBody"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "400":
+          description: Error response.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "404":
+          description: Resource not found.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  "/instance-scaling-groups/{instance_scaling_group_id}/instance-configuration":
+    get:
+      tags:
+        - InstanceScalingGroup
+      operationId: ShowRuntimeConfiguration
+      summary: 查询实例伸缩组的实例配置
+      description: 指定实例伸缩组ID，查询实例伸缩组的实例配置
+      x-is-registered: "N"
+      x-support-sdk: "N"
+      parameters:
+        - $ref: "#/parameters/scalingGroupId"
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: "#/definitions/InstanceConfiguration"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "400":
+          description: Error response.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "404":
+          description: Resource not found.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  "/{project_id}/scaling-policies":
+    post:
+      tags:
+        - ScalingPolicy
+      operationId: CreateScalingPolicy
+      summary: 创建伸缩策略
+      description: 创建伸缩策略
+      x-is-registered: "N"
+      x-support-sdk: "N"
+      produces:
+        - application/json
+      parameters:
+        - $ref: "#/parameters/projectId"
+        - in: body
+          name: CreateScalingPolicyRequestBody
+          description: 创建伸缩策略的请求体
+          required: true
+          schema:
+            $ref: "#/definitions/CreateScalingPolicyReqBody"
+      x-request-examples-text-1: |-
+        {
+          "name": "string",
+          "instance_scaling_group_id": "af6af97b-d7a9-e6c7-043c-ae25180026fd",
+          "policy_type": "TARGET_BASED",
+          "target_based_configuration": {
+              "metric_name": "PERCENT_AVAILABLE_SERVER_SESSIONS",
+              "target_value": 100
+          },
+          "agency": {
+              "name": "IAMAgency",
+              "domain_id": "a8327883-6b07-4497-9c61-68d03ee193a1"
+          }
+        }
+      responses:
+        "201":
+          description: 创建弹性伸缩策略响应结构体.
+          schema:
+            $ref: "#/definitions/CreateScalingPolicyRespBody"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "400":
+          description: Error response.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+  "/{project_id}/scaling-policies/{scaling_policy_id}":
+    delete:
+      tags:
+        - ScalingPolicy
+      operationId: DeleteScalingPolicy
+      summary: 删除伸缩策略
+      description: 指定伸缩策略ID，删除该伸缩策略
+      x-is-registered: "N"
+      x-support-sdk: "N"
+      produces:
+        - application/json
+      parameters:
+        - $ref: "#/parameters/projectId"
+        - $ref: "#/parameters/scalingPolicyId"
+      responses:
+        "204":
+          description: ""
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "400":
+          description: Error response.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "404":
+          description: Resource not found.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+    put:
+      tags:
+        - ScalingPolicy
+      operationId: UpdateScalingPolicy
+      summary: 更新伸缩策略
+      description: 指定伸缩策略ID，更新该伸缩策略
+      x-is-registered: "N"
+      x-support-sdk: "N"
+      produces:
+        - application/json
+      parameters:
+        - $ref: "#/parameters/projectId"
+        - $ref: "#/parameters/scalingPolicyId"
+        - name: UpdateScalingPolicyRequestBody
+          description: 更新伸缩策略的请求体
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UpdateScalingPolicyReqBody"
+      x-request-examples-text-1: |-
+        {
+          "name": "my-policy",
+          "policy_type": "TARGET_BASED",
+          "target_based_configuration": {
+              "metric_name": "PERCENT_AVAILABLE_SERVER_SESSIONS",
+              "target_value": 10
+          }
+        }
+      responses:
+        "204":
+          description: ""
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "400":
+          description: Error response.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "404":
+          description: Resource not found.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: "#/definitions/ErrorRsp"
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+definitions:
+  ErrorRsp:
+    description: 失败时返回的错误对象.
+    required:
+      - error_code
+      - error_msg
+    properties:
+      error_code:
+        description: 错误码.
+        type: string
+        minLength: 8
+        maxLength: 36
+      error_msg:
+        description: 错误描述.
+        type: string
+        minLength: 2
+        maxLength: 512
+  CreateInstanceScalingGroupReqBody:
+    required:
+      - instance_scaling_group_name
+      - subnet_id
+      - vpc_id
+      - fleet_id
+      - instance_configuration
+      - instance_type
+      - agency
+    properties:
+      instance_scaling_group_name:
+        type: string
+        description: 实例伸缩组名称，不可重名。
+        minLength: 1
+        maxLength: 64
+        example: my-scaling-group
+      min_instance_number:
+        type: integer
+        format: int32
+        description: 最小实例数量，默认值为0。
+        minimum: 0
+        maximum: 200
+        default: 0
+      max_instance_number:
+        type: integer
+        format: int32
+        description: 最大实例数量，默认值为0。
+        minimum: 0
+        maximum: 200
+        default: 0
+      desire_instance_number:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 200
+        default: 0
+        description: 期望实例数量，满足：最小实例数≤期望实例数≤最大实例数。
+      cool_down_time:
+        type: integer
+        format: int32
+        description: |-
+          冷却时间，取值范围0-30，默认值为5，单位：分钟。
+          在每次伸缩活动完成之后，系统开始计算冷却时间。
+          伸缩组在冷却时间内，会拒绝由伸缩策略触发的伸缩活动，手动触发的伸缩活动不受限制。
+        minimum: 0
+        maximum: 30
+        default: 5
+      subnet_id:
+        type: string
+        pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+        description: 子网Id
+      vpc_id:
+        type: string
+        pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+        description: 虚拟私有云（VPC）Id
+      instance_type:
+        type: string
+        description: "实例类型,VM表示使用云服务器"
+        enum:
+          - VM
+      vm_template:
+        description: VM实例配置模板，当instance_type为VM时必选。
+        $ref: "#/definitions/VMTemplate"
+      instance_configuration:
+        description: 实例配置
+        $ref: "#/definitions/InstanceConfiguration"
+      fleet_id:
+        type: string
+        pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+        description: 所属进程队列编号
+      enable_auto_scaling:
+        type: boolean
+        description: 是否开启弹性伸缩，默认值为false。当禁止时策略仍旧存在，但是不会触发弹性伸缩动作。
+        default: "false"
+      agency:
+        description: 委托信息
+        $ref: "#/definitions/Agency"
+  CreateInstanceScalingGroupRespBody:
+    properties:
+      instance_scaling_group_id:
+        type: string
+        pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+        description: 应用进程弹性伸缩组ID
+    required:
+      - instance_scaling_group_id
+  UpdateInstanceScalingGroupReqBody:
+    properties:
+      min_instance_number:
+        type: integer
+        format: int32
+        description: 最小实例数量。
+        minimum: 0
+        maximum: 200
+      max_instance_number:
+        type: integer
+        format: int32
+        description: 最大实例数量。
+        minimum: 0
+        maximum: 200
+      desire_instance_number:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 200
+        description: 期望实例数量。
+      cool_down_time:
+        type: integer
+        format: int32
+        description: |-
+          冷却时间，取值范围0-30，单位：分钟。
+          在每次伸缩活动完成之后，系统开始计算冷却时间。
+          伸缩组在冷却时间内，会拒绝由伸缩策略触发的伸缩活动，手动触发的伸缩活动不受限制。
+        minimum: 0
+        maximum: 30
+      instance_configuration:
+        description: 实例配置
+        $ref: "#/definitions/InstanceConfiguration"
+      enable_auto_scaling:
+        type: boolean
+        description: 是否开启弹性伸缩，默认值为false。当禁止时策略仍旧存在，但是不会触发弹性伸缩动作。
+        default: "false"
+  ShowInstanceScalingGroupRespBody:
+    properties:
+      instance_scaling_group_id:
+        type: string
+        pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+        description: 应用进程弹性伸缩组ID
+      instance_scaling_group_name:
+        type: string
+        description: 实例伸缩组名称。
+        minLength: 1
+        maxLength: 64
+        example: my-scaling-group
+      min_instance_number:
+        type: integer
+        format: int32
+        description: 最小实例数量。
+        minimum: 0
+        maximum: 200
+      max_instance_number:
+        type: integer
+        format: int32
+        description: 最大实例数量。
+        minimum: 0
+        maximum: 200
+      desire_instance_number:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 200
+        description: 期望实例数量。
+      cool_down_time:
+        type: integer
+        format: int32
+        description: |-
+          冷却时间，单位：分钟。在每次伸缩活动完成之后，系统开始计算冷却时间。
+          伸缩组在冷却时间内，会拒绝由伸缩策略触发的伸缩活动，手动触发的伸缩活动不受限制。
+        minimum: 0
+        maximum: 30
+      subnet_id:
+        type: string
+        pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+        description: 子网Id
+      vpc_id:
+        type: string
+        pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+        description: 虚拟私有云（VPC）Id
+      fleet_id:
+        type: string
+        pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+        description: 所属进程队列编号
+      enable_auto_scaling:
+        type: boolean
+        description: 是否开启弹性伸缩，默认值为false。当禁止时策略仍旧存在，但是不会触发弹性伸缩动作。
+  ListInstanceScalingGroupRespBody:
+    description: 查询弹性伸缩组列表响应结构体.
+    properties:
+      count:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 100
+        description: 列表中伸缩组的数量
+      instance_scaling_groups:
+        type: array
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: "#/definitions/ShowInstanceScalingGroupRespBody"
+        description: 满足查询要求的实例伸缩组列表
+  CreateScalingPolicyRespBody:
+    description: 创建弹性伸缩策略响应结构体.
+    properties:
+      scaling_policy_id:
+        type: string
+        pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+        description: 伸缩策略ID
+    required:
+      - scaling_policy_id
+  CreateScalingPolicyReqBody:
+    properties:
+      name:
+        type: string
+        description: 策略名称
+        minLength: 1
+        maxLength: 1024
+      instance_scaling_group_id:
+        type: string
+        pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+        description: 策略关联的实例伸缩组ID
+      policy_type:
+        type: string
+        description: 策略类型，TARGET_BASED表示基于目标的策略。
+        default: TARGET_BASED
+        enum:
+          - TARGET_BASED
+      target_based_configuration:
+        description: 基于目标的伸缩配置
+        $ref: "#/definitions/TargetBasedConfiguration"
+    required:
+      - name
+      - instance_scaling_group_id
+      - policy_type
+  UpdateScalingPolicyReqBody:
+    properties:
+      name:
+        type: string
+        description: 策略名称.
+        minLength: 1
+        maxLength: 1024
+      target_based_configuration:
+        description: 基于目标的伸缩配置
+        $ref: "#/definitions/TargetBasedConfiguration"
+  VMTemplate:
+    description: VM实例配置模板
+    required:
+      - available_flavor_ids
+      - image_id
+      - disks
+      - security_groups
+      - key_name
+      - eip
+    properties:
+      available_flavor_ids:
+        type: array
+        minItems: 1
+        maxItems: 10
+        description: 可使用的云服务器的规格ID列表，最多支持选择10个规格。
+        items:
+          type: string
+          pattern: '[A-Za-z][0-9A-Za-z\.]{4,31}'
+        example:
+          - c6s.large.2
+          - s6.small.1
+      image_id:
+        type: string
+        pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+        description: 镜像ID
+      disks:
+        type: array
+        minItems: 1
+        maxItems: 1
+        description: 磁盘组信息，当前仅支持配置系统盘
+        items:
+          required:
+            - size
+            - volume_type
+            - disk_type
+          properties:
+            size:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 1024
+              description: |-
+                磁盘大小，容量单位为GB。
+                系统盘输入大小范围为1~1024，且不小于镜像中系统盘的最小(min_disk属性)值。
+            volume_type:
+              type: string
+              enum:
+                - SATA
+                - SAS
+                - SSD
+              description: |-
+                云服务器系统盘对应的磁盘类型，需要与系统所提供的磁盘类型相匹配。
+                SATA：普通IO磁盘类型。
+                SAS：高IO磁盘类型。
+                SSD：超高IO磁盘类型。
+            disk_type:
+              type: string
+              enum:
+                - SYS
+              description: 标识磁盘类型。SYS表示系统盘。
+      security_groups:
+        type: array
+        minItems: 1
+        maxItems: 10
+        description: 安全组信息
+        items:
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+              description: "安全组ID, UUID格式."
+      eip:
+        description: 弹性IP的配置
+        required:
+          - bandwidth
+        properties:
+          ip_type:
+            type: string
+            description: >-
+              弹性IP地址类型。
+              生产环境底层资源支持的枚举值： 5_bgp：全动态BGP。 5_sbgp：静态BGP。 5_telcom：中国电信。
+              5_union：中国联通。
+              测试环境底层资源支持的枚举值：5_g-vm
+            enum:
+              - 5_bgp
+              - 5_sbgp
+              - 5_telcom
+              - 5_union
+              - 5_g-vm
+            default: 5_bgp
+          bandwidth:
+            description: 带宽
+            required:
+              - size
+            properties:
+              size:
+                type: integer
+                format: int32
+                minimum: 1
+                maximum: 200
+                example: 10
+                description: "单实例公网出带宽最大值，单位Mbps，取值范围[1,200]，可提单提高配额。"
+      key_name:
+        description: 登录云服务器的SSH密钥名称
+        type: string
+        minLength: 1
+        maxLength: 64
+  InstanceConfiguration:
+    description: 实例配置
+    properties:
+      runtime_configuration:
+        description: 运行时配置
+        $ref: "#/definitions/RuntimeConfiguration"
+      server_session_protection_policy:
+        type: string
+        enum:
+          - NO_PROTECTION
+          - FULL_PROTECTION
+          - TIME_LIMIT_PROTECTION
+        description: >-
+          服务服务器会话保护策略。 NO_PROTECTION: 不保护，缩容时如果有会话在实例上运行，直接缩容。 FULL_PROTECTION:
+          完全保护，缩容时如果有会话在实例上运行，等待会话结束再缩容。 TIME_LIMIT_PROTECTION:
+          限时保护，缩容时如果有会话在实例上运行，等待一定时间后缩容，等待时间由server_session_protection_time_limit_minutes指定。
+        default: NO_PROTECTION
+      server_session_protection_time_limit_minutes:
+        type: integer
+        minimum: 5
+        maximum: 1440
+        default: 5
+        description: >-
+          服务器会话保护时间限制分钟数，server_session_protection_policy字段为TIME_LIMIT_PROTECTION时有效，设单位分钟，取值范围[5,1440]，默认值5。
+  TargetBasedConfiguration:
+    description: 扩缩容策略类型为TARGET_BASED时需要的配置
+    required:
+      - target_value
+      - metric_name
+    properties:
+      metric_name:
+        type: string
+        description: >-
+          指标名。PERCENT_AVAILABLE_SERVER_SESSIONS表示空闲server
+          session百分比，取值范围[1,100]。
+        enum:
+          - PERCENT_AVAILABLE_SERVER_SESSIONS
+      target_value:
+        type: integer
+        format: int32
+        description: 目标资源空闲百分比，取值1-100
+        minimum: 1
+        maximum: 100
+  RuntimeConfiguration:
+    properties:
+      process_configurations:
+        description: 进程相关配置。
+        type: array
+        minItems: 1
+        maxItems: 50
+        items:
+          $ref: "#/definitions/ProcessConfiguration"
+      server_session_activation_timeout_seconds:
+        description: >-
+          下发创建server session请求到server
+          session的状态变为可用状态的超时时间，单位秒，取值范围[1,600]，默认值600。
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 600
+        default: 600
+      max_concurrent_server_sessions_per_process:
+        type: integer
+        format: int32
+        description: "单进程最大并发server session数量，取值范围[1,50]，默认值1。"
+        minimum: 1
+        maximum: 50
+        default: 1
+  ProcessConfiguration:
+    description: 应用进程描述
+    required:
+      - launch_path
+      - parameters
+      - concurrent_executions
+    properties:
+      launch_path:
+        type: string
+        description: 应用进程启动程序路径，linux风格文件路径
+        minLength: 0
+        maxLength: 1024
+        example: "C://Game/startup.exe"
+      parameters:
+        type: string
+        description: 应用进程启动入参
+        minLength: 0
+        maxLength: 1024
+        example: "--port=1234"
+      concurrent_executions:
+        type: integer
+        format: int32
+        description: 并发应用进程数
+        minimum: 1
+        maximum: 50
+  Agency:
+    required:
+      - name
+      - domain_id
+    properties:
+      name:
+        type: string
+        example: IAMAgency
+        description: 委托名称
+        minLength: 0
+        maxLength: 64
+      domain_id:
+        type: string
+        description: 委托方的帐号ID
+        pattern: "[0-9a-f]{32}"
+        example: a83278836b0744979c6168d03ee193a1
+parameters:
+  contentType:
+    name: Content-Type
+    in: header
+    type: string
+    description: MIME类型；带请求体的请求该字段需为 application/json;charset=utf-8
+    required: true
+    minLength: 1
+    maxLength: 64
+  projectId:
+    name: project_id
+    in: path
+    type: string
+    description: >
+      项目ID，获取方法请参考[获取项目ID](https://support.huaweicloud.com/api-mpc/mpc_04_0064.html)
+    required: true
+    pattern: "[0-9a-f]{32}"
+  offset:
+    name: offset
+    in: query
+    type: integer
+    format: int32
+    description: 查询偏移量
+    required: false
+    minimum: 0
+    maximum: 2147483647
+    default: 0
+  limit:
+    name: limit
+    in: query
+    type: integer
+    format: int32
+    description: 查询的限制数量
+    required: false
+    minimum: 0
+    maximum: 100
+    default: 100
+  scalingGroupId:
+    name: instance_scaling_group_id
+    in: path
+    type: string
+    description: 实例伸缩组ID
+    required: true
+    pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+  scalingGroupName:
+    name: instance_scaling_group_name
+    in: query
+    type: string
+    description: 实例伸缩组名称
+    required: false
+    minLength: 1
+    maxLength: 64
+  scalingPolicyId:
+    name: scaling_policy_id
+    in: path
+    type: string
+    description: 伸缩策略ID
+    required: true
+    pattern: "[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"

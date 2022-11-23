@@ -1,0 +1,43 @@
+{
+    "service_endpoint": {
+        "iam_service": {
+            "cn-north-4": "https://iam.region.{endpoint}"
+        },
+        "auto_scaling_service": {
+            "cn-north-4": "https://{aass_host}:{aass_port}"
+        },
+        "app_gateway": {
+            "cn-north-4": "https://{appgateway_host}:{appgateway_port}"
+        },
+        "vpc_service": {
+            "cn-north-4": "https://vpc.{region}.{endpoint}"
+        },
+        "internal_iam_endpoint": ""
+    },
+    "fleet_cidr": {
+        "from": "10.100.0.0",
+        "to": "10.240.0.0",
+        "vpc_netmask": 19,
+        "subnet_netmask": 20
+    },
+    "resource": {
+        "specification": {
+            "cn-north-4": {
+                "scase_standard_2u4g": "{specification-1},{specification-2}",
+                "scase_standard_4u8g": "{specification-1},{specification-2}",
+                "scase_standard_8u16g": "{specification-1}"
+            }
+        }
+    },
+    "internal_inbound_permissions": [
+        {
+            "protocol": "TCP",
+            "ip_range": "{appgateway_host}/32",
+            "from_port": 60001,
+            "to_port": 60001
+        }
+    ],
+    "eip_type": {
+        "{region}": "5_bgp"
+    }
+}

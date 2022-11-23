@@ -1,0 +1,15 @@
+[Unit]
+Description=auxproxy.service
+
+[Service]
+Type=simple
+User=root        
+Group=root       
+ExecStart=/etc/auxproxy/auxproxy-start.sh
+ExecStop=/etc/auxproxy/auxproxy-cleanup.sh
+Restart=always
+RestartSec=30
+TimeoutSec=0
+
+[Install]
+WantedBy=multi-user.target
