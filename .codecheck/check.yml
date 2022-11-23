@@ -10,8 +10,7 @@ env:
 steps:
   #在代码仓下载后，代码检查启动前
   pre_codecheck:
-    - checkout:
-        path: demo/go/fake-server
+    - checkout
     - sh:
         command: |
           cd $WORKSPACE/code/demo/go/fake-server
@@ -19,8 +18,11 @@ steps:
 tool_params:
   secsolar:
     source_dir: ./
+    need_compile: false
   binscope:
-    #以下参数不支持正则匹配
+    # 以下参数不支持正则匹配
+    
+    # compile_root_dir: $WORKSPACE/code/demo/go/fake-server
     scan_dirs: ../code  # scan_dirs&scan_file至少2选1，相对于代码下载根目录的目录路径, 支持多路径，英文逗号分隔；此处配置目录为编译成二进制文件所在的目录。
     #scan_file: ./mConductor      # scan_dirs&scan_file至少2选1，相对于代码下载根目录的文件路径, scan_file只能填一个路径 ，此处配置目录为编译成二进制文件所在的目录。
     relative_dir: code           # 必填，只支持单个路径, 用户填写，按用户填下的内容传给binscope，建议指定根目录code，用来做扫描项的基准目录，避免问题重复扫描出来。
