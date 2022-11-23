@@ -14,7 +14,7 @@ steps:
     - sh:
       command: |
         #! /bin/bash
-        cd ./demo/go/fake-server
+        cd demo/go/fake-server
       effect_tool: gobuild
 tool_params:
   secsolar:
