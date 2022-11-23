@@ -10,7 +10,6 @@ env:
 steps:
   #在代码仓下载后，代码检查启动前
   pre_codecheck:
-    - checkout # 检出当前源码库 单仓
     - sh:
       command: |
         #! /bin/bash
