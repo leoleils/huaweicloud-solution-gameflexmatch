@@ -13,7 +13,6 @@ steps:
     - sh:
       command: |
         cd $WORKSPACE/code/demo/go/fake-server
-        ls $WORKSPACE//code/demo/go/fake-server
       effect_tool: gobuild
 tool_params:
   secsolar:
