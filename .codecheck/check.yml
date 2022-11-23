@@ -11,9 +11,9 @@ steps:
   #在代码仓下载后，代码检查启动前
   pre_codecheck:
     - sh:
-      command: |
-        cd $WORKSPACE/code/demo/go/fake-server
-      effect_tool: gobuild
+        command: |
+          cd $WORKSPACE/code/demo/go/fake-server
+        effect_tool: gobuild
 tool_params:
   secsolar:
     source_dir: ./
