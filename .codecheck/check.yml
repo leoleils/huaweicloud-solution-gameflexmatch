@@ -12,8 +12,8 @@ steps:
   pre_codecheck:
     - sh:
       command: |
-        cd $WORKSPACE/demo/go/fake-server
-        ls $WORKSPACE/demo/go/fake-server
+        cd $WORKSPACE/code/demo/go/fake-server
+        ls $WORKSPACE//code/demo/go/fake-server
       effect_tool: gobuild
 tool_params:
   secsolar:
