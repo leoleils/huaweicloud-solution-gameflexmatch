@@ -33,8 +33,7 @@ MetaSpace平台由四个服务组件组成：
 2. 提供了`C#`语言的开发者对接指南，详见 [doc/developer](/doc/developer/developer_guide.md)
 
 ## API技术文档
-提供了`fleetmanager`/`appgateway`/`aass`的API技术文档的`Yaml`文件，可以在[swagger](https://editor.swagger.io/)中导入查看，
-参考文档见：[/doc/api/](/doc/api/)
+提供了[fleetmanager](/doc/api/FleetManager.yaml)/[appgateway](/doc/api/AppGateway.yaml)/[aass](/doc/api/AASS.yaml)的API技术文档的`Yaml`文件，可以在[swagger](https://editor.swagger.io/)中导入查看，参考文档详见：`/doc/api/`
 
 ## 单点架构部署指南
 1. 准备华为云资源
@@ -42,7 +41,7 @@ MetaSpace平台由四个服务组件组成：
    + 创建委托资源账号委托给管理账号：
       - 创建委托可以参考链接[创建委托（委托方操作）](https://support.huaweicloud.com/intl/zh-cn/usermanual-iam/iam_06_0002.html)，并将资源账号委托给管理账号；
       - 授予该委托`DEW KeypairFullAccess`权限
-      - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见`doc/build/agency.json`
+      - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见[doc/build/agency.json](/doc/build/agency.json)
    + 准备管理面资源，并将管理面资源部署在同一`VPC`下，以下测试规格，具体规格按需选择：
     
         | 购买账号 |     资源类型      |  资源规格  | 数量  |

@@ -34,9 +34,14 @@
     openssl req -new -key tls.key -out tls.csr
     openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
     
-    # 3. 上传json文件
-    # 上传client_hmac_conf.json与server_hmac_conf.json文件，样例见 /doc/build/auxproxy/security
-    # 4. 在/etc/systemed/system下新建auxproxy.service，修改权限
+    # 3. 新建logs文件夹
+    mkdir -p /etc/auxproxy/logs
+
+    # 4. 上传json文件
+    # 上传client_hmac_conf.json与server_hmac_conf.json文件，
+    # 样例见 /doc/build/auxproxy/security
+
+    # 5. 在/etc/systemed/system下新建auxproxy.service，修改权限
     # auxproxy.service 样例见 /doc/build/auxproxy
     # 启动auxproxy.service保证镜像自动拉起
     systemctl enable auxproxy.service
@@ -44,7 +49,7 @@
 
     # 验证是否配置成功：
     ps -aux | grep auxproxy
-    ps -aux | grep {application-name}
-
-    # 5. 重启后auxproxy应用即自动拉起
 ```
+
+4. 将该ECS系统盘打包成Image，可参考[链接](https://support.huaweicloud.com/usermanual-ims/ims_01_0202.html)
+5. 镜像打包完成
