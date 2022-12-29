@@ -2,12 +2,14 @@
 ---
 ## 简介
 
-`MetaSpace`是一个服务端应用托管平台，支持灵活的服务器伸缩、灰度发布、就近接入、跨地域容灾等多种特性，帮助开发者快速构建稳定、低延时的服务端应用，兼容所有`gRPC`支持的服务框架的部署与运行。
+`MetaSpace`是一个服务端应用托管平台，包含四个服务组件(`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`)，可以实现应用的托管、托管应用所需资源的弹性伸缩、应用进程的资源调度管理、应用的灰度发布，多`region`部署时可以实现用户的就近接入，减少时延，以及服务资源的跨地域容灾。可以帮助开发者快速构建稳定、低延时的多人游戏的部署环境，并节省大量的运维成本，支持支持`Unreal`、`Unity`引擎，`C#`、`C++`以及`gRPC`支持的任何语言的`server`框架部署和运行。
+
 
 ## 逻辑架构
 <img src="./img/architecture.jpg" width="80%">
 
 MetaSpace平台由四个服务组件组成：
++ [Console](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-console): 为运维人员提供一个端到端的运维平台，提供了重要指标监控、fleet管理、应用打包、灰度发布以及基本的信息配置等功能
 + [FleetManager](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-fleetmanager): 负责应用进程的全句话动态部署及管理，支持配置动态部署策略，基于成本或时延优化应用分布，负责弹性伸缩策略的配置和服务端会话、客户端会话与应用包的管理，服务端应用的灰度发布等
 + [AppGateway](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-appgateway): 负责应用进程、会话与客户端连接的管理，通过与`AuxProxy`通信获得应用进程信息，决策进程资源的调度
 + [AASS](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-aass): 负责弹性伸缩组和弹性伸缩策略的管理与执行，以及服务端应用资源的监控，调用华为云`AS`(弹性伸缩服务)实现资源的弹性伸缩
@@ -17,7 +19,7 @@ MetaSpace平台由四个服务组件组成：
 
     |-- huaweicloud-solution-metaspace
         |-- demo
-        |   |-- go                  -- go语言的服务单SDK Demo
+        |   |-- go                  -- go语言的服务SDK Demo
         |-- doc
         |   |-- api                 -- api技术文档
         |   |-- build               -- 测试环境部署指导
@@ -28,7 +30,7 @@ MetaSpace平台由四个服务组件组成：
         |   |-- vpc_peering         -- vpc之间创建对等连接工具
 ## 服务端SDK-Demo
 1. 提供了`go`语言的服务端`SDK Demo`，可以与`Metaspace`平台进行无缝对接
-2. 提供了`C#`语言的开发者对接指南，详见 `doc/developer`
+2. 提供了`C#`语言的开发者对接指南，详见 [doc/developer](/doc/developer/developer_guide.md)
 
 ## API技术文档
 提供了`fleetmanager`/`appgateway`/`aass`的API技术文档的`Yaml`文件，可以在[swagger](https://editor.swagger.io/)中导入查看，

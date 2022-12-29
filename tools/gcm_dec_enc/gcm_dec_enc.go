@@ -8,8 +8,10 @@ import (
 )
 
 const (
-	key   = "mTqBnYoyhQm8xOkRFkaUU7X2"
-	nonce = "0xCWIOTotifzJMnD"
+	// aes-gcm加密的24位秘钥
+	key   = "************************"
+	// aes-gcm加密的16位初始向量
+	nonce = "****************"
 )
 
 func AESGCMEncrypt(plaintextStr string) (string, error) {
