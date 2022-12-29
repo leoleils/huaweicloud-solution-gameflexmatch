@@ -34,7 +34,7 @@ MetaSpace平台由四个服务组件组成：
 
 ## API技术文档
 提供了`fleetmanager`/`appgateway`/`aass`的API技术文档的`Yaml`文件，可以在[swagger](https://editor.swagger.io/)中导入查看，
-参考文档见：[/doc/api/](/doc/api)
+参考文档见：[/doc/api/](/doc/api/)
 
 ## 单点架构部署指南
 1. 准备华为云资源
