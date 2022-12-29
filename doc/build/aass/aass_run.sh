@@ -36,7 +36,7 @@ export HTTPS_LISTEN_ADDR=0.0.0.0
 
 function start_service(){
 	cd /home/bin/
-	nohup ./aass-${version} &
+	./aass-${version}
 }
 
 function main(){

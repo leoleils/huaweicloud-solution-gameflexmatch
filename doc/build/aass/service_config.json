@@ -13,6 +13,7 @@
       "heart_beat_task_interval_seconds": 300,
       "dead_check_task_interval_seconds": 300,
       "max_dead_minutes": 10
-    }
+    },
+    "enterprise_project_id": "enterprise_project_id"
   }
 }

@@ -92,8 +92,7 @@ MetaSpace平台由四个服务组件组成：
     # 4. auxproxy
     cd ~/huaweicloud-solution-metaspace-auxproxy
     go build ./cmd/auxproxy.go
-    # 修改文件名
-    mv auxproxy auxproxy-{version}
+
 ```
 
 3. 通过openssl获取自签名证书，可在任一台`ECS`下操作，三个服务组件使用相同的自签名证书：
@@ -136,8 +135,17 @@ MetaSpace平台由四个服务组件组成：
 
     # 5. 验证是否执行成功
     ps -aux | grep appgateway
-    # 6. 查看运行日志
-    vim /home/appgateway/bin/nohup.out
+    
+    # 6. Ctrl+c 关掉进程后配置开机自启动
+    # 在/etc/systemed/system下新建appgateway.service
+    # appgateway.service 样例见 /doc/build/appgateway
+    # 启动appgateway.service保证镜像自动拉起
+    systemctl enable appgateway.service
+    systemctl start appgateway.service
+
+    # 7. 验证是否成功
+    ps -aux | grep appgateway
+
 ```
 
 5. 安装`aass`服务组件
@@ -163,8 +171,16 @@ MetaSpace平台由四个服务组件组成：
     sh ./aass_run.sh
     ps -aux | grep aass
 
-    # 8.查看日志
-    vim /home/aass/bin/nohup.out
+    # 8. Ctrl+c 关掉进程后配置开机自启动
+    # 在/etc/systemed/system下新建aass.service
+    # aass.service 样例见 /doc/build/aass
+    # 启动aass.service保证镜像自动拉起
+    systemctl enable aass.service
+    systemctl start aass.service
+
+    # 9. 验证是否成功
+    ps -aux | grep aass
+
 ```
 
 6. 安装`fleetmanager`服务组件
@@ -194,12 +210,19 @@ MetaSpace平台由四个服务组件组成：
     sh ./fleetmanager_run.sh
     ps -aux | grep fleetmanager
 
-    # 8. 查看日志
-    vim /home/fleetmanager/bin/nohup.out
+    # 8. Ctrl+c 关掉进程后配置开机自启动
+    # 在/etc/systemed/system下新建fleetmanager.service
+    # fleetmanager.service 样例见 /doc/build/fleetmanager
+    # 启动fleetmanager.service保证镜像自动拉起
+    systemctl enable fleetmanager.service
+    systemctl start fleetmanager.service
+
+    # 9. 验证是否成功
+    ps -aux | grep fleetmanager
 ```
 
-7. 应用镜像制作详见 `doc/build/make-image-guide.md`
-8. 应用的资源数据导入详见 `doc/build/user-data-import.md`
+7. 应用镜像制作详见 [doc/build/make-image-guide.md](/doc/build/make-image-guide.md)
+8. 应用的资源数据导入详见 [doc/build/user-data-import.md](/doc/build/user-data-import.md)
 
 ## 日志导出功能
 Metaspace平台可以借助华为云LTS服务，实现服务组件以及托管应用的日志转存功能

@@ -41,7 +41,7 @@
     # 上传client_hmac_conf.json与server_hmac_conf.json文件，
     # 样例见 /doc/build/auxproxy/security
 
-    # 5. 在/etc/systemed/system下新建auxproxy.service，修改权限
+    # 5. 在/etc/systemed/system下新建auxproxy.service
     # auxproxy.service 样例见 /doc/build/auxproxy
     # 启动auxproxy.service保证镜像自动拉起
     systemctl enable auxproxy.service

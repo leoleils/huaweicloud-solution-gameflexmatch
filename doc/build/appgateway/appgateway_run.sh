@@ -23,8 +23,7 @@ export AUXPROXY_IP_MODE=public
 
 function start_service(){
 	cd /home/appgateway/bin/
-	nohup ./appgateway-${version} -gateway-addrress $GATEWAY_ADDR -database-address $DATABASE_ADDR -database-name $DATABASE_NAME -database-user-name $DATABASE_USER -database-password $DATABASE_PASSWORD --aass-address $AASS_ADDR --auxproxy-ip-mode $AUXPROXY_IP_MODE -influx-address $INFLUX_ADDR -influx-username $INFLUX_USER -influx-password $INFLUX_PASSWORD -influx-dbname $INFLUX_DBNAME &
-
+	./appgateway-${version} -gateway-addrress $GATEWAY_ADDR -database-address $DATABASE_ADDR -database-name $DATABASE_NAME -database-user-name $DATABASE_USER -database-password $DATABASE_PASSWORD --aass-address $AASS_ADDR --auxproxy-ip-mode $AUXPROXY_IP_MODE -influx-address $INFLUX_ADDR -influx-username $INFLUX_USER -influx-password $INFLUX_PASSWORD -influx-dbname $INFLUX_DBNAME
 }
 
 
