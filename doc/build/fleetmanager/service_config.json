@@ -23,9 +23,8 @@
     "resource": {
         "specification": {
             "cn-north-4": {
-                "scase_standard_2u4g": "{specification-1},{specification-2}",
-                "scase_standard_4u8g": "{specification-1},{specification-2}",
-                "scase_standard_8u16g": "{specification-1}"
+                "scase_standard_4u8g": "{specification-1},{specification-n}",
+                "scase_standard_8u16g": "{specification-1},{specification-n}"
             }
         }
     },

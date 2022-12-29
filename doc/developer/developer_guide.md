@@ -10,7 +10,7 @@
 
 ## 接口对接
 接口对接分为两部分，一部分是租户管理面与MetaSpace服务的交互（通过RESTful API交互），一部分是与租户托管应用与MetaSpace服务的交互（通过集成SDK交互）整体流程如下：
-<img src="./../../img/developer.jpg" width="80%">
+<img src="/img/developer.jpg" width="80%">
 
 ### 租户管理面与metaspace服务的交互接口说明：
 详细接口信息看`API`接口文档，下面对接口做一些说明：

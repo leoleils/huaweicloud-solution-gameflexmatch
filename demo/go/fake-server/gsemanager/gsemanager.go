@@ -113,7 +113,11 @@ func (g *gsemanager) getContext() context.Context {
 func (g *gsemanager) ProcessReady(logPath []string, clientPort int32, grpcPort int32) error {
 	logger.Info("start to processready", zap.Any("logPath", logPath), zap.Int32("clientPort", clientPort),
 		zap.Int32("grpcPort", grpcPort))
-	pid, _ := strconv.ParseInt(g.pid, 10, 32)
+	pid, err := strconv.ParseInt(g.pid, 10, 32)
+	if err != nil {
+		logger.Info("pid parse fail", zap.Error(err))
+		return err
+	}
 	req := &grpcsdk.ProcessReadyRequest{
 		LogPathsToUpload: logPath,
 		ClientPort:       clientPort,
@@ -121,7 +125,7 @@ func (g *gsemanager) ProcessReady(logPath []string, clientPort int32, grpcPort i
 		Pid:              int32(pid),
 	}
 
-	_, err := g.rpcClient.ProcessReady(g.getContext(), req)
+	_, err = g.rpcClient.ProcessReady(g.getContext(), req)
 	if err != nil {
 		logger.Info("ProcessReady fail", zap.Error(err))
 		return err
@@ -190,7 +194,10 @@ func (g *gsemanager) TerminateGameServerSession() (*grpcsdk.AuxProxyResponse, er
 // 6. ProcessEnding
 func (g *gsemanager) ProcessEnding() (*grpcsdk.AuxProxyResponse, error) {
 	logger.Info("start to ProcessEnding")
-	pid, _ := strconv.ParseInt(g.pid, 10, 32)
+	pid, err := strconv.ParseInt(g.pid, 10, 32)
+	if err != nil {
+		logger.Error("str parse file")
+	}
 	req := &grpcsdk.ProcessEndingRequest{
 		Pid: int32(pid),
 	}

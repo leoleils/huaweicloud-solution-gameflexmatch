@@ -1,16 +1,14 @@
 [Unit]
-Description=auxproxy.service
+Description=aass
 
 [Service]
 Type=simple
 User=root        
 Group=root       
-ExecStart=/etc/auxproxy/auxproxy-start.sh
-ExecStop=/etc/auxproxy/auxproxy-cleanup.sh
+ExecStart=/home/aass/bin/aass_run.sh
 Restart=always
 RestartSec=30
 TimeoutSec=0
-KillMode=process
 
 [Install]
 WantedBy=multi-user.target

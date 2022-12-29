@@ -28,6 +28,7 @@ export FLEET_DISK_TYPE=SYS
 export FLEET_DISK_SIZE=40
 export FLEET_VOLUME_TYPE=SAS
 export FLEET_EIP_SHARE_TYPE=PER
+export ENTERPRISE_PROJECT={enterprise_project}
 
 # 服务其他配置
 export AASS_ENABLE_HMAC=false
@@ -49,7 +50,7 @@ export WEB_HTTPS_PORT=31002
 
 function start_service(){
 	cd /home/bin/
-	nohup ./fleetmanager-${version} &
+	./fleetmanager-${version}
 }
 
 function main(){

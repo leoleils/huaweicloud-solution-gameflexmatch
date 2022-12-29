@@ -13,7 +13,16 @@ func getEncoder() zapcore.Encoder {
 }
 
 func getLogWriter() zapcore.WriteSyncer {
-	file, _ := os.Create("/local/app/log/log.txt")
+	file, err := os.Create("/local/app/log/log.txt")
+	if err != nil {
+		return zapcore.AddSync(file)
+	}
+	defer file.Close()
+
+    err = file.Chmod(0600)
+	if err != nil {
+		return zapcore.AddSync(file)
+	}
 	return zapcore.AddSync(file)
 }
 

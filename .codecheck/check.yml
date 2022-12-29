@@ -1,0 +1,29 @@
+---
+version: 2.0
+
+env:
+  resource:
+    type: docker
+    image: szvecr03.his.huawei.com:80/ecr-build-green/fuxigatepublicx8620220126:PublicGoHttps
+    mode: toolbox
+
+steps:
+  #在代码仓下载后，代码检查启动前
+  pre_codecheck:
+    - checkout
+tool_params:
+  secsolar:
+    source_dir: ./
+  binscope:
+    # 以下参数不支持正则匹配
+    scan_dirs: ../code  # scan_dirs&scan_file至少2选1，相对于代码下载根目录的目录路径, 支持多路径，英文逗号分隔；此处配置目录为编译成二进制文件所在的目录。
+    #scan_file: ./mConductor      # scan_dirs&scan_file至少2选1，相对于代码下载根目录的文件路径, scan_file只能填一个路径 ，此处配置目录为编译成二进制文件所在的目录。
+    relative_dir: code           # 必填，只支持单个路径, 用户填写，按用户填下的内容传给binscope，建议指定根目录code，用来做扫描项的基准目录，避免问题重复扫描出来。
+    checkers: fortify_source,trapv  # 非必填，可选参数：fortify_source,trapv,cfi，多个英文逗号分隔，填写代码库相对根路径相对路径即可
+
+# 过滤unit test
+params:
+  - name: exclude  # 排除检查文件目录
+    value: (.+\.pb.go|main.go)   # 使用正则表达式，注意括号不能去掉
+  - name: includePaths  # 指定代码检查路径
+    value: demo/go/fake-server

@@ -15,12 +15,12 @@
 package main
 
 import (
+	"C"
 	"fake-server/api"
 	"fake-server/gsemanager"
 	"os"
 	"os/signal"
 	"syscall"
-	"C"
 )
 
 func startGrpcServer() int {
@@ -52,4 +52,5 @@ func main() {
 	case <-sigChan:
 		os.Exit(1)
 	}
+
 }
