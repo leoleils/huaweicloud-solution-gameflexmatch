@@ -34,9 +34,9 @@ MetaSpace平台由四个服务组件组成：
 
 ## API技术文档
 提供了`fleetmanager`/`appgateway`/`aass`的API技术文档的`Yaml`文件，可以在[swagger](https://editor.swagger.io/)中导入查看，
-参考文档见：`/doc/api/`
+参考文档见：[/doc/api/](/doc/api)
 
-## 部署指南
+## 单点架构部署指南
 1. 准备华为云资源
    + 管理账号与资源账号：管理账号用于`MetaSpace`的管理面服务组件的管理与执行，资源账号用于计算资源的申请
    + 创建委托资源账号委托给管理账号：
@@ -63,7 +63,7 @@ MetaSpace平台由四个服务组件组成：
         入方向至少需要保障`60003`端口和`31002`端口开放
 
    + 准备RDS数据库，默认端口为`3306`，依次为三个服务组件(`appgateway`/`aass`/`fleetmanager`)创建数据库，创建用户并授予**读写权限**
-   + 创建GaussDB(for Influx)：选择购买InfluxDB，并开启SSL安全连接，使用默认证书即可，为服务组件创建数据库(`aass`/`appgateway`)
+   + 创建GaussDB(for Influx)：选择购买InfluxDB，并开启SSL安全连接，使用默认证书即可，为服务组件创建数据库(`aass`/`appgateway`)，`aass`与`appgateway`共用一个influxDB的数据库
    + 创建AK与SK，参考链接[管理IAM用户访问密匙](https://support.huaweicloud.com/usermanual-iam/iam_02_0003.html)
    + 新建密匙对，用于弹性伸缩实例的密匙验证登录
 
