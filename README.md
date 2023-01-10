@@ -222,7 +222,7 @@ MetaSpace平台由四个服务组件组成：
 
 7. 应用镜像制作详见 [doc/build/make-image-guide.md](/doc/build/make-image-guide.md)
 8. 应用的资源数据导入详见 [doc/build/user-data-import.md](/doc/build/user-data-import.md)
-9. 应用的资源数据导入详见 [doc/build/param-annotation.md](/doc/build/param-annotation.md)
+9. 部署过程中必要的参数注解详见 [doc/build/param-annotation.md](/doc/build/param-annotation.md)
 
 ## 日志导出功能
 Metaspace平台可以借助华为云LTS服务，实现服务组件以及托管应用的日志转存功能
