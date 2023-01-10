@@ -5,7 +5,7 @@ version={version}
 # influxDB的相关配置
 export INFLUX_ADDRESS=https://{influx_host}:{influx_port}
 export INFLUX_PASSWORD={influx_pwd}
-export INFLUX_DATABASE={influx_aass_database}
+export INFLUX_DATABASE={influx_database}
 export INFLUX_USER={influx_username}
 
 # AASS的数据库相关配置

@@ -9,7 +9,6 @@
 <img src="./img/architecture.jpg" width="80%">
 
 MetaSpace平台由四个服务组件组成：
-+ [Console](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-console): 为运维人员提供一个端到端的运维平台，提供了重要指标监控、fleet管理、应用打包、灰度发布以及基本的信息配置等功能
 + [FleetManager](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-fleetmanager): 负责应用进程的全句话动态部署及管理，支持配置动态部署策略，基于成本或时延优化应用分布，负责弹性伸缩策略的配置和服务端会话、客户端会话与应用包的管理，服务端应用的灰度发布等
 + [AppGateway](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-appgateway): 负责应用进程、会话与客户端连接的管理，通过与`AuxProxy`通信获得应用进程信息，决策进程资源的调度
 + [AASS](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-aass): 负责弹性伸缩组和弹性伸缩策略的管理与执行，以及服务端应用资源的监控，调用华为云`AS`(弹性伸缩服务)实现资源的弹性伸缩
@@ -223,6 +222,7 @@ MetaSpace平台由四个服务组件组成：
 
 7. 应用镜像制作详见 [doc/build/make-image-guide.md](/doc/build/make-image-guide.md)
 8. 应用的资源数据导入详见 [doc/build/user-data-import.md](/doc/build/user-data-import.md)
+9. 应用的资源数据导入详见 [doc/build/param-annotation.md](/doc/build/param-annotation.md)
 
 ## 日志导出功能
 Metaspace平台可以借助华为云LTS服务，实现服务组件以及托管应用的日志转存功能
