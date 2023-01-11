@@ -2,7 +2,8 @@
 ---
 ## 简介
 
-`MetaSpace`是一个服务端应用托管平台，支持灵活的服务器伸缩、灰度发布、就近接入、跨地域容灾等多种特性，帮助开发者快速构建稳定、低延时的服务端应用，兼容所有`gRPC`支持的服务框架的部署与运行。
+`MetaSpace`是一个服务端应用托管平台，包含四个服务组件(`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`)，可以实现应用的托管、托管应用所需资源的弹性伸缩、应用进程的资源调度管理、应用的灰度发布，多`region`部署时可以实现用户的就近接入，减少时延，以及服务资源的跨地域容灾。可以帮助开发者快速构建稳定、低延时的多人游戏的部署环境，并节省大量的运维成本，支持支持`Unreal`、`Unity`引擎，`C#`、`C++`以及`gRPC`支持的任何语言的`server`框架部署和运行。
+
 
 ## 逻辑架构
 <img src="./img/architecture.jpg" width="80%">
@@ -17,7 +18,7 @@ MetaSpace平台由四个服务组件组成：
 
     |-- huaweicloud-solution-metaspace
         |-- demo
-        |   |-- go                  -- go语言的服务单SDK Demo
+        |   |-- go                  -- go语言的服务SDK Demo
         |-- doc
         |   |-- api                 -- api技术文档
         |   |-- build               -- 测试环境部署指导
@@ -28,19 +29,18 @@ MetaSpace平台由四个服务组件组成：
         |   |-- vpc_peering         -- vpc之间创建对等连接工具
 ## 服务端SDK-Demo
 1. 提供了`go`语言的服务端`SDK Demo`，可以与`Metaspace`平台进行无缝对接
-2. 提供了`C#`语言的开发者对接指南，详见 `doc/developer`
+2. 提供了`C#`语言的开发者对接指南，详见 [doc/developer](/doc/developer/developer_guide.md)
 
 ## API技术文档
-提供了`fleetmanager`/`appgateway`/`aass`的API技术文档的`Yaml`文件，可以在[swagger](https://editor.swagger.io/)中导入查看，
-参考文档见：`/doc/api/`
+提供了[fleetmanager](/doc/api/FleetManager.yaml)/[appgateway](/doc/api/AppGateway.yaml)/[aass](/doc/api/AASS.yaml)的API技术文档的`Yaml`文件，可以在[swagger](https://editor.swagger.io/)中导入查看，参考文档详见：`/doc/api/`
 
-## 部署指南
+## 单点架构部署指南
 1. 准备华为云资源
    + 管理账号与资源账号：管理账号用于`MetaSpace`的管理面服务组件的管理与执行，资源账号用于计算资源的申请
    + 创建委托资源账号委托给管理账号：
       - 创建委托可以参考链接[创建委托（委托方操作）](https://support.huaweicloud.com/intl/zh-cn/usermanual-iam/iam_06_0002.html)，并将资源账号委托给管理账号；
       - 授予该委托`DEW KeypairFullAccess`权限
-      - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见`doc/build/agency.json`
+      - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见[doc/build/agency.json](/doc/build/agency.json)
    + 准备管理面资源，并将管理面资源部署在同一`VPC`下，以下测试规格，具体规格按需选择：
     
         | 购买账号 |     资源类型      |  资源规格  | 数量  |
@@ -61,7 +61,7 @@ MetaSpace平台由四个服务组件组成：
         入方向至少需要保障`60003`端口和`31002`端口开放
 
    + 准备RDS数据库，默认端口为`3306`，依次为三个服务组件(`appgateway`/`aass`/`fleetmanager`)创建数据库，创建用户并授予**读写权限**
-   + 创建GaussDB(for Influx)：选择购买InfluxDB，并开启SSL安全连接，使用默认证书即可，为服务组件创建数据库(`aass`/`appgateway`)
+   + 创建GaussDB(for Influx)：选择购买InfluxDB，并开启SSL安全连接，使用默认证书即可，为服务组件创建数据库(`aass`/`appgateway`)，`aass`与`appgateway`共用一个influxDB的数据库
    + 创建AK与SK，参考链接[管理IAM用户访问密匙](https://support.huaweicloud.com/usermanual-iam/iam_02_0003.html)
    + 新建密匙对，用于弹性伸缩实例的密匙验证登录
 
@@ -91,8 +91,7 @@ MetaSpace平台由四个服务组件组成：
     # 4. auxproxy
     cd ~/huaweicloud-solution-metaspace-auxproxy
     go build ./cmd/auxproxy.go
-    # 修改文件名
-    mv auxproxy auxproxy-{version}
+
 ```
 
 3. 通过openssl获取自签名证书，可在任一台`ECS`下操作，三个服务组件使用相同的自签名证书：
@@ -135,8 +134,17 @@ MetaSpace平台由四个服务组件组成：
 
     # 5. 验证是否执行成功
     ps -aux | grep appgateway
-    # 6. 查看运行日志
-    vim /home/appgateway/bin/nohup.out
+    
+    # 6. Ctrl+c 关掉进程后配置开机自启动
+    # 在/etc/systemed/system下新建appgateway.service
+    # appgateway.service 样例见 /doc/build/appgateway
+    # 启动appgateway.service保证镜像自动拉起
+    systemctl enable appgateway.service
+    systemctl start appgateway.service
+
+    # 7. 验证是否成功
+    ps -aux | grep appgateway
+
 ```
 
 5. 安装`aass`服务组件
@@ -162,8 +170,16 @@ MetaSpace平台由四个服务组件组成：
     sh ./aass_run.sh
     ps -aux | grep aass
 
-    # 8.查看日志
-    vim /home/aass/bin/nohup.out
+    # 8. Ctrl+c 关掉进程后配置开机自启动
+    # 在/etc/systemed/system下新建aass.service
+    # aass.service 样例见 /doc/build/aass
+    # 启动aass.service保证镜像自动拉起
+    systemctl enable aass.service
+    systemctl start aass.service
+
+    # 9. 验证是否成功
+    ps -aux | grep aass
+
 ```
 
 6. 安装`fleetmanager`服务组件
@@ -193,12 +209,20 @@ MetaSpace平台由四个服务组件组成：
     sh ./fleetmanager_run.sh
     ps -aux | grep fleetmanager
 
-    # 8. 查看日志
-    vim /home/fleetmanager/bin/nohup.out
+    # 8. Ctrl+c 关掉进程后配置开机自启动
+    # 在/etc/systemed/system下新建fleetmanager.service
+    # fleetmanager.service 样例见 /doc/build/fleetmanager
+    # 启动fleetmanager.service保证镜像自动拉起
+    systemctl enable fleetmanager.service
+    systemctl start fleetmanager.service
+
+    # 9. 验证是否成功
+    ps -aux | grep fleetmanager
 ```
 
-7. 应用镜像制作详见 `doc/build/make-image-guide.md`
-8. 应用的资源数据导入详见 `doc/build/user-data-import.md`
+7. 应用镜像制作详见 [doc/build/make-image-guide.md](/doc/build/make-image-guide.md)
+8. 应用的资源数据导入详见 [doc/build/user-data-import.md](/doc/build/user-data-import.md)
+9. 部署过程中必要的参数注解详见 [doc/build/param-annotation.md](/doc/build/param-annotation.md)
 
 ## 日志导出功能
 Metaspace平台可以借助华为云LTS服务，实现服务组件以及托管应用的日志转存功能
