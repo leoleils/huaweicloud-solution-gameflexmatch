@@ -42,7 +42,7 @@ MetaSpace平台由四个服务组件组成：
       - 授予该委托`DEW KeypairFullAccess`权限
       - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见[doc/build/agency.json](/doc/build/agency.json)
    + 准备管理面资源，并将管理面资源部署在同一`VPC`下，以下测试规格，具体规格按需选择：
-    
+   
         | 购买账号 |     资源类型      |  资源规格  | 数量  |
         | :------: | :---------------: | :--------: | :---: |
         | 资源账号 |        ECS        | 2vCPUs/4GB |   3   |
@@ -223,6 +223,7 @@ MetaSpace平台由四个服务组件组成：
 7. 应用镜像制作详见 [doc/build/make-image-guide.md](/doc/build/make-image-guide.md)
 8. 应用的资源数据导入详见 [doc/build/user-data-import.md](/doc/build/user-data-import.md)
 9. 部署过程中必要的参数注解详见 [doc/build/param-annotation.md](/doc/build/param-annotation.md)
+10. 平台用户管理模块使用详见[doc/build/user-management.md](/doc/build/user-management.md)
 
 ## 日志导出功能
 Metaspace平台可以借助华为云LTS服务，实现服务组件以及托管应用的日志转存功能
