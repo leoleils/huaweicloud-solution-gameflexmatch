@@ -29,13 +29,13 @@
 |          fleet_cidr          |                新建fleet所申请资源的子网段                 |                --                |            --            |
 |        specification         |                       具体的实例规格                       |                --                |      如s6.xlarge.2       |
 | internal_inbound_permissions | 弹性申请资源的安全组配置，默认必须放通appgateway的业务端口 |                --                |            --            |
-|          dns_config          |                  在某个region下的dns配置                   |         便于连接业务集群         | 若为cn-north-4，则为示例 |
+|          dns_config          | 在某个region下的dns配置，查询方式见[链接](https://support.huaweicloud.com/dns_faq/dns_faq_002.html)| 便于连接业务集群 | 若为cn-north-4，则为示例 |
 |          redis_host          |                      Redis数据库地址                       |                --                |            --            |
 |          redis_port          |                    Redis数据库连接端口                     |                --                |        默认为6379        |
 |        redis_password        |                    Redis数据库连接密码                     |                --                |       加密后的密码       |
-|     redis_max_connection     |                   Redis数据库最大连接数                    |      限制Redis的最大连接数      |        可设为1000        |
-| login_session_lifetime | 登录会话持续实际 | 登录会话的持续时间，单位：秒 | 43200 (12小时) |
+|     redis_max_connection     |                   Redis数据库最大连接数                    |      限制Redis的最大连接数       |        可设为1000        |
+|    login_session_lifetime    |                      登录会话持续实际                      |   登录会话的持续时间，单位：秒   |      43200 (12小时)      |
 |    jwt_token_generate_key    |                      生成JWT令牌的key                      |        用于生成JWT Token         |            --            |
-| Jwt_token_lifetime | JWT Token的有效时长 | 限制token的有效时间 | 7200（2小时） |
+|      Jwt_token_lifetime      |                    JWT Token的有效时长                     |       限制token的有效时间        |      7200（2小时）       |
 
 

@@ -34,7 +34,7 @@ MetaSpace平台由四个服务组件组成：
 ## API技术文档
 提供了[fleetmanager](/doc/api/FleetManager.yaml)/[appgateway](/doc/api/AppGateway.yaml)/[aass](/doc/api/AASS.yaml)的API技术文档的`Yaml`文件，可以在[swagger](https://editor.swagger.io/)中导入查看，参考文档详见：`/doc/api/`
 
-## 单点架构部署指南
+## 部署指南
 1. 准备华为云资源
    + 管理账号与资源账号：管理账号用于`MetaSpace`的管理面服务组件的管理与执行，资源账号用于计算资源的申请
    + 创建委托资源账号委托给管理账号：
@@ -65,7 +65,8 @@ MetaSpace平台由四个服务组件组成：
    + 创建AK与SK，参考链接[管理IAM用户访问密匙](https://support.huaweicloud.com/usermanual-iam/iam_02_0003.html)
    + 新建密匙对，用于弹性伸缩实例的密匙验证登录
 
-2. 将源码下载到本地，编译`linux`可执行的二进制文件，**以下步骤中{var}中的变量需按具体情况更改**
+2. 文件编译：
+   + 将源码下载到本地，编译`linux`可执行的二进制文件，**以下步骤中{var}中的变量需按具体情况更改**
    本地直接编译默认不提供加密操作，若需安全加密则需自定义添加
 ```sh
     # 设置编译的可执行文件的操作系统
@@ -95,7 +96,7 @@ MetaSpace平台由四个服务组件组成：
 ```
 
 3. 通过openssl获取自签名证书，可在任一台`ECS`下操作，三个服务组件使用相同的自签名证书：
-
+   + 获取https签名证书
 ```sh
     # 1. 创建tlsSecret文件夹
     mkdir -p /home/tlsSecret
@@ -109,7 +110,14 @@ MetaSpace平台由四个服务组件组成：
     openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
     openssl x509 -in tls.crt -text
 ```
-
+   + 获取网络传输的RSA非对称加密的公钥与私钥
+```sh
+    # 1. 创建RSA私钥，长度可以为1024，也可以为2048
+    cd /home/tlsSecret
+    openssl genrsa -out rsa_private.pem 1024
+    # 2. 在私钥的基础上生成公钥
+    openssl rsa -in rsa_private.pem -pubout -out rsa_public.pem
+```
 4. 安装`appgateway`服务组件
 
 ```sh

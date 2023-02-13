@@ -9,6 +9,11 @@ export MYSQL_PASSWORD={mysql_pwd}						# 数据库用户密码
 export MYSQL_USER={mysql_user}							# 数据库用户名
 export MYSQL_CHARSET=utf8								# 数据库中数据存储格式
 
+# Fleetmanager Redis相关配置
+export REDIS_ADDRESS={redis_host}:{redis_port}			# redis地址与端口
+export REDIS_PASSWORD={redis_password}					# redis的密码
+export REDIS_MAX_CONN=1000								# redis的最大连接数
+
 # 服务账号的相关配置
 export SERVICE_AK={ak}									# 管理账号使用GCM加密后的ak
 export SERVICE_SK={sk}									# 管理账号使用GCM加密后的sk
@@ -35,8 +40,8 @@ export ENTERPRISE_PROJECT={enterprise_project}			# 默认企业项目
 export ENABLE_TOKEN_CHECK=false							# 是否开启华为云IAM token校验
 export HTTPS_CERT_FILE=/home/tlsSecret/tls.crt			# https签名文件路径
 export HTTPS_KEY_FILE=/home/tlsSecret/tls.key			# https秘钥路径
-export RSA_PUBLIC_FILE=/home/tlsSecret/public.pem		# 网络敏感信息加密传输的RSA公钥
-export RSA_PRIVATE_FILE=/home/tlsSecret/private.pem		# 网络敏感信息加密传输的RSA私钥
+export RSA_PUBLIC_FILE=/home/tlsSecret/rsa_public.pem		# 网络敏感信息加密传输的RSA公钥
+export RSA_PRIVATE_FILE=/home/tlsSecret/rsa_private.pem		# 网络敏感信息加密传输的RSA私钥
 export GCM_KEY=**************							# 本地数据加密的GCM 24位key
 export GCM_NONCE=********************					# 本地数据加密的GCM 16位Nonce
 
@@ -56,18 +61,13 @@ export SUPPORT_REGIONS={region}							# 支持的region
 export WEB_HTTPS_ADDR=0.0.0.0							# fleetmanager的启动地址
 export WEB_HTTPS_PORT=31002								# fleetmanager的启动端口
 
-# Fleetmanager Redis相关配置
-export REDIS_ADDRESS={redis_host}:{redis_port}
-export REDIS_PASSWORD={redis_password}
-export REDIS_MAX_CONN={redis_max_connection}
-
 # 登录功能相关配置
-export SESSION_LIFETIME=43200
-export JWTKEY={jwt_token_generate_key}
-export JWT_TOKEN_LIFETIME=7200
+export LOGIN_SESSION_LIFETIME=43200						# 登录会话的过期时间(s)
+export JWTKEY={jwt_token_generate_key}					# 登录会话token生成的key
+export JWT_TOKEN_LIFETIME=7200							# 登录会话token的有效时间(s)
 
 # 是否开启登录验证功能
-export ENABLE_AUTHORIZED=false
+export ENABLE_AUTHORIZED=false						
 
 function start_service(){
 	cd /home/bin/
