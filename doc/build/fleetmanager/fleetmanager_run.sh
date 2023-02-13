@@ -48,6 +48,19 @@ export SUPPORT_REGIONS={region}
 export WEB_HTTPS_ADDR=0.0.0.0
 export WEB_HTTPS_PORT=31002
 
+# Fleetmanager Redis相关配置
+export REDIS_ADDRESS={redis_host}:{redis_port}
+export REDIS_PASSWORD={redis_password}
+export REDIS_MAX_CONN={redis_max_connection}
+
+# 登录功能相关配置
+export SESSION_LIFETIME=43200
+export JWTKEY={jwt_token_generate_key}
+export JWT_TOKEN_LIFETIME=7200
+
+# 是否开启登录验证功能
+export ENABLE_AUTHORIZED=false
+
 function start_service(){
 	cd /home/bin/
 	./fleetmanager-${version}
