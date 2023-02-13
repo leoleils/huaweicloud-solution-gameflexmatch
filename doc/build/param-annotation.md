@@ -34,6 +34,8 @@
 |          redis_port          |                    Redis数据库连接端口                     |                --                |        默认为6379        |
 |        redis_password        |                    Redis数据库连接密码                     |                --                |       加密后的密码       |
 |     redis_max_connection     |                   Redis数据库最大连接数                    |      限制Redis的最大连接数      |        可设为1000        |
+| login_session_lifetime | 登录会话持续实际 | 登录会话的持续时间，单位：秒 | 43200 (12小时) |
 |    jwt_token_generate_key    |                      生成JWT令牌的key                      |        用于生成JWT Token         |            --            |
+| Jwt_token_lifetime | JWT Token的有效时长 | 限制token的有效时间 | 7200（2小时） |
 
 
