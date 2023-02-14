@@ -1,55 +1,17 @@
 # make-image-guide
-应用镜像用于`MetaSpace`平台扩容实例，主要集成了`Auxproxy`服务组件以及希望执行的服务端应用
-1. 在华为云控制台上购买1台ECS，选择密匙对登录
-2. 上传应用安装包到指定路径，并修改可执行文件的权限
+## 功能说明：
 
-```sh
-    # 1. 建立文件夹
-    mkdir -p /local/app/{app-name}
-    cd /local/app/{app-name}
-    # 2. 上传应用包的二进制可执行文件到该路径下如application，并修改权限
-    chmod 750 application
-    # 3. 上传应用的启动脚本到同一目录下如application.sh，并修改权限
-    chmod 750 application.sh
-```
+`FleetMange服务器组件`提供了应用包的全生命周期管理能力，并且基于应用包提供了镜像打包能力，用于`MetaSpace`平台扩容实例，应用包镜像主要集成了`Auxproxy`服务组件以及希望执行的服务端应用，同时集成了云日志服务LTS与云监控CES的插件以对应用状态进行掌握。
 
-3. 上传`auxproxy`安装文件
-   
-```sh
-    # 1. 上传以下文件并修改执行权限到指定文件夹
-    mkdir -p /etc/auxproxy
-    cd /etc/auxproxy
-    # auxproxy-{version}是auxproxy组件编译后的二进制可执行文件
-    # auxproxy-cleanup.sh是退出auxproxy组件的脚本文件
-    # auxproxy-start.sh是启动auxproxy组件的脚本文件
-    # 样例见/doc/build/auxproxy
-    chmod 750 auxproxy-{version}
-    chmod 750 auxproxy-cleanup.sh
-    chmod 750 auxproxy-start.sh
 
-    # 2. 新建security文件夹，生成密匙文件
-    mkdir -p /etc/auxproxy/security
-    cd /etc/auxproxy/security
-    openssl genrsa -out tls.key 3072
-    openssl req -new -key tls.key -out tls.csr
-    openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
-    
-    # 3. 新建logs文件夹
-    mkdir -p /etc/auxproxy/logs
 
-    # 4. 上传json文件
-    # 上传client_hmac_conf.json与server_hmac_conf.json文件，
-    # 样例见 /doc/build/auxproxy/security
+## 使用说明：
 
-    # 5. 在/etc/systemed/system下新建auxproxy.service
-    # auxproxy.service 样例见 /doc/build/auxproxy
-    # 启动auxproxy.service保证镜像自动拉起
-    systemctl enable auxproxy.service
-    systemctl start auxproxy.service
+1.将`Auxproxy`服务组件压缩包（zip或rar）、镜像打包环境构建脚本[image_env.sh](../../doc/build/image_env.sh)添加至管理账号的OBS桶中
 
-    # 验证是否配置成功：
-    ps -aux | grep auxproxy
-```
+2.将应用压缩包（zip或rar）添加至资源账号的OBS桶中
 
-4. 将该ECS系统盘打包成Image，可参考[链接](https://support.huaweicloud.com/usermanual-ims/ims_01_0202.html)
-5. 镜像打包完成
+3.应用镜像中，应用默认在路径/usr/local/app下进行解压，请根据该路径调整应用启动脚本，或修改环境构建脚本中的应用下载目标路径
+
+4.`FleetMange服务器组件`启动脚本[fleetmaange_run.sh](../../doc/build/fleetmanager/fleetmanager_run.sh)中添加参数，具体为DEFAULT_SCRIPT_PATH（环境构建脚本的OBS路径）、DEFAULT_AUXPROXY_PATH（`Auxproxy`服务组件压缩包OBS路径），其余镜像创建相关参数也可以在启动脚本中修改
+
