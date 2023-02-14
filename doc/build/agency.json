@@ -38,6 +38,9 @@
         },
         {
             "Action": [
+                    "ecs:cloudServers:createServers",
+                    "ecs:servers:create",
+                    "ecs:cloudServers:delete",
                     "ecs:servers:delete",
                     "ecs:servers:stop",
                     "ecs:serverKeypairs:delete",
@@ -54,7 +57,31 @@
                     "ecs:*:get",
                     "ecs:*:list"
                 ],
-                "Effect": "Allow"
+            "Effect": "Allow"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+              "ims:images:upload",
+              "ims:serverImages:create",
+              "ims:wholeImages:create",
+              "ims:images:delete"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+              "obs:bucket:PutBucketAcl",
+              "obs:object:PutObjectAcl",
+              "obs:object:GetObject",
+              "obs:object:ModifyObjectMetaData",
+              "obs:object:DeleteObject",
+              "obs:bucket:HeadBucket",
+              "obs:bucket:CreateBucket",
+              "obs:bucket:ListAllMyBuckets",
+              "obs:bucket:ListBucket",
+              "obs:object:PutObject"
+            ]
         },
         {
             "Action": [
