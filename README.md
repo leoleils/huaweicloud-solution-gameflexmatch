@@ -37,11 +37,18 @@ MetaSpace平台由四个服务组件组成：
 ## 部署指南
 1. 准备华为云资源
    + 管理账号与资源账号：管理账号用于`MetaSpace`的管理面服务组件的管理与执行，资源账号用于计算资源的申请
+   
    + 创建委托资源账号委托给管理账号：
       - 创建委托可以参考链接[创建委托（委托方操作）](https://support.huaweicloud.com/intl/zh-cn/usermanual-iam/iam_06_0002.html)，并将资源账号委托给管理账号；
       - 授予该委托`DEW KeypairFullAccess`权限
       - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见[doc/build/agency.json](/doc/build/agency.json)
-   + 准备管理面资源，并将管理面资源部署在同一`VPC`下，以下测试规格，具体规格按需选择：
+      
+   + 在委托资源账号下创建LTS委托给ECS以安装ICagent：
+     
+        委托配置流程见[创建icagent委托](https://support.huaweicloud.com/usermanual-lts/lts_03_0002.htm)。
+        
++ 准备管理面资源，并将管理面资源部署在同一`VPC`下，以下测试规格，具体规格按需选择：
+        
         | 购买账号 |     资源类型      |  资源规格  | 数量  |
         | :------: | :---------------: | :--------: | :---: |
         | 资源账号 |        ECS        | 2vCPUs/4GB |   3   |
@@ -58,7 +65,7 @@ MetaSpace平台由四个服务组件组成：
         | ECS-02 |     aass     |   9091   |        N        |
         | ECS-03 | fleetmanager |  31002   |        Y        |
         入方向至少需要保障`60003`端口和`31002`端口开放
-
+   
    + 准备RDS数据库，默认端口为`3306`，依次为三个服务组件(`appgateway`/`aass`/`fleetmanager`)创建数据库，创建用户并授予**读写权限**
    + 创建GaussDB(for Influx)：选择购买InfluxDB，并开启SSL安全连接，使用默认证书即可，为服务组件创建数据库(`aass`/`appgateway`)，`aass`与`appgateway`共用一个influxDB的数据库
    + 创建AK与SK，参考链接[管理IAM用户访问密匙](https://support.huaweicloud.com/usermanual-iam/iam_02_0003.html)

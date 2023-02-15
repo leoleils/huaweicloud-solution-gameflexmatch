@@ -16,8 +16,8 @@ cd rar
 make
 
 # download app
-mkdir -p /usr/local/app
-cd /usr/local/app
+mkdir -p /local/app
+cd /local/app
 wget ${APP_URL} -O ${APP_FILE}
 if [ "${APP_FILE##*.}" = "zip" ]; then
 	unzip -o ${APP_FILE}
