@@ -202,10 +202,10 @@ MetaSpace平台由四个服务组件组成：
     # 4. 创建文件夹/home/bin/conf/workflow
     mkdir -p /home/bin/conf/workflow
 
-    # 5. 上传create_fleet_workflow.json、delete_fleet_workflow.json以及create_build_workflow.json，详见
+    # 5. 上传create_fleet_workflow.json、delete_fleet_workflow.json以及create_build_image_workflow.json，详见
     # doc/build/fleetmanager/create_fleet_workflow.json
     # doc/build/fleetmanager/delete_fleet_workflow.json
-    # doc/build/fleetmanager/create_build_workflow.json
+    # doc/build/fleetmanager/create_build_image_workflow.json
     
     # 6. 上传fleetmanager的二进制可执行文件fleetmanager-{version}
     # 与启动脚本fleetmanager_run.sh上传至bin文件夹，修改相关配置与文件权限
