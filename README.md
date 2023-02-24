@@ -41,7 +41,7 @@ MetaSpace平台由四个服务组件组成：
    + 创建委托资源账号委托给管理账号：
       - 创建委托可以参考链接[创建委托（委托方操作）](https://support.huaweicloud.com/intl/zh-cn/usermanual-iam/iam_06_0002.html)，并将资源账号委托给管理账号；
       - 授予该委托`DEW KeypairFullAccess`权限
-      - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见[doc/build/agency.json](/doc/build/agency.json)
+      - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见[doc/build/agency_region.json](/doc/build/agency_region.json)与[doc/build/agency_global.json](/doc/build/agency_global.json)
       
    + 在委托资源账号下创建LTS委托给ECS以安装ICagent：
      
@@ -54,7 +54,7 @@ MetaSpace平台由四个服务组件组成：
         | 资源账号 |        ECS        | 2vCPUs/4GB |   3   |
         | 资源账号 |        RDS        | 2vCPUs/4GB |   1   |
         | 资源账号 | Gauss(for Influx) | 2vCPUs/4GB |   1   |
-
+    
         RDS可以按需选择单机或主备节点
         influxdb选择集群(默认3节点)
 

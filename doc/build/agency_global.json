@@ -1,0 +1,20 @@
+{
+  "Version": "1.1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "obs:bucket:PutBucketAcl",
+        "obs:object:PutObjectAcl",
+        "obs:object:GetObject",
+        "obs:object:ModifyObjectMetaData",
+        "obs:object:DeleteObject",
+        "obs:bucket:HeadBucket",
+        "obs:bucket:CreateBucket",
+        "obs:bucket:ListAllMyBuckets",
+        "obs:bucket:ListBucket",
+        "obs:object:PutObject"
+      ]
+    }
+  ]
+}
