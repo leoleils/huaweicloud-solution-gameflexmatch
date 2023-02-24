@@ -14,7 +14,7 @@ export DATABASE_USER={mysql_username}
 # influxDB的相关配置
 export INFLUX_ADDR={influx_host}:{influx_port}
 export INFLUX_PASSWORD={influx_password}			# GCM 加密后的influxDB密码
-export INFLUX_DBNAME={influx_database}
+export INFLUX_DBNAME={influx_database}				# 与aass使用相同的数据库
 export INFLUX_USER={influx_username}
 
 # 本地传输加密相关

@@ -5,13 +5,13 @@ version={version}										# fleetmanager的版本
 # FleetManager的数据库相关配置 
 export MYSQL_ADDRESS={mysql_host}:{mysql_port}			# 数据库地址与端口
 export MYSQL_DB_NAME={mysql_fleetmanager_database}		# 数据库名
-export MYSQL_PASSWORD={mysql_pwd}						# 数据库用户密码
+export MYSQL_PASSWORD={mysql_pwd}						# 加密后的数据库用户密码
 export MYSQL_USER={mysql_user}							# 数据库用户名
 export MYSQL_CHARSET=utf8								# 数据库中数据存储格式
 
 # Fleetmanager Redis相关配置
 export REDIS_ADDRESS={redis_host}:{redis_port}			# redis地址与端口
-export REDIS_PASSWORD={redis_password}					# redis的密码
+export REDIS_PASSWORD={redis_password}					# 加密后的redis的密码
 export REDIS_MAX_CONN=1000								# redis的最大连接数
 
 # 服务账号的相关配置
