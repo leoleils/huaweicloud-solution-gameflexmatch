@@ -45,7 +45,7 @@ MetaSpace平台由四个服务组件组成：
       
    + 在委托资源账号下创建LTS委托给ECS以安装ICagent：
      
-        委托配置流程见[创建icagent委托](https://support.huaweicloud.com/usermanual-lts/lts_03_0002.htm)。
+        委托配置流程见[创建icagent委托](https://support.huaweicloud.com/usermanual-lts/lts_03_0002.html)。
         
 + 准备管理面资源，并将管理面资源部署在同一`VPC`下，以下测试规格，具体规格按需选择：
         
@@ -91,7 +91,7 @@ MetaSpace平台由四个服务组件组成：
 
     # 3. aass
     cd ~/huaweicloud-solution-metaspace-aass
-    go build ./cmd/application_auto_scaling_service.go
+    go build ./cmd/application-auto-scaling-service/application_auto_scaling_service.go
     # 修改文件名
     mv application_auto_scaling_service aass-{version}
 
@@ -150,7 +150,7 @@ MetaSpace平台由四个服务组件组成：
     ps -aux | grep appgateway
     
     # 6. Ctrl+c 关掉进程后配置开机自启动
-    # 在/etc/systemed/system下新建appgateway.service
+    # 在/etc/systemd/system下新建appgateway.service
     # appgateway.service 样例见 /doc/build/appgateway
     # 启动appgateway.service保证镜像自动拉起
     systemctl enable appgateway.service
@@ -174,9 +174,9 @@ MetaSpace平台由四个服务组件组成：
     # doc/build/aass/service_config.json
 
     # 5. 创建文件夹/home/bin
-    mkdir -p /home/bin
+    mkdir -p /home/aass/bin
     # 6. 将aass的二进制可执行文件aass-{version}与执行脚本aass_run.sh上传至bin目录下，修改相关配置，并修改文件权限
-    cd /home/bin
+    cd /home/aass/bin
     chmod 750 aass-{version}
     chmod 750 aass_run.sh
 
@@ -185,7 +185,7 @@ MetaSpace平台由四个服务组件组成：
     ps -aux | grep aass
 
     # 8. Ctrl+c 关掉进程后配置开机自启动
-    # 在/etc/systemed/system下新建aass.service
+    # 在/etc/systemd/system下新建aass.service
     # aass.service 样例见 /doc/build/aass
     # 启动aass.service保证镜像自动拉起
     systemctl enable aass.service
@@ -216,7 +216,7 @@ MetaSpace平台由四个服务组件组成：
     
     # 6. 上传fleetmanager的二进制可执行文件fleetmanager-{version}
     # 与启动脚本fleetmanager_run.sh上传至bin文件夹，修改相关配置与文件权限
-    cd /home/bin
+    cd /home/fleetmanager/bin
     chmod 750 fleetmanager-{version}
     chmod 750 fleetmanager_run.sh
 
@@ -225,7 +225,7 @@ MetaSpace平台由四个服务组件组成：
     ps -aux | grep fleetmanager
 
     # 8. Ctrl+c 关掉进程后配置开机自启动
-    # 在/etc/systemed/system下新建fleetmanager.service
+    # 在/etc/systemd/system下新建fleetmanager.service
     # fleetmanager.service 样例见 /doc/build/fleetmanager
     # 启动fleetmanager.service保证镜像自动拉起
     systemctl enable fleetmanager.service
@@ -245,5 +245,5 @@ Metaspace平台可以借助华为云LTS服务，实现服务组件以及托管�
 详细过程步骤请[参考链接](https://support.huaweicloud.com/usermanual-lts/lts_04_1031.html)
 
 ## 辅助工具
-1. 加密工具：提供了加密敏感数据的工具，有需要可自行嵌入进源码中
+1. 加密工具：提供了加密敏感数据的工具，详细请参考[链接](/tools/cipher)，有需要可自行嵌入进源码中
 2. 对等连接工具：提供了两个`VPC`创建对等连接的工具

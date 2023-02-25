@@ -68,7 +68,7 @@
     },
     {
       "name": "prepare_vpc",
-      "description": "按需准备vpc资源",
+      "description": "按需准备VPC资源",
       "task_type": "PREPARE_VPC",
       "execute_failure": {
         "retry_policy": {
@@ -89,7 +89,7 @@
     },
     {
       "name": "prepare_subnet",
-      "description": "按需准备subnet资源",
+      "description": "按需准备Subnet资源",
       "task_type": "PREPARE_SUBNET",
       "execute_failure": {
         "retry_policy": {
@@ -110,7 +110,7 @@
     },
     {
       "name": "prepare_security_group",
-      "description": "按需准备security_group资源",
+      "description": "按需准备Security_Group资源",
       "task_type": "PREPARE_SECURITY_GROUP",
       "execute_failure": {
         "retry_policy": {
@@ -131,7 +131,7 @@
     },
     {
       "name": "prepare_security_group_rules",
-      "description": "按需准备security_group_rules资源",
+      "description": "按需准备Security_Group_Rules资源",
       "task_type": "PREPARE_SECURITY_GROUP_RULES",
       "execute_failure": {
         "retry_policy": {
@@ -170,8 +170,7 @@
         },
         "ignore": true
       }
-    },
-    {
+    },{
       "name": "wait_process_ready",
       "description": "等待应用队列进程启动",
       "task_type": "WAIT_PROCESS_READY",
@@ -199,7 +198,7 @@
       "execute_failure": {
         "retry_policy": {
           "logic": "exponent",
-          "repeat": 20,
+          "repeat": 10,
           "delay_seconds": 5
         },
         "ignore": false

@@ -1,23 +1,23 @@
 #!/bin/bash
 
-version={version}
+version={version}							# aass的版本名
 
 # influxDB的相关配置
-export INFLUX_ADDRESS=https://{influx_host}:{influx_port}
-export INFLUX_PASSWORD={influx_pwd}
-export INFLUX_DATABASE={influx_database}
+export INFLUX_ADDRESS=https://{influx_host}:{influx_port}	# influxDB的地址与端口
+export INFLUX_PASSWORD={influx_pwd}			# 加密后的influxDB密码
+export INFLUX_DATABASE={influx_database}	# influxDB数据库，与appgateway配置相同
 export INFLUX_USER={influx_username}
 
 # AASS的数据库相关配置
-export MYSQL_ADDRESS={mysql_host}:{mysql_port}
+export MYSQL_ADDRESS={mysql_host}:{mysql_port}		# 数据库的地址与端口
 export MYSQL_DB_NAME={mysql_aass_database}
-export MYSQL_PASSWORD={mysql_pwd}
+export MYSQL_PASSWORD={mysql_pwd} 			# 加密后的mysql密码
 export MYSQL_USER={mysql_username}
 export MYSQL_CHARSET=utf8
 
 # 服务账号的相关配置
-export SERVICE_AK={ak}
-export SERVICE_SK={sk}
+export SERVICE_AK={ak}						# 加密后的管理用户ak
+export SERVICE_SK={sk}						# 加密后的管理用户sk
 export SERVICE_DOMAIN_ID={managerUser_domain_id}
 
 # 其他配置
