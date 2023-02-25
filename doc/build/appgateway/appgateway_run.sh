@@ -1,21 +1,21 @@
 #!/bin/bash
 
-version={version} 
+version={version} 								    # appgateway的版本号
 
-# AASS的地址与监听端口(默认9091).
+# AASS的地址与监听端口(端口默认9091)
 export AASS_ADDR={aass_host}:{aass_port}
 
 # Appgateway的数据库相关配置，默认端口3306
-export DATABASE_ADDR={mysql_host}
-export DATABASE_NAME={mysql_appgateway_database}
+export DATABASE_ADDR={mysql_host}:{mysql_port}		# RDS地址与端口
+export DATABASE_NAME={mysql_appgateway_database}	# RDS数据库名
 export DATABASE_PASSWORD={mysql_password}			# GCM 加密后的RDS密码
-export DATABASE_USER={mysql_username}
+export DATABASE_USER={mysql_username}				# RDS用户名
 
 # influxDB的相关配置
-export INFLUX_ADDR={influx_host}:{influx_port}
+export INFLUX_ADDR={influx_host}:{influx_port}		# influxDB的地址与端口
 export INFLUX_PASSWORD={influx_password}			# GCM 加密后的influxDB密码
 export INFLUX_DBNAME={influx_database}				# 与aass使用相同的数据库
-export INFLUX_USER={influx_username}
+export INFLUX_USER={influx_username}				# influxDB的用户名
 
 # 本地传输加密相关
 export GCM_KEY=**************		# 24位的GCM key
