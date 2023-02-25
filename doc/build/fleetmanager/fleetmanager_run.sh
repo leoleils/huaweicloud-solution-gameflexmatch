@@ -49,7 +49,6 @@ export DEFAULT_IMAGE_REF="CentOS 7.2 64bit" # 用于镜像打包的ECS默认操�
 export DEFAULT_SCRIPT_PATH=metaspace/image_env.sh # 镜像环境配置脚本 OBS路径 桶名/对象名
 export DEFAULT_AUXPROXY_PATH=metaspace/auxproxy.zip # AuxProxy组件压缩包 OBS路径 用于镜像环境配置 桶名/对象名
 export IMAGE_DISK_SIZE=40
-export LTS_AGENCY_NAME=lts_ecm_trust # LTS授权委托名称 用于ECS安装ICAgent 委托配置方法见README
 
 # 服务其他配置
 export AASS_ENABLE_HMAC=false							# aass是否开启hmac验证
