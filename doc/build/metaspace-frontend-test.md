@@ -149,8 +149,8 @@ http {
 
 ```
 
-12. 把 dist 目录下的所有文件都复制到 nginx 网站根目录 /usr/local/webserver/nginx/html 下
-13. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
+17. 把 dist 目录下的所有文件都复制到 nginx 网站根目录 /usr/local/webserver/nginx/html 下
+18. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
 
 ```
 ./nginx
