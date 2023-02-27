@@ -13,28 +13,38 @@ yum -y install git
 2. 安装 nodejs
 
 ```
-yum -y install nodejs
+wget https://nodejs.org/download/release/v16.13.1/node-v16.13.1-linux-x64.tar.gz
+tar xf node-v16.13.1-linux-x64.tar.gz
+mv node-v16.13.1-linux-x64 /usr/local/
 ```
 
-3. 安装 npm
+3. 修改 node.sh 文件
 
 ```
-curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+vi /etc/profile.d/node.sh
 ```
 
-4. 安装 vue
+4. 设置环境变量
+
+```
+export NODE_HOME=/usr/local/node-v16.13.1-linux-x64
+export PATH=${NODE_HOME}/bin:$PATH
+```
+
+5. 执行脚本使环境变量生效
+
+```
+chmod +x /etc/profile.d/node.sh
+source /etc/profile.d/node.sh
+```
+
+6. 安装 vue
 
 ```
 npm install -g @vue/cli
 ```
 
-5. 安装 vite
-
-```
-npm init vite@latest
-```
-
-6. 拉取前端代码
+7. 拉取前端代码
 
 ```
 cd /usr/local
@@ -42,7 +52,7 @@ git clone -b master-dev https://codehub-dg-g.huawei.com/PublicCloudSolution/huaw
 cd huaweicloud-solution-metaspace-console
 ```
 
-7. 修改密码加密公钥配置文件 src/api/crypto.ts
+8. 修改密码加密公钥配置文件 src/api/crypto.ts
 
 ```
 export function encryptedData(data: string) {
@@ -53,13 +63,19 @@ export function encryptedData(data: string) {
 }
 ```
 
-8. 在根目录下运行 npm install 命令，安装项目所需要的依赖
+9. 在根目录下运行 npm install 命令，安装项目所需要的依赖
 
 ```
 npm install
 ```
 
-9. 在根目录下运行 npm run dev 命令，运行项目
+10. 在根目录下安装 vue 国际化插件
+
+```
+npm install --save vue-i18n@next
+```
+
+11. 在根目录下运行 npm run dev 命令，运行项目
 
 ```
 npm run dev
@@ -67,19 +83,19 @@ npm run dev
 
 ## 打包部署
 
-10. 在根目录下运行 npm run build 命令，将项目编译打包至根目录的 dist 文件夹下。
+12. 在根目录下运行 npm run build 命令，将项目编译打包至根目录的 dist 文件夹下。
 
 ```
 npm run build
 ```
 
-11. 安装编译工具及库文件
+13. 安装编译工具及库文件
 
 ```
 yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel
 ```
 
-12. 下载 PCRE 安装包
+14. 下载 PCRE 安装包
 
 ```
 cd /usr/local/src/ || exit
@@ -87,7 +103,7 @@ wget http://downloads.sourceforge.net/project/pcre/pcre/8.35/pcre-8.35.tar.gz
 tar zxvf pcre-8.35.tar.gz
 ```
 
-13. 编译安装
+15. 编译安装
 
 ```
 cd pcre-8.35 || exit
@@ -95,7 +111,7 @@ cd pcre-8.35 || exit
 make && make install
 ```
 
-14. 安装 Nginx
+16. 安装 Nginx
 
 ```
 cd /usr/local/src/ || exit
@@ -104,7 +120,7 @@ tar zxvf nginx-1.7.8.tar.gz
 cd nginx-1.7.8 || exit
 ```
 
-15. 编译安装到/usr/local/webserver/nginx
+17. 编译安装到/usr/local/webserver/nginx
 
 ```
 ./configure --prefix=/usr/local/webserver/nginx --with-http_stub_status_module --with-http_ssl_module --with-pcre=/usr/local/src/pcre-8.35
@@ -112,7 +128,7 @@ make
 make install
 ```
 
-16. 替换 /usr/local/webserver/nginx/conf/nginx.conf 为以下内容
+18. 替换 /usr/local/webserver/nginx/conf/nginx.conf 为以下内容
 
 ```
 worker_processes  1;
@@ -151,8 +167,8 @@ http {
 
 ```
 
-17. 把 dist 目录下的所有文件都复制到 nginx 网站根目录 /usr/local/webserver/nginx/html 下
-18. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
+19. 把 dist 目录下的所有文件都复制到 nginx 网站根目录 /usr/local/webserver/nginx/html 下
+20. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
 
 ```
 ./nginx
