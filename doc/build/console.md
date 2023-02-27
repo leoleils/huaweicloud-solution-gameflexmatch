@@ -1,6 +1,8 @@
 # metaspace 前端测试部署流程
 
-## 安装前端代码
+操作系统：CentOS 7.6 64bit
+
+## 本地运行前端代码
 
 1. 安装 git
 
@@ -81,7 +83,7 @@ yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel
 
 ```
 cd /usr/local/src/ || exit
-wget https://documentation-samples.obs.cn-north-4.myhuaweicloud.com/solution-as-code-publicbucket/solution-as-code-moudle/build-a-digital-assets-platform-based-on-MetaTown/open-source-software/pcre-8.35.tar.gz
+wget http://downloads.sourceforge.net/project/pcre/pcre/8.35/pcre-8.35.tar.gz
 tar zxvf pcre-8.35.tar.gz
 ```
 
@@ -97,7 +99,7 @@ make && make install
 
 ```
 cd /usr/local/src/ || exit
-wget https://documentation-samples.obs.cn-north-4.myhuaweicloud.com/solution-as-code-publicbucket/solution-as-code-moudle/build-a-digital-assets-platform-based-on-MetaTown/open-source-software/nginx-1.7.8.tar.gz
+wget http://nginx.org/download/nginx-1.7.8.tar.gz
 tar zxvf nginx-1.7.8.tar.gz
 cd nginx-1.7.8 || exit
 ```
@@ -149,26 +151,9 @@ http {
 
 ```
 
-12. 把 dist 目录下的所有文件都复制到 nginx 网站根目录 /usr/local/webserver/nginx/html 下
-13. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
+17. 把 dist 目录下的所有文件都复制到 nginx 网站根目录 /usr/local/webserver/nginx/html 下
+18. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
 
 ```
 ./nginx
-```
-
-# centos7 + x86 ecs 配置乌兰 203yum 镜像源
-
-```
-sed -i '$i nameserver 10.189.32.59' /etc/resolv.conf;
-nmcli con mod 'System eth0' ipv4.dns "10.129.0.220 10.98.48.39";
-nmcli con up 'System eth0';
-sed -i '$a 7.223.219.40  mirrors.tools.huawei.com' /etc/hosts;
-sed -i '$a 7.223.219.58  cmc-cd-mirror.rnd.huawei.com' /etc/hosts;
-if [ "`cat /etc/yum.conf | grep sslverify=`" != "" ]; then sed -i 's/sslverify=.*/sslverify=false/g' /etc/yum.conf; else sed -i '$a sslverify=false' /etc/yum.conf; fi
-mkdir -p /etc/repoback;
-mv -f /etc/yum.repos.d/* /etc/repoback;
-rm -rf /etc/yum.repos.d/*;
-wget -q -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.tools.huawei.com/repository/conf/CentOS-7-anon.repo;
-yum clean all;
-yum makecache;
 ```
