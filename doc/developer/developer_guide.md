@@ -24,7 +24,7 @@
 `Fleet`创建之后默认会启动一个虚拟机来启动进程，需要等`Fleet`的状态为`active`，通过这个接口可以修改指定`Fleet`的虚拟机最大值、最少值和期望值
  
 4. **UpdateFleet**
-该接口主要是修改`Fleet`的属性，比如打开弹性伸缩
+该接口主要是修改`Fleet`的属性，比如打开弹性伸缩，修改实例标签，会话保护策略与保护时长等
  
 5. **CreateScalingPolicy**
 `Fleet`创建之后默认不启动弹性伸缩，需要等`Fleet`的状态为`active`，调用`updateFleet` 开启弹性伸缩，然后通过`CreateScalingPolicy`可以配置自己的弹性阈值
