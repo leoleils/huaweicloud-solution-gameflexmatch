@@ -4,16 +4,8 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
-	"flag"
 	"fmt"
 )
-
-// const (
-// 	// aes-gcm加密的24位秘钥
-// 	key   = "mTqBnYoyhQm8xOkRFkaUU7X2"
-// 	// aes-gcm加密的16位初始向量
-// 	nonce = "0xCWIOTotifzJMnD"
-// )
 
 func AESGCMEncrypt(plaintextStr string, key string, nonce string) (string, error) {
 	// 将明文和密钥转换为字节切片
@@ -61,42 +53,4 @@ func AESGCMDecrypt(ciphertextStr string, key string, nonce string) (string, erro
 		return "", err
 	}
 	return string(plaintext), nil
-}
-
-func main() {
-	var str string
-	var mode string
-	var key string
-	var nonce string
-	
-	flag.StringVar(&mode, "mode", "", "gcm cipher mode, support encode or decode")
-	flag.StringVar(&str, "str", "", "str need to encode or decode")
-	flag.StringVar(&key, "key", "", "gcm key")
-	flag.StringVar(&nonce, "nonce", "", "gcm nonce")
-	
-	flag.Parse()
-	if mode == "encode" {
-		fmt.Printf("encode plain text: %s\n", str)
-		
-
-		ciphertext, err := AESGCMEncrypt(str, key, nonce)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		fmt.Printf("encode cipher text result: %s\n", ciphertext)
-	} else if mode == "decode" {
-		fmt.Printf("decode cipher text: %s\n", str)
-		plaintext, err := AESGCMDecrypt(str, key, nonce)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		fmt.Printf("decode plain text result: %s\n", plaintext)
-	} else {
-		fmt.Printf("-mode: encode or decode\n")
-		fmt.Printf("-str: plain or cipher text\n")
-		fmt.Printf("-key: gcm key\n")
-		fmt.Printf("-nonce: gcm nonce\n")
-	}
 }
