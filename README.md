@@ -76,10 +76,10 @@ MetaSpace平台由五个服务组件组成：
 2. **环境依赖**:
    + go1.16及以上版本
 3. **文件编译**：
-   + 将源码下载到本地，编译`linux`可执行的二进制文件，**以下步骤中{var}中的变量需按具体情况更改**
+   + 将源码下载到本地，编译`linux`可执行的二进制文件，**以下步骤中{version}中的变量需按具体情况更改**
     ```sh
         # 设置编译的可执行文件的操作系统
-        go env -w GOOS=linux/window
+        go env -w GOOS=linux
         # 1. fleetmanager
         cd ~/huaweicloud-solution-metaspace-fleetmanager
         go build ./main.go
@@ -104,7 +104,7 @@ MetaSpace平台由五个服务组件组成：
 
     ```
 4. **证书准备**
-   通过`openssl`获取自签名证书，可在任一台`ECS`下操作，三个服务组件使用相同的自签名证书：
+   在`linux`系统下通过`openssl`获取自签名证书，可在任一台`ECS`下操作，三个服务组件使用相同的自签名证书：
    + 获取`https`签名证书
     ```sh
         # 1. 创建tlsSecret文件夹
@@ -126,7 +126,7 @@ MetaSpace平台由五个服务组件组成：
         # Organizational Unit Name (eg, section) []:Cloud
         # Common Name (eg, your name or your server's hostname) []:MetaSpace
         # Email Address []:metaspace@huawei.com
-        
+
         # Please enter the following 'extra' attributes
         # to be sent with your certificate request
         # A challenge password []:metaspace@123
