@@ -2,14 +2,14 @@
 ---
 ## 简介
 
-`MetaSpace`是一个服务端应用托管平台，包含四个服务组件(`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`)，可以实现应用的托管、托管应用所需资源的弹性伸缩、应用进程的资源调度管理、应用的灰度发布，多`region`部署时可以实现用户的就近接入，减少时延，以及服务资源的跨地域容灾。可以帮助开发者快速构建稳定、低延时的多人游戏的部署环境，并节省大量的运维成本，支持支持`Unreal`、`Unity`引擎，`C#`、`C++`以及`gRPC`支持的任何语言的`server`框架部署和运行。
+`MetaSpace`是一个服务端应用托管平台，包含四个服务组件(`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`)，可以实现应用的托管、托管应用所需资源的弹性伸缩、应用进程的资源调度管理、应用的灰度发布，多`region`部署时可以实现用户的就近接入，减少时延，以及服务资源的跨地域容灾。可以帮助开发者快速构建稳定、低延时的多人游戏的部署环境，并节省大量的运维成本，支持`Unreal`、`Unity`引擎，`C#`、`C++`以及`gRPC`支持的任何语言的`server`框架部署和运行。
 
 
 ## 逻辑架构
 <img src="/img/architecture.jpg" width="80%">
 
 MetaSpace平台由五个服务组件组成：
-+ [FleetManager](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-fleetmanager): 负责应用进程的全句话动态部署及管理，支持配置动态部署策略，基于成本或时延优化应用分布，负责弹性伸缩策略的配置和服务端会话、客户端会话与应用包的管理，服务端应用的灰度发布等
++ [FleetManager](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-fleetmanager): 负责应用进程的全局化动态部署及管理，支持配置动态部署策略，基于成本或时延优化应用分布，负责弹性伸缩策略的配置和服务端会话、客户端会话与应用包的管理，服务端应用的灰度发布等
 + [AppGateway](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-appgateway): 负责应用进程、会话与客户端连接的管理，通过与`AuxProxy`通信获得应用进程信息，决策进程资源的调度
 + [AASS](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-aass): 负责弹性伸缩组和弹性伸缩策略的管理与执行，以及服务端应用资源的监控，调用华为云`AS`(弹性伸缩服务)实现资源的弹性伸缩
 + [AuxProxy](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-auxproxy): 在扩容出的实例中自动拉起，负责应用进程的创建、进程状态的上报以及应用进程的通信
@@ -56,7 +56,7 @@ MetaSpace平台由五个服务组件组成：
            | 资源账号 |         ECS         | 2vCPUs/4GB |   3   |
            | 资源账号 |         RDS         | 2vCPUs/4GB |   3   |
            | 资源账号 | GaussDB(for Influx) | 2vCPUs/4GB |   1   |
-       
+        
            RDS可以按需选择单机或主备节点
            influxdb选择集群(默认3节点)
 
@@ -114,6 +114,24 @@ MetaSpace平台由五个服务组件组成：
         openssl genrsa -out tls.key 3072
         # 3. 使用私钥生成csr，并查看
         openssl req -new -key tls.key -out tls.csr
+        # 上述步骤会要求输入以下信息，可按实际情况填写，如
+        # There are quite a few fields but you can leave some blank
+        # For some fields there will be a default value,
+        # If you enter '.', the field will be left blank.
+
+        # Country Name (2 letter code) [XX]:China
+        # State or Province Name (full name) []:GuangDong
+        # Locality Name (eg, city) [Default City]:ShenZhen
+        # Organization Name (eg, company) [Default Company Ltd]:Huawei
+        # Organizational Unit Name (eg, section) []:Cloud
+        # Common Name (eg, your name or your server's hostname) []:MetaSpace
+        # Email Address []:metaspace@huawei.com
+        
+        # Please enter the following 'extra' attributes
+        # to be sent with your certificate request
+        # A challenge password []:metaspace@123
+        # An optional company name []:Huawei
+
         openssl req -in tls.csr -text
         # 4. 生成自签名证书 tls.crt, 并查看
         openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
