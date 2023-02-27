@@ -10,7 +10,7 @@
 
 ### 架构介绍
 
-<img src="/img/user-management.jpg" width="80%">
+<img src="../../img/user-management.jpg" width="80%">
 
 ## 二、用户登录/管理功能使用说明
 
