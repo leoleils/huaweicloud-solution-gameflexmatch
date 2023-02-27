@@ -77,167 +77,170 @@ MetaSpace平台由五个服务组件组成：
    + go1.16及以上版本
 3. **文件编译**：
    + 将源码下载到本地，编译`linux`可执行的二进制文件，**以下步骤中{var}中的变量需按具体情况更改**
-```sh
-    # 设置编译的可执行文件的操作系统
-    go env -w GOOS=linux/window
-    # 1. fleetmanager
-    cd ~/huaweicloud-solution-metaspace-fleetmanager
-    go build ./main.go
-    # 修改文件名
-    mv main fleetmanager-{version}
+    ```sh
+        # 设置编译的可执行文件的操作系统
+        go env -w GOOS=linux/window
+        # 1. fleetmanager
+        cd ~/huaweicloud-solution-metaspace-fleetmanager
+        go build ./main.go
+        # 修改文件名
+        mv main fleetmanager-{version}
 
-    # 2. appgateway
-    cd ~/huaweicloud-solution-metaspace-appgateway
-    go build ./cmd/application_gateway.go
-    # 修改文件名
-    mv application_gateway appgateway-{version}
+        # 2. appgateway
+        cd ~/huaweicloud-solution-metaspace-appgateway
+        go build ./cmd/application_gateway.go
+        # 修改文件名
+        mv application_gateway appgateway-{version}
 
-    # 3. aass
-    cd ~/huaweicloud-solution-metaspace-aass
-    go build ./cmd/application-auto-scaling-service/application_auto_scaling_service.go
-    # 修改文件名
-    mv application_auto_scaling_service aass-{version}
+        # 3. aass
+        cd ~/huaweicloud-solution-metaspace-aass
+        go build ./cmd/application-auto-scaling-service/application_auto_scaling_service.go
+        # 修改文件名
+        mv application_auto_scaling_service aass-{version}
 
-    # 4. auxproxy
-    cd ~/huaweicloud-solution-metaspace-auxproxy
-    go build ./cmd/auxproxy.go
+        # 4. auxproxy
+        cd ~/huaweicloud-solution-metaspace-auxproxy
+        go build ./cmd/auxproxy.go
 
-```
+    ```
 4. **证书准备**
    通过`openssl`获取自签名证书，可在任一台`ECS`下操作，三个服务组件使用相同的自签名证书：
    + 获取`https`签名证书
-```sh
-    # 1. 创建tlsSecret文件夹
-    mkdir -p /home/tlsSecret
-    cd /home/tlsSecret
-    # 2. 生成私钥tls.key
-    openssl genrsa -out tls.key 3072
-    # 3. 使用私钥生成csr，并查看
-    openssl req -new -key tls.key -out tls.csr
-    openssl req -in tls.csr -text
-    # 4. 生成自签名证书 tls.crt, 并查看
-    openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
-    openssl x509 -in tls.crt -text
-```
+    ```sh
+        # 1. 创建tlsSecret文件夹
+        mkdir -p /home/tlsSecret
+        cd /home/tlsSecret
+        # 2. 生成私钥tls.key
+        openssl genrsa -out tls.key 3072
+        # 3. 使用私钥生成csr，并查看
+        openssl req -new -key tls.key -out tls.csr
+        openssl req -in tls.csr -text
+        # 4. 生成自签名证书 tls.crt, 并查看
+        openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
+        openssl x509 -in tls.crt -text
+    ```
    + 获取网络传输的RSA非对称加密的公钥与私钥，用户敏感数据的加密与解密
-```sh
-    # 1. 创建RSA私钥，长度可以为1024，也可以为2048
-    cd /home/tlsSecret
-    openssl genrsa -out rsa_private.pem 1024
-    # 2. 在私钥的基础上生成公钥
-    openssl rsa -in rsa_private.pem -pubout -out rsa_public.pem
-```
+    ```sh
+        # 1. 创建RSA私钥，长度可以为1024，也可以为2048
+        cd /home/tlsSecret
+        openssl genrsa -out rsa_private.pem 1024
+        # 2. 在私钥的基础上生成公钥
+        openssl rsa -in rsa_private.pem -pubout -out rsa_public.pem
+    ```
 5. **服务组件安装**
    + 安装`appgateway`服务组件
 
-```sh
-    # 1. 登录ECS-01，新建/home/tlsSecret，并上传已生成的tls.crt与tls.key
-    mkdir -p /home/tlsSecret
-    # 2. 创建文件夹/home/appgateway/conf/hmac，
-    mkdir -p /home/appgateway/conf/hmac
-    # 上传client_hmac_conf.json、server_hmac_conf.json上传至hmac文件夹，样例见: 
-    # doc/build/appgateway/client_hmac_conf.json
-    # doc/build/appgateway/server_hmac_conf.json
+    ```sh
+        # 1. 登录ECS-01，新建/home/tlsSecret，并上传已生成的tls.crt与tls.key
+        mkdir -p /home/tlsSecret
+        # 2. 创建文件夹/home/appgateway/conf/hmac，
+        mkdir -p /home/appgateway/conf/hmac
+        # 上传client_hmac_conf.json、server_hmac_conf.json上传至hmac文件夹，样例见: 
+        # doc/build/appgateway/client_hmac_conf.json
+        # doc/build/appgateway/server_hmac_conf.json
 
-    # 3. 新建bin目录，上传可执行二进制文件与启动脚本并修改权限
-    mkdir -p /home/appgateway/bin
-    cd /home/appgateway/bin
-    # 上传生成的appgateway-{version}二进制文件与启动脚本appgateway_run.sh，并修改相关配置(样例见：doc/build/appgateway/appgateway_run.sh)
-    # 修改权限
-    chmod 750 appgateway-{version}
-    chmod 750 appgateway_run.sh
+        # 3. 新建bin目录，上传可执行二进制文件与启动脚本并修改权限
+        mkdir -p /home/appgateway/bin
+        cd /home/appgateway/bin
+        # 上传生成的appgateway-{version}二进制文件与启动脚本appgateway_run.sh，并修改相关配置(样例见：doc/build/appgateway/appgateway_run.sh)
+        # 修改权限
+        chmod 750 appgateway-{version}
+        chmod 750 appgateway_run.sh
 
-    # 4. 配置完成后运行启动脚本
-    ./appgateway_run.sh
+        # 4. 配置完成后运行启动脚本
+        ./appgateway_run.sh
 
-    # 5. 验证是否执行成功
-    ps -aux | grep appgateway
-    
-    # 6. 关掉进程后配置开机自启动
-    # 在/etc/systemd/system下新建appgateway.service
-    # appgateway.service 样例见 /doc/build/appgateway
-    # 启动appgateway.service保证进程自动拉起
-    systemctl enable appgateway.service
-    systemctl start appgateway.service
+        # 5. 验证是否执行成功
+        ps -aux | grep appgateway
+        
+        # 6. 关掉进程后配置开机自启动
+        # 在/etc/systemd/system下新建appgateway.service
+        # appgateway.service 样例见 /doc/build/appgateway
+        # 启动appgateway.service保证进程自动拉起
+        systemctl enable appgateway.service
+        systemctl start appgateway.service
 
-    # 7. 验证是否成功
-    ps -aux | grep appgateway
+        # 7. 验证是否成功
+        ps -aux | grep appgateway
+        # 8. 可以正常运行则为部署成功
 
-```
+    ```
 
    + 安装`aass`服务组件
 
-```sh
-    # 1. 登录ECS-02，并创建tlsSecret文件夹
-    mkdir -p /home/tlsSecret
-    # 2. 将已生成的tls.crt与tls.key上传至tlsSecret文件夹中
-    # 3. 创建文件夹/home/aass
-    mkdir -p /home/aass/configmap
-    # 4. 将server_hmac_conf.json与service_config.json上传至configmap中,修改相关配置，样例见：
-    # doc/build/aass/server_hmac_conf.json
-    # doc/build/aass/service_config.json
+    ```sh
+        # 1. 登录ECS-02，并创建tlsSecret文件夹
+        mkdir -p /home/tlsSecret
+        # 2. 将已生成的tls.crt与tls.key上传至tlsSecret文件夹中
+        # 3. 创建文件夹/home/aass
+        mkdir -p /home/aass/configmap
+        # 4. 将server_hmac_conf.json与service_config.json上传至configmap中,修改相关配置，样例见：
+        # doc/build/aass/server_hmac_conf.json
+        # doc/build/aass/service_config.json
 
-    # 5. 创建文件夹/home/aass/bin
-    mkdir -p /home/aass/bin
-    # 6. 将aass的二进制可执行文件aass-{version}与执行脚本aass_run.sh上传至bin目录下，修改相关配置，并修改文件权限
-    cd /home/aass/bin
-    chmod 750 aass-{version}
-    chmod 750 aass_run.sh
+        # 5. 创建文件夹/home/aass/bin
+        mkdir -p /home/aass/bin
+        # 6. 将aass的二进制可执行文件aass-{version}与执行脚本aass_run.sh上传至bin目录下，修改相关配置，并修改文件权限
+        cd /home/aass/bin
+        chmod 750 aass-{version}
+        chmod 750 aass_run.sh
 
-    # 7. 执行并验证是否执行成功
-    sh ./aass_run.sh
-    ps -aux | grep aass
+        # 7. 执行并验证是否执行成功
+        sh ./aass_run.sh
+        ps -aux | grep aass
 
-    # 8. Ctrl+c 关掉进程后配置开机自启动
-    # 在/etc/systemd/system下新建aass.service
-    # aass.service 样例见 /doc/build/aass
-    # 启动aass.service保证进程自动拉起
-    systemctl enable aass.service
-    systemctl start aass.service
+        # 8. Ctrl+c 关掉进程后配置开机自启动
+        # 在/etc/systemd/system下新建aass.service
+        # aass.service 样例见 /doc/build/aass
+        # 启动aass.service保证进程自动拉起
+        systemctl enable aass.service
+        systemctl start aass.service
 
-    # 9. 验证是否成功
-    ps -aux | grep aass
+        # 9. 验证是否成功
+        ps -aux | grep aass
+        # 10. 可以正常运行则为部署成功
 
-```
+    ```
 
- + 安装`fleetmanager`服务组件
+   + 安装`fleetmanager`服务组件
 
-```sh
-    # 1. 登录ECS-03，创建文件夹tlsSecret并上传已生成的tls.crt与tls.key文件
-    mkdir -p /home/tlsSecret
-    # 2. 创建/home/configmap文件夹
-    mkdir -p /home/fleetmanager/configmap
-    # 3. 上传server_config.json到configmap下，并修改相关配置
-    # 样例见 doc/build/fleetmanager/server_config.json
-    
-    # 4. 创建文件夹/home/fleetmanager/bin/conf/workflow
-    mkdir -p /home/fleetmanager/bin/conf/workflow
+    ```sh
+        # 1. 登录ECS-03，创建文件夹tlsSecret并上传已生成的tls.crt与tls.key文件
+        mkdir -p /home/tlsSecret
+        # 2. 创建/home/configmap文件夹
+        mkdir -p /home/fleetmanager/configmap
+        # 3. 上传server_config.json到configmap下，并修改相关配置
+        # 样例见 doc/build/fleetmanager/server_config.json
+        
+        # 4. 创建文件夹/home/fleetmanager/bin/conf/workflow
+        mkdir -p /home/fleetmanager/bin/conf/workflow
 
-    # 5. 上传create_fleet_workflow.json、delete_fleet_workflow.json以及create_build_image_workflow.json，详见
-    # doc/build/fleetmanager/create_fleet_workflow.json
-    # doc/build/fleetmanager/delete_fleet_workflow.json
-    # doc/build/fleetmanager/create_build_image_workflow.json
-    
-    # 6. 上传fleetmanager的二进制可执行文件fleetmanager-{version}
-    # 与启动脚本fleetmanager_run.sh上传至bin文件夹，修改相关配置与文件权限
-    cd /home/fleetmanager/bin
-    chmod 750 fleetmanager-{version}
-    chmod 750 fleetmanager_run.sh
+        # 5. 上传create_fleet_workflow.json、delete_fleet_workflow.json以及create_build_image_workflow.json，详见
+        # doc/build/fleetmanager/create_fleet_workflow.json
+        # doc/build/fleetmanager/delete_fleet_workflow.json
+        # doc/build/fleetmanager/create_build_image_workflow.json
+        
+        # 6. 上传fleetmanager的二进制可执行文件fleetmanager-{version}
+        # 与启动脚本fleetmanager_run.sh上传至bin文件夹，修改相关配置与文件权限
+        cd /home/fleetmanager/bin
+        chmod 750 fleetmanager-{version}
+        chmod 750 fleetmanager_run.sh
 
-    # 7. 启动脚本并验证是否成功
-    sh ./fleetmanager_run.sh
-    ps -aux | grep fleetmanager
+        # 7. 启动脚本并验证是否成功
+        sh ./fleetmanager_run.sh
+        ps -aux | grep fleetmanager
 
-    # 8. 关掉进程后配置开机自启动
-    # 在/etc/systemd/system下新建fleetmanager.service
-    # fleetmanager.service 样例见 /doc/build/fleetmanager
-    # 启动fleetmanager.service保证进程自动拉起
-    systemctl enable fleetmanager.service
-    systemctl start fleetmanager.service
+        # 8. 关掉进程后配置开机自启动
+        # 在/etc/systemd/system下新建fleetmanager.service
+        # fleetmanager.service 样例见 /doc/build/fleetmanager
+        # 启动fleetmanager.service保证进程自动拉起
+        systemctl enable fleetmanager.service
+        systemctl start fleetmanager.service
 
-    # 9. 验证是否成功
-    ps -aux | grep fleetmanager
-```
+        # 9. 验证是否成功
+        ps -aux | grep fleetmanager
+        # 10. 可以正常运行则为部署成功
+    ```
 6. **其他说明**：
    + 前端部署指导详见 [doc/build/console.md](/doc/build/console.md)
    + 应用镜像制作详见 [doc/build/make-image-guide.md](/doc/build/make-image-guide.md)
