@@ -11,7 +11,7 @@
 
 2.将应用压缩包（zip或rar）添加至资源账号的OBS桶中
 
-3.应用镜像中，应用默认在路径/local/app下进行解压，请根据该路径调整应用启动脚本，或修改环境构建脚本中的应用下载目标路径
+3.应用镜像中，应用默认在路径/local/app/{创建的应用包名}下进行解压，请根据该路径调整应用启动脚本，或修改环境构建脚本中的应用下载目标路径
 
 4.`FleetMange服务器组件`启动脚本[fleetmanage_run.sh](../../doc/build/fleetmanager/fleetmanager_run.sh)中添加参数，具体为DEFAULT_SCRIPT_PATH（环境构建脚本的OBS路径）、DEFAULT_AUXPROXY_PATH（`Auxproxy`服务组件压缩包OBS路径），其余镜像创建相关参数也可以在启动脚本中修改
 
