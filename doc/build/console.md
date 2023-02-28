@@ -171,7 +171,7 @@ http {
 20. 开启 nginx 开机自启动，在/etc/rc.d/rc.local 文件里添加以下内容
 
 ```
-/usr/local/nginx/sbin/nginx
+/usr/local/webserver/nginx/sbin/nginx
 ```
 
 21. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
