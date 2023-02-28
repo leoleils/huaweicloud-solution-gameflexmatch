@@ -168,7 +168,13 @@ http {
 ```
 
 19. 把 dist 目录下的所有文件都复制到 nginx 网站根目录 /usr/local/webserver/nginx/html 下
-20. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
+20. 开启 nginx 开机自启动，在/etc/rc.d/rc.local 文件里添加以下内容
+
+```
+/usr/local/nginx/sbin/nginx
+```
+
+21. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
 
 ```
 ./nginx
