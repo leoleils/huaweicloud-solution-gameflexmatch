@@ -5,7 +5,7 @@ AUX_URL=$3
 LTS_IP=$4
 APP_FILE=$5
 AUX_FILE=$6
-
+APP_NAME=$7
 
 # download rarlab
 mkdir /tmp/rar
@@ -16,8 +16,8 @@ cd rar
 make
 
 # download app
-mkdir -p /local/app
-cd /local/app
+mkdir -p /local/app/${APP_NAME}
+cd /local/app/${APP_NAME}
 wget ${APP_URL} -O ${APP_FILE}
 if [ "${APP_FILE##*.}" = "zip" ]; then
 	unzip -o ${APP_FILE}
