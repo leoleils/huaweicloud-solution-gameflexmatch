@@ -141,8 +141,8 @@ http {
     include       mime.types;
     default_type  application/octet-stream;
     sendfile        on;
-    keepalive_timeout  200;
-    client_max_body_size 5g;
+    keepalive_timeout  300;
+    client_max_body_size 6g;
     server {
         listen       80;
         server_name  localhost;
@@ -168,13 +168,41 @@ http {
 ```
 
 19. 把 dist 目录下的所有文件都复制到 nginx 网站根目录 /usr/local/webserver/nginx/html 下
-20. 开启 nginx 开机自启动，在/etc/rc.d/rc.local 文件里添加以下内容
+20. 配置 nginx 开机自启动，在/lib/systemd/system/目录下创建 nginx.service 文件
 
 ```
-/usr/local/webserver/nginx/sbin/nginx
+vi /lib/systemd/system/nginx.service
 ```
 
-21. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
+21. 在该文件中添加如下内容
+
+```
+[Unit]
+Description=nginx service
+After=network.target
+[Service]
+Type=forking
+ExecStart=/usr/local/webserver/nginx/sbin/nginx
+ExecReload=/usr/local/webserver/nginx/sbin/nginx -s reload
+ExecStop=/usr/local/webserver/nginx/sbin/nginx -s quit
+PrivateTmp=true
+[Install]
+WantedBy=multi-user.target
+```
+
+22. 设置文件的执行权限
+
+```
+chmod a+x /lib/systemd/system/nginx.service
+```
+
+23. 设置开机自启动
+
+```
+systemctl enable nginx.service
+```
+
+24. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
 
 ```
 ./nginx
