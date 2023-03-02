@@ -13,7 +13,7 @@ MetaSpace平台由五个服务组件组成：
 + [AppGateway](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-appgateway): 负责应用进程、会话与客户端连接的管理，通过与`AuxProxy`通信获得应用进程信息，决策进程资源的调度
 + [AASS](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-aass): 负责弹性伸缩组和弹性伸缩策略的管理与执行，以及服务端应用资源的监控，调用华为云`AS`(弹性伸缩服务)实现资源的弹性伸缩
 + [AuxProxy](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-auxproxy): 在扩容出的实例中自动拉起，负责应用进程的创建、进程状态的上报以及应用进程的通信
-+ [Console](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-console): 运维平台，用于监控metaspace的运行状态，以及运维管理metaspace的fleet、应用包与用户信息等
++ [Console](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-console): 运维平台，用于监控`metaspace`的运行状态，以及运维管理`metaspace`的`fleet`、应用包与用户信息等
 
 ## 组织结构
 
@@ -141,7 +141,7 @@ MetaSpace平台由五个服务组件组成：
     ```sh
         # 1. 创建RSA私钥，长度可以为1024，也可以为2048
         cd /home/tlsSecret
-        openssl genrsa -out rsa_private.pem 1024
+        openssl genrsa -out rsa_private.pem 2048
         # 2. 在私钥的基础上生成公钥
         openssl rsa -in rsa_private.pem -pubout -out rsa_public.pem
     ```
@@ -149,7 +149,7 @@ MetaSpace平台由五个服务组件组成：
    + 安装`appgateway`服务组件
 
     ```sh
-        # 1. 登录ECS-01，新建/home/tlsSecret，并上传已生成的tls.crt与tls.key
+        # 1. 登录ECS-01，新建/home/tlsSecret，并上传已生成的tls.crt与tls.key，以及RSA非对称加密的公钥与私钥rsa_private.pem，rsa_public.pem
         mkdir -p /home/tlsSecret
         # 2. 创建文件夹/home/appgateway/conf/hmac，
         mkdir -p /home/appgateway/conf/hmac

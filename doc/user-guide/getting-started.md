@@ -1,0 +1,289 @@
+# MetaSpace控制台快速入门
+## 1. 用户管理，关联资源用户
++ metaspace的用户分为两种类型，一种是用于登录控制台的MetaSpace用户，一种是用于创建与管理计算、网络等资源的华为云租户
++ 管理员第一次登录或普通用户第一次登录时，需重置密码，并关联华为云租户，以正常使metaspace控制台
+### Step1. 管理员新建用户NewUser
++ 管理员登录
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/user/login.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"></font>登录</font></div>
+</center>
+
++ 找到新增用户入口
+
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/user/admin-add-user-input.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">管理员新增用户入口</font></div>
+</center>
+
++ 新增普通用户，以NewUser为例
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/user/admin-add-user.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">管理员新增用户</font></div>
+</center>
+
+
+### Step2. 首次登录重置密码
++ NewUser首次登录控制台，需修改密码
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/user/modify-pw.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">首次登录修改密码</font></div>
+</center>
+
+### Step3. 普通用户或管理员首次进入若未关联资源租户，需先关联资源租户
++ 需联系管理员为NewUser关联资源租户
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/user/no-associated-res-domain.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">提示关联资源租户</font></div>
+</center>
+
+### Step4. 管理员为NewUser关联资源租户
++ 管理员登录控制台
++ 管理员为NewUser新增关联租户
+
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/user/admin-add-res-for-user-input.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">关联资源租户入口</font></div>
+</center>
+
++ **填写相关关联的资源租户相关信息**，简介如下:
+    1. 使用租户信息：
+    ```
+    使用租户id: 临时参数，后续废弃，可填写资源租户id
+    使用租户名: 临时参数，后续废弃，可填写资源租户名
+    使用租户项目id: 临时参数，后续废弃，可填写资源租户项目id
+    ```
+    2. 资源租户信息：
+    ```
+    资源租户id: 华为云租户，用于创建metaspace资源的租户id
+    资源租户名: 华为云租户，用于创建metaspace资源的租户名
+    资源租户项目id: 华为云租户，资源租户用于创建metaspace资源所对应项目id
+    资源用户名: 资源租户下的iam用户名
+    资源用户id: 资源租户下的iam用户id
+    Region: 资源租户用于创建metaspace资源的对应region
+    委托名: 资源租户委托给管理租户，便于metaspace使用管理租户管理资源租户，管理租户对应fleetmanager与aass后台部署时所对应的租户
+    密钥名: metaspace弹性扩容虚机时的登录认证密钥
+    云服务委托名: 目前用于打包镜像时安装ICAgent以及使用lts云日志服务的日志转储
+    ```
+    3. 委托的创建详见[/README.md](/README.md)
+
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/user/admin-add-res-for-user.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">关联资源租户</font></div>
+</center>
+
+### Step5. 查看NewUser关联的资源租户详情
++ 查看用户NewUser详情
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/user/res-info-input.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">资源租户详情入口</font></div>
+</center>
+
++ 查看NewUser关联的资源租户信息
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/user/res-info.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">资源租户详情</font></div>
+</center>
+
++ 资源租户关联成功，现在可以使用正常使用metaspace了
+
+
+## 2. 应用上传，制作镜像
++ 应用镜像内包含AuxProxy服务组件以及已完成对接的后端服务应用，并已完成相关的启动配置，用于弹性扩容虚机的模板
++ 执行该步骤之前，需确保资源租户向管理租户已经配置了正确的委托，以及资源租户配置了正确的云服务委托
++ 需保证上传的服务端应用可以正常的被启动
+
+### Step1. 上传应用包，制作镜像
++ 用户登录控制台
++ 进入“应用包管理”模块，进入“创建应用包”，开始制作应用
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/build/build-image-input.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">制作应用入口</font></div>
+</center>
+
++ 填写制作镜像相关信息，点击创建server-application
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/build/build-image-upload.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">制作应用</font></div>
+</center>
+
+### Step2. 查看应用包详情，确认应用状态
++ 进入应用包管理，搜索server-application
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/build/build-search.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">搜索应用</font></div>
+</center>
+
++ 点击应用名称查看应用详情，确认应用状态拿到应用包id
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/build/build-info.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">应用详情</font></div>
+</center>
+
++ 当应用状态为就绪时，可以使用该应用创建fleet
+
+## 3. 创建Fleet流程
++ 应用进程队列(fleet)是一个管理后端服务应用集群的队列，可以支持手动或自动增加后端服务应用的数量，以满足不同的负载需求
++ 执行该步骤之前，需确保资源租户向管理租户已经配置了正确的委托，以及资源租户配置了正确的云服务委托
++ 需保证已经拿到了“就绪”状态的应用包ID
+
+### Step1. 创建Fleet
++ 用户登录控制台
++ 进入创建fleet界面
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/fleet/create-fleet-input.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">创建fleet入口</font></div>
+</center>
+
++ 填写创建fleet的相关信息，支持json格式的文件导入
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/fleet/create-fleet.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">创建fleet</font></div>
+</center>
+
++ 点击创建，开始创建fleet
+
+### Step2. 检查Fleet是否创建成功
++ 进入fleet列表，找到刚刚创建的fleet
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/fleet/fleet-list.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">创建fleet</font></div>
+</center>
+
++ 点击详情，查看fleet信息
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/fleet/fleet-info.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">创建fleet</font></div>
+</center>
+
++ fleet状态由CREATING转为ACTIVE，则创建成功，转为ERROR，则创建失败，需管理员查看FleetManager服务日志查看失败原因
+
+## 4. 创建弹性伸缩策略，开启弹性伸缩功能
++ 执行该步骤之前，需保证创建弹性伸缩策略的fleet处于激活状态
++ 当前只支持选择“可用会话比”一种弹性伸缩策略，可以根据当前可承载的最大会话数、当前会话以及可用会话比的动态关系弹性扩缩容计算资源
+
+
+### Step1 创建弹性伸缩策略
++ 找到弹性伸缩策略创建入口
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/auto-scaling/create-auto-scaling-input.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">创建弹性伸缩策略入口</font></div>
+</center>
+
++ 选择弹性伸缩策略绑定的fleet_id，填写必要参数，点击创建
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/auto-scaling/create-auto-scaling.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">创建弹性伸缩策略</font></div>
+</center>
+
++ 确认弹性伸缩策略是否创建成功
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/auto-scaling/auto-scaling-list.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">弹性伸缩策略列表</font></div>
+</center>
+
+### Step2 修改fleet信息，开启弹性伸缩能力
++ 进入弹性伸缩策略所绑定的fleet的详情
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/auto-scaling/auto-scaling-fleet-list.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">fleet列表</font></div>
+</center>
+
++ 修改 `基本信息->是否开启弹性伸缩` 字段，开启弹性伸缩能力
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/auto-scaling/modify-fleet-info.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">修改fleet信息</font></div>
+</center>
+
++ 现在metaspace可以根据负载情况弹性扩缩容计算资源了
+
+
+## 5. 快速创建别名(alias)关联(可选)
++ fleet别名可以提供灰度发布的功能，可以为多个fleet关联同一个alias，在创建会话时可以携带alias_id代替fleet_id来创建会话，并支持不同fleet有不同的权重，加权分配不同会话创建请求
++ 需保证关联的fleet的状态是ACTIVE激活状态
+### Step1. 创建应用进程队列别名
++ 进入创建别名界面
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/alias/create-alias-input.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">创建别名入口</font></div>
+</center>
+
++ 填写别名创建相关信息
+<center>
+    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="../../img/alias/create-alias.jpg" width=80%>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block; color: #999;padding: 1px;"><font size="2">创建别名</font></div>
+</center>
+
++ 点击创建，完成alias的创建，现在可以使用这个alias创建会话了

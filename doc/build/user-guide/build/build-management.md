@@ -18,9 +18,9 @@
 
 ### 操作步骤
 
-1.登录`Metaspace`管理控制台。
+1. 登录`Metaspace`管理控制台。
 
-2.选择“应用包管理 > 创建应用包”。
+2. 选择“应用包管理 > 创建应用包”。
 
 ![create_build](../../../../img/build/create_build.PNG)
 
