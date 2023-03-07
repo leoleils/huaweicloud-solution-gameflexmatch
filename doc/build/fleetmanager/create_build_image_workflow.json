@@ -4,6 +4,27 @@
   "version": "1",
   "tasks": [
     {
+      "name": "start_build_image",
+      "description": "启动镜像打包创建流程",
+      "task_type": "START_BUILD_IMAGE",
+      "execute_failure": {
+        "retry_policy": {
+          "logic": "default",
+          "repeat": 1,
+          "delay_seconds": 5
+        },
+        "ignore": false
+      },
+      "rollback_failure": {
+        "retry_policy": {
+          "logic": "default",
+          "repeat": 0,
+          "delay_seconds": 0
+        },
+        "ignore": true
+      }
+    },
+    {
       "name": "prepare_res_domain",
       "description": "按需同步res_domain资源",
       "task_type": "PREPARE_RES_DOMAIN",
