@@ -141,3 +141,31 @@
 ![创建别名](../../img/alias/create-alias.jpg)
 
 + 点击创建，完成alias的创建，现在可以使用这个alias创建会话了
+
+## 6. 创建日志接入和转储
+
+- 为fleet下的实例创建日志接入和日志转储
+- 执行该步骤之前，需保证创建弹性伸缩策略的fleet处于激活状态，并且确保资源租户向管理租户已经配置了正确的委托
+
+### Step1. 创建日志接入
+
+- 进入日志管理界面，点击新建日志
+
+ ![build_access_config](../../img/lts/build_access_config.PNG)
+
+- 填写日志接入相关信息
+
+![build_access_config2](../../img/lts/build_access_config2.PNG)
+
+- 创建成功后可配置日志自动转储到OBS中，也可选择”否“跳过此步骤
+
+![prepare_build_transfer](../../img/lts/prepare_build_transfer.PNG)
+
+- 填写创建日志转储参数，点击创建
+
+![create_transfer2](../../img/lts/create_transfer2.PNG)
+
+- 创建成功后日志管理页面则会新增一条记录，可直接点击日志流或者OBS转储路径跳转至对应华为云服务控制台
+
+![build_access_config3](../../img/lts/build_access_config3.PNG)
+
