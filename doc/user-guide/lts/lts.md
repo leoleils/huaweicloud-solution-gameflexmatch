@@ -70,7 +70,7 @@ Metaspace平台提供对应用进程队列中的实例接入日志自动化管�
 
 5. 创建成功后，列表页显示该日志接入的obs转储路径，未配置转储显示空，路径可链接到华为OBS云服务的桶对象列表页
 
-   ![create_transfer3](../../../img/lts/create_transfer3.png)
+![create_transfer3](../../../img/lts/create_transfer3.png)
 
 ## 删除日志接入与转储
 
