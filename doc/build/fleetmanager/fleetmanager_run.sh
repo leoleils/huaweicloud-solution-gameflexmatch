@@ -70,6 +70,7 @@ export WEB_HTTPS_PORT=31002								# fleetmanager的启动端口
 export LOGIN_SESSION_LIFETIME=43200						# 登录会话的过期时间(s)
 export JWTKEY={jwt_token_generate_key}					# 登录会话token生成的key
 export JWT_TOKEN_LIFETIME=7200							# 登录会话token的有效时间(s)						
+export DEFAULT_LOGIN_PASSWORD={default_login_password}  # 登录默认密码设置
 
 function start_service(){
 	cd /home/bin/
