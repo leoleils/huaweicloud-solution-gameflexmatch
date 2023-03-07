@@ -151,21 +151,21 @@
 
 - 进入日志管理界面，点击新建日志
 
- ![build_access_config](../../img/lts/build_access_config.PNG)
+ ![build_access_config](../../img/lts/build_access_config.png)
 
 - 填写日志接入相关信息
 
-![build_access_config2](../../img/lts/build_access_config2.PNG)
+![build_access_config2](../../img/lts/build_access_config2.png)
 
 - 创建成功后可配置日志自动转储到OBS中，也可选择”否“跳过此步骤
 
-![prepare_build_transfer](../../img/lts/prepare_build_transfer.PNG)
+![prepare_build_transfer](../../img/lts/prepare_build_transfer.png)
 
 - 填写创建日志转储参数，点击创建
 
-![create_transfer2](../../img/lts/create_transfer2.PNG)
+![create_transfer2](../../img/lts/create_transfer2.png)
 
 - 创建成功后日志管理页面则会新增一条记录，可直接点击日志流或者OBS转储路径跳转至对应华为云服务控制台
 
-![build_access_config3](../../img/lts/build_access_config3.PNG)
+![build_access_config3](../../img/lts/build_access_config3.png)
 

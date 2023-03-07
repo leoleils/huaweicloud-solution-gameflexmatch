@@ -12,11 +12,11 @@ Metaspace平台提供对应用进程队列中的实例接入日志自动化管�
 
 2. 选择“日志管理  > 新建日志”；
 
-   ![build_access_config](../../../img/lts/build_access_config.PNG)
+   ![build_access_config](../../../img/lts/build_access_config.png)
 
 3. 填写日志接入参数，若无日志组，可点击”日志组名称“旁的”新建“，
    
-   ![build_access_config2](../../../img/lts/build_access_config2.PNG)
+   ![build_access_config2](../../../img/lts/build_access_config2.png)
 
 4. 新建日志接入参数详情如下：
 
@@ -30,14 +30,14 @@ Metaspace平台提供对应用进程队列中的实例接入日志自动化管�
 
 创建日志组参数详情如下：
 
-![create_log_group](../../../img/lts/create_log_group.PNG)
+![create_log_group](../../../img/lts/create_log_group.png)
 
 | 参数           | 解释                                                       | 取值样例 |
 | -------------- | ---------------------------------------------------------- | -------- |
 | 日志组名称 | 日志组的名称 | -        |
 | 日志保留时间（天） | 日志在LTS平台中保留的时间，范围1~30天 | 7 |
 
-5. 新建成功后会提示创建日志转储，选择”是“则跳转创建，选择”否"则跳过创建，进入日志接入详情页可以随时创建；![prepare_build_transfer](../../../img/lts/prepare_build_transfer.PNG)
+5. 新建成功后会提示创建日志转储，选择”是“则跳转创建，选择”否"则跳过创建，进入日志接入详情页可以随时创建；![prepare_build_transfer](../../../img/lts/prepare_build_transfer.png)
 
 6. 注意，一个日志接入只能对应一个日志转储。
 
@@ -54,11 +54,11 @@ Metaspace平台提供对应用进程队列中的实例接入日志自动化管�
 1. 登录`Metaspace`管理控制台；
 2. 选择“日志管理  > 日志详情  > 配置日志转储”；
 
-![create_transfer](../../../img/lts/create_transfer.PNG)
+![create_transfer](../../../img/lts/create_transfer.png)
 
 3. 填写创建日志转储的配置信息
 
-![create_transfer2](../../../img/lts/create_transfer2.PNG)
+![create_transfer2](../../../img/lts/create_transfer2.png)
 
 4. 配置参数信息如下：
 
@@ -82,8 +82,8 @@ Metaspace平台提供对应用进程队列中的实例接入日志自动化管�
 
 1. 删除日志接入（若已配置日志转储，则需要先删除日志转储），在日志接入的列表页，找到需要删除的日志接入项的删除按钮，点击即可删除
 
-   ![delete_access_config](../../../img/lts/delete_access_config.PNG)
+   ![delete_access_config](../../../img/lts/delete_access_config.png)
 
 2. 删除日志转储，在日志接入的详情页面中，点击右上角“删除日志转储”即可删除
 
-![delete_transfer](../../../img/lts/delete_transfer.PNG)
+![delete_transfer](../../../img/lts/delete_transfer.png)
