@@ -37,5 +37,6 @@
 |    login_session_lifetime    |                      登录会话持续实际                      |   登录会话的持续时间，单位：秒   |      43200 (12小时)      |
 |    jwt_token_generate_key    |                      生成JWT令牌的key                      |        用于生成JWT Token         |            --            |
 |      Jwt_token_lifetime      |                    JWT Token的有效时长                     |       限制token的有效时间        |      7200（2小时）       |
+| default_login_password |      用户登录默认密码        |   用于首次登录或重置密码操作 | 需包含大小写字母和数字，可包含特殊符号，如 Metaspace@123|
 |            lts_ip            |                  在某个region下的lts accessip，通过控制台-LTS-主机管理-安装ICAgent查看                  |         用于监测ECS状态          | 常用映射：cn-north-4:100.125.12.150, cn-east-3：100.125.11.177, cn-south-1:100.125.158.115 |
 
