@@ -4939,6 +4939,7 @@ definitions:
       password:
         type: string
         description: 用户登录密码
+        example: '*******'
       email:
         type: string
         description: 邮箱
@@ -5404,7 +5405,7 @@ definitions:
         example: user1@demo.com
       LastLogin:
         type: string
-        description: 最近登陆时间，UTC时间格式
+        description: 最近登陆时间，UTC时间格式2023-03-08T09:57:09Z
       Activation:
         type: integer
         format: int32
@@ -5423,15 +5424,19 @@ definitions:
       id:
         type: string
         description: 用户id
+        example: b3b22b1e***************03faa
       username:
         type: string
-        description: 要修改的用户
+        description: 要修改的用户名
+        example: user1
       email:
         type: string
         description: 邮箱
+        example: user1@123.com
       phone:
         type: string
         description: 电话
+        example: 13800000000
       usertype:
         type: integer
         format: int32
