@@ -27,6 +27,7 @@ export CLOUD_CLIENT_REGION={region}
 export CLOUD_CLIENT_AS_ENDPOINT=https://as.{region}.{endpoint}
 export CLOUD_CLIENT_ECS_ENDPOINT=https://ecs.{region}.{endpoint}
 export CLOUD_CLIENT_IAM_ENDPOINT=https://iam.{region}.{endpoint}
+export CLOUD_CLIENT_LTS_ENDPOINT=https://lts.{region}.{endpoint}
 export CONFIG_FILE=/home/aass/configmap/service_config.json
 export HTTPS_CERT_FILE=/home/tlsSecret/tls.crt
 export HTTPS_KEY_FILE=/home/tlsSecret/tls.key
