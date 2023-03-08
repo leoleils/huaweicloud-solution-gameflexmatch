@@ -13,21 +13,25 @@ consumes:
   - application/json; charset=UTF-8
 tags:
   - name: 应用进程队列管理
+  - name: 应用进程队列运行状态查询
   - name: 伸缩策略管理
   - name: 服务器会话管理
   - name: 客户端会话管理
   - name: 应用进程管理
+  - name: 别名管理
   - name: 应用包管理
+  - name: 用户管理
+  - name: 其他资源管理
+  - name: 日志管理
 parameters:
-  xAuthToken:
-    name: X-Auth-Token
+  Auth-token:
+    name: Auth-token
     in: header
     type: string
     description: |
       用户Token。
 
-      通过调用IAM服务获取用户Token接口获取（响应消息头中X-Subject-Token的值）。
-      [IAM token获取](https://support.huaweicloud.com/api-iam/iam_30_0001.html)
+      通过用户登录后的请求体中获取，请求API需要在请求头中带此参数
     required: true
     minLength: 1
     maxLength: 16384
@@ -53,6 +57,14 @@ parameters:
     name: fleet_id
     in: path
     description: 应用进程队列的id，由创建应用进程队列接口返回，格式为uuid，例如：77317ac6-acd8-11ec-a7e0-6805cab276a1
+    required: true
+    type: string
+    minLength: 1
+    maxLength: 64
+  aliasId:
+    name: alias_id
+    in: path
+    description: 应用进程队列别名的id，由创建应用进程队列接口返回，格式为uuid，例如：77317ac6-acd8-11ec-a7e0-6805cab276a1
     required: true
     type: string
     minLength: 1
@@ -93,8 +105,72 @@ parameters:
     description: 客户端会话id，通过创建客户端会话接口返回，全局唯一，uuid格式，例如：77317ac6-acd8-11ec-a7e0-6805cab276a1
     minLength: 1
     maxLength: 64
+  instanceId:
+    name: instance_id
+    in: query
+    description: 每一个实例id，由ECS服务自动生成，全局唯一，uuid格式，例如：77317ac6-acd8-11ec-a7e0-6805cab276a1
+    required: false
+    type: string
+    minLength: 1
+    maxLength: 64
+  durationStart:
+    name: duration_start
+    in: query
+    required: false
+    type: integer
+    format: int32
+    description: 筛选当前在应用进程队列/实例/进程上的会话最小数量，默认不设置
+  durationEnd:
+    name: duration_end
+    in: query
+    required: false
+    type: integer
+    format: int32
+    description: 筛选当前在应用进程队列/实例/进程上的会话最大数量，默认不设置
+  ipAddress:
+    name: ip_address
+    in: query
+    required: false
+    type: string
+    description: 筛选的ip地址，如100.20.13.25
+  processId:
+    name: process_id
+    in: query
+    required: false
+    type: string
+    description: 进程id，全局唯一，uuid格式，例如：77317ac6-acd8-11ec-a7e0-6805cab276a1
+    minLength: 1
+    maxLength: 64
+  startTime:
+    name: start_time
+    in: query
+    required: false
+    type: string
+    description: 筛选的数据的开始时间，例如：2022-12-01T20:37:39
+    minLength: 1
+    maxLength: 64
+  endTime:
+    name: end_time
+    in: query
+    required: false
+    type: string
+    description: 筛选的数据的结束时间，例如：2022-12-01T20:37:39
+    minLength: 1
+    maxLength: 64
+  Userid:
+    name: id
+    in: query
+    required: false
+    description: 用户id
+    type: string
+  ResouarceId:
+    name: id
+    in: query
+    required: false
+    description: 资源配置id，全局唯一，uuid格式，例如c0544f73-bce0-11ed-991f-fa163ecd2502
+    type: string
 paths:
-  '/{project_id}/fleets':
+  /{project_id}/fleets:
     post:
       tags:
         - 应用进程队列管理
@@ -106,7 +182,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - in: body
           name: CreateFleetRequestBody
@@ -114,6 +190,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/CreateFleetRequestBody'
+        - $ref: '#/parameters/Userid'
       responses:
         '201':
           description: 创建成功响应
@@ -150,7 +227,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/offset'
         - $ref: '#/parameters/limit'
@@ -179,19 +256,19 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/{project_id}/fleets/{fleet_id}':
+  /{project_id}/fleets/{fleet_id}:
     delete:
       tags:
         - 应用进程队列管理
       operationId: DeleteFleet
       summary: 删除应用进程队列
-      description: Delete Fleet by ID
+      description: 删除前请确认该fleet是否关联有alias，若关联，则无法被删除
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
       responses:
@@ -230,7 +307,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
       responses:
@@ -269,7 +346,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
         - in: body
@@ -301,7 +378,7 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/{project_id}/fleets/{fleet_id}/inbound-permissions':
+  /{project_id}/fleets/{fleet_id}/inbound-permissions:
     get:
       tags:
         - 应用进程队列管理
@@ -313,7 +390,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
       responses:
@@ -352,7 +429,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
         - in: body
@@ -384,7 +461,7 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/{project_id}/fleets/{fleet_id}/runtime-configuration':
+  /{project_id}/fleets/{fleet_id}/runtime-configuration:
     get:
       tags:
         - 应用进程队列管理
@@ -396,7 +473,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
       responses:
@@ -435,7 +512,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
         - in: body
@@ -467,7 +544,7 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/{project_id}/fleets/{fleet_id}/instance-capacity':
+  /{project_id}/fleets/{fleet_id}/instance-capacity:
     get:
       tags:
         - 应用进程队列管理
@@ -477,7 +554,7 @@ paths:
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
       responses:
@@ -516,7 +593,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
         - in: body
@@ -548,7 +625,7 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/{project_id}/fleets/{fleet_id}/process-counts':
+  /{project_id}/fleets/{fleet_id}/process-counts:
     get:
       tags:
         - 应用进程队列管理
@@ -558,7 +635,7 @@ paths:
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
       responses:
@@ -586,7 +663,7 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/{project_id}/fleets/{fleet_id}/scaling-policies':
+  /{project_id}/fleets/{fleet_id}/scaling-policies:
     post:
       tags:
         - 伸缩策略管理
@@ -596,7 +673,7 @@ paths:
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
         - name: CreateScalingPolicyRequestBody
@@ -639,7 +716,7 @@ paths:
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
         - $ref: '#/parameters/offset'
@@ -669,7 +746,7 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/{project_id}/fleets/{fleet_id}/scaling-policies/{policy_id}':
+  /{project_id}/fleets/{fleet_id}/scaling-policies/{policy_id}:
     put:
       tags:
         - 伸缩策略管理
@@ -679,7 +756,7 @@ paths:
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
         - name: policy_id
@@ -729,7 +806,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/fleetId'
         - name: policy_id
@@ -762,17 +839,17 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/{project_id}/server-sessions':
+  /{project_id}/server-sessions:
     post:
       tags:
         - 服务器会话管理
       summary: 创建服务器会话
-      description: 创建服务器会话
+      description: 创建服务器会话，可以选择根据fleet_id或alias_id创建会话，两者不能同时配置
       operationId: CreateServerSession
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - name: CreateServerSessionRequestBody
           in: body
@@ -814,7 +891,7 @@ paths:
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/offset'
         - $ref: '#/parameters/limit'
@@ -868,7 +945,7 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/{project_id}/server-sessions/{server_session_id}':
+  /{project_id}/server-sessions/{server_session_id}:
     get:
       tags:
         - 服务器会话管理
@@ -880,7 +957,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/serverSessionId'
       responses:
@@ -917,7 +994,7 @@ paths:
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/serverSessionId'
         - name: UpdateServerSessionRequestBody
@@ -949,7 +1026,7 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/{project_id}/server-sessions/{server_session_id}/client-sessions':
+  /{project_id}/server-sessions/{server_session_id}/client-sessions:
     post:
       tags:
         - 客户端会话管理
@@ -959,7 +1036,7 @@ paths:
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/serverSessionId'
         - name: CreateClientSessionRequestBody
@@ -1002,7 +1079,7 @@ paths:
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/serverSessionId'
         - $ref: '#/parameters/offset'
@@ -1032,7 +1109,7 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/{project_id}/server-sessions/{server_session_id}/client-sessions/batch-create':
+  /{project_id}/server-sessions/{server_session_id}/client-sessions/batch-create:
     post:
       tags:
         - 客户端会话管理
@@ -1042,7 +1119,7 @@ paths:
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       parameters:
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/serverSessionId'
         - name: BatchCreateClientSessionsRequestBody
@@ -1076,7 +1153,7 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/{project_id}/server-sessions/{server_session_id}/client-sessions/{client_session_id}':
+  /{project_id}/server-sessions/{server_session_id}/client-sessions/{client_session_id}:
     get:
       tags:
         - 客户端会话管理
@@ -1089,7 +1166,7 @@ paths:
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/serverSessionId'
         - $ref: '#/parameters/clientSessionId'
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
       responses:
         '200':
           description: 客户端会话详情列表
@@ -1115,7 +1192,307 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  '/v1/{project_id}/app-processes':
+  /{project_id}/monitor-fleets:
+    get:
+      tags:
+        - 应用进程队列运行状态查询
+      summary: 获取应用进程运行状态列表
+      description: 获取应用进程运行状态列表
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      operationId: ListMonitorFleets
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/Auth-token'
+        - name: state
+          in: query
+          required: false
+          description: 应用进程队列状态 枚举：CREATING ACTIVE DELETING ERROR，精准搜索
+          type: string
+        - name: fleet_id
+          in: query
+          required: false
+          type: string
+          description: 应用进程队列id，模糊搜索
+        - name: fleet_name
+          in: query
+          required: false
+          type: string
+          description: 应用进程队列名称，模糊搜索
+      responses:
+        '200':
+          description: 响应应用进程队列列表
+          schema:
+            $ref: '#/definitions/ListMonitorFleetsResponseBody'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /{project_id}/monitor-fleets/{fleet_id}:
+    get:
+      tags:
+        - 应用进程队列运行状态查询
+      summary: 获取单个应用进程队列运行状态详情
+      description: 获取单个应用进程队列运行状态详情
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      operationId: ShowMonitorFleet
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/fleetId'
+      responses:
+        '200':
+          description: 查询应用进程队列详情响应
+          schema:
+            $ref: '#/definitions/ShowMonitorFleetResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /{project_id}/fleets/{fleet_id}/monitor-instances:
+    get:
+      tags:
+        - 应用进程队列运行状态查询
+      summary: 获取单个应用进程队列中的实例列表
+      description: 获取单个应用进程队列中的实例列表
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      operationId: ListMonitorInstances
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/fleetId'
+        - $ref: '#/parameters/instanceId'
+        - name: health_state
+          in: query
+          required: false
+          description: |
+            实例的健康状态
+            * ERROR：异常状态
+            * NORMAL: >-
+              正常状态
+              * INITAILIZING：初始化
+          type: string
+          minLength: 1
+          maxLength: 64
+          enum:
+            - ERROR
+            - NORMAL
+            - INITAILIZING
+        - name: life_cycle_state
+          in: query
+          required: false
+          description: |
+            实例所处的生命周期
+            * INSERVICE：已启用
+            * PENDING：正在加入伸缩组
+            * PENDING_WAIT：等待（正在加入伸缩组）
+            * REMOVING：正在移出伸缩组
+            * REMOVING_WAIT：等待（正在移出伸缩组）
+            * STANDBY：已备用
+            * ENTERING_STANDBY：进入备用状: >-
+              >-
+          type: string
+          minLength: 1
+          maxLength: 64
+          enum:
+            - INSERVICE
+            - PENDING
+            - PENDING_WAIT
+            - REMOVING
+            - REMOVING_WAIT
+            - STANDBY
+            - ENTERING_STANDBY
+        - $ref: '#/parameters/durationStart'
+        - $ref: '#/parameters/durationEnd'
+      responses:
+        '200':
+          description: 响应实例信息
+          schema:
+            $ref: '#/definitions/ListMonitorInstancesResponceBody'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /{project_id}/fleets/{fleet_id}/monitor-app-processes:
+    get:
+      tags:
+        - 应用进程队列运行状态查询
+      summary: 获取单个应用进程队列中的进程列表
+      description: 获取单个应用进程队列中的进程列表
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      operationId: ListMonitorAppProcesses
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/fleetId'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/instanceId'
+        - $ref: '#/parameters/processId'
+        - $ref: '#/parameters/ipAddress'
+        - $ref: '#/parameters/durationStart'
+        - $ref: '#/parameters/durationEnd'
+        - name: state
+          in: query
+          required: false
+          description: |
+            * ACTIVATING: 进程正在激活
+            * ERROR: 进程异常
+            * ACTIVE: 进程已被激活
+            * TERMINATED: 进程已被终止
+            * TERMINATING: 进程正在被终止
+          type: string
+          minLength: 1
+          maxLength: 64
+          enum:
+            - ACTIVATING
+            - ERROR
+            - ACTIVE
+            - TERMINATED
+            - TERMINATING
+      responses:
+        '200':
+          description: 响应进程信息
+          schema:
+            $ref: '#/definitions/ListMonitorAppProcessResponceBody'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/fleets/{fleet_id}/monitor-server-sessions:
+    get:
+      tags:
+        - 应用进程队列运行状态查询
+      summary: 获取单个应用进程队列中会话列表
+      description: 获取单个应用进程队列中的会话列表
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      operationId: ListMonitorServerSessions
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/fleetId'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/instanceId'
+        - $ref: '#/parameters/processId'
+        - $ref: '#/parameters/ipAddress'
+        - $ref: '#/parameters/startTime'
+        - $ref: '#/parameters/endTime'
+        - name: state
+          in: query
+          required: false
+          description: |
+            * ACTIVATING: 会话正在激活
+            * ERROR: 会话异常
+            * ACTIVE: 会话已被激活
+            * TERMINATED: 会话已被终止
+          type: string
+          minLength: 1
+          maxLength: 64
+          enum:
+            - ACTIVATING
+            - ERROR
+            - ACTIVE
+            - TERMINATED
+        - name: server_session_id
+          in: query
+          required: false
+          type: string
+          description: 服务器会话id，通过创建服务器会话接口返回，全局唯一，uuid格式，例如：77317ac6-acd8-11ec-a7e0-6805cab276a1
+          minLength: 1
+          maxLength: 64
+      responses:
+        '200':
+          description: 响应会话信息
+          schema:
+            $ref: '#/definitions/ListMonitorServerSessionResponceBody'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /v1/{project_id}/app-processes:
     get:
       tags:
         - 应用进程管理
@@ -1138,7 +1515,7 @@ paths:
           type: string
           minLength: 1
           maxLength: 64
-        - $ref: '#/parameters/xAuthToken'
+        - $ref: '#/parameters/Auth-token'
       responses:
         '200':
           description: 响应进程列表
@@ -1156,7 +1533,885 @@ paths:
           description: 服务器错误
           schema:
             $ref: '#/definitions/ErrorRsp'
-  '/v1/{project_id}/builds':
+  /{project_id}/aliases:
+    post:
+      tags:
+        - 别名管理
+      operationId: CreateAlias
+      summary: 创建应用进程队列
+      description: 创建应用进程队列
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/projectId'
+        - in: body
+          name: CreateAliasRequestBody
+          description: 创建应用进程队列别名请求体
+          required: true
+          schema:
+            $ref: '#/definitions/CreateAliasRequestBody'
+      responses:
+        '201':
+          description: 创建成功响应
+          schema:
+            $ref: '#/definitions/CreateAliasResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    get:
+      tags:
+        - 别名管理
+      operationId: ListAliases
+      summary: 获取应用进程队列别名列表
+      description: 获取应用进程队列别名列表
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
+        - in: query
+          name: fleet_id
+          description: 搜索alias所关联的fleet_id
+          required: false
+          type: string
+          minLength: 1
+          maxLength: 64
+        - in: query
+          name: type
+          description: |-
+            别名的类型
+            * ACTIVE: 激活类型，该类型的alias可以指向flee列表t，并且可以使用该alias创建会话
+            * DEACTIVE: 停用类型，该类型的alias不会指向fleet，使用该alias创建会话会直接返回该结构体中message的信息
+            * TERMINATED: 表示该Alias已被删除
+          required: false
+          type: string
+          minLength: 1
+          maxLength: 64
+        - in: query
+          name: name
+          description: 别名的名称，支持模糊搜索
+          required: false
+          type: string
+          minLength: 1
+          maxLength: 1024
+      responses:
+        '200':
+          description: 应用进程队列列表
+          schema:
+            $ref: '#/definitions/ListAliasResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /{project_id}/aliases/{alias_id}:
+    get:
+      tags:
+        - 别名管理
+      operationId: ShowAlias
+      summary: 查询应用队列别名基本信息
+      description: 查询应用队列别名基本信息
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/aliasId'
+      responses:
+        '200':
+          description: 查询应用进程队列别名详情响应
+          schema:
+            $ref: '#/definitions/ShowAliasResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    put:
+      tags:
+        - 别名管理
+      operationId: UpdateAlias
+      summary: 更新应用队列别名基本信息
+      description: 更新应用队列别名基本信息
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/aliasId'
+        - in: body
+          name: UpdateAliasRequestBody
+          description: Alias object that needs to be modified
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateAliasRequestBody'
+      responses:
+        '204':
+          description: 更新应用队列基本信息成功
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+    delete:
+      tags:
+        - 别名管理
+      operationId: DeleteAlias
+      summary: 删除应用进程队列
+      description: Delete Alias by ID
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/aliasId'
+      responses:
+        '204':
+          description: 删除应用进程队列成功
+          schema:
+            type: string
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /user/login:
+    post:
+      tags:
+        - 用户管理
+      summary: 用户登录
+      description: 用户登录接口
+      operationId: UserLogin
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: LoginParam
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/LoginParam'
+      responses:
+        '201':
+          description: 用户信息解析成功，返回用户相关信息
+          schema:
+            $ref: '#/definitions/LoginResponse'
+          headers:
+            Auth-Token:
+              description: 用户认证token，访问API时请求头需携带此参数
+              type: string
+            username:
+              description: 当前登录用户名
+              type: string
+            sessionid:
+              description: 当前登录用户会话id
+              type: string
+            ExpireTime:
+              description: token过期时间
+              type: string
+        '400':
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+      x-order: 0
+  /v1/user/logout:
+    post:
+      tags:
+        - 用户管理
+      summary: 用户登出
+      description: 用户登出，删除登录会话
+      operationId: UserLogout
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '204':
+          description: 登出成功
+          schema:
+            type: string
+      x-order: 1
+  /user/changepass:
+    put:
+      tags:
+        - 用户管理
+      summary: 修改密码
+      description: 用户修改密码
+      operationId: ChangePassword
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: ChangePassBody
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/ChangePassBody'
+          description: 修改密码结构体
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '204':
+          description: 密码修改成功，自动登出
+          schema:
+            type: string
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+      x-order: 2
+  /admin/resconfig:
+    post:
+      tags:
+        - 用户管理
+      summary: 管理员为用户新增租户信息
+      operationId: InsertResConfig
+      parameters:
+        - name: ResourceConfig
+          in: body
+          required: false
+          description: 资源租户信息
+          schema:
+            $ref: '#/definitions/ResConfig'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '201':
+          description: 请求成功
+          schema:
+            $ref: '#/definitions/InsertResConfResp'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+      x-order: 4
+    delete:
+      tags:
+        - 用户管理
+      summary: 删除用户资源账户信息
+      description: 根据origin字段与region删除租户
+      operationId: DeleteResConfig
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/ResouarceId'
+      responses:
+        '204':
+          description: 删除成功
+          schema:
+            type: string
+        '400':
+          description: 输入参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+      x-order: 5
+    put:
+      tags:
+        - 用户管理
+      summary: 修改租户信息
+      operationId: AdminUpdateResConfig
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: ModifyResConfigBody
+          in: body
+          required: true
+          description: 修改租户信息结构体
+          schema:
+            $ref: '#/definitions/ModifyResConfigBody'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '204':
+          description: 修改成功
+          schema:
+            type: string
+        '400':
+          description: 输入参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+      x-order: 6
+    get:
+      tags:
+        - 用户管理
+      summary: 管理员获取所有租户信息
+      description: 获取所有租户信息
+      operationId: AdminGetAllResConfig
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 返回所有租户信息数量和详情
+          schema:
+            $ref: '#/definitions/ResConfList'
+        '400':
+          description: 输入参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/builds/upload:
+    post:
+      tags:
+        - 应用包管理
+      operationId: UploadBuild
+      consumes:
+        - multipart/form-data
+      summary: 上传应用
+      description: 上传应用（通过console上传应用）（参数存在form-data中）
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - name: project_id
+          in: path
+          description: ID of project
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+        - name: file
+          in: formData
+          required: true
+          type: string
+          format: binary
+          description: 应用包文件 将校验后缀（zip与rar）将校验大小 小于5GB
+        - name: region
+          in: formData
+          required: true
+          description: 应用包将存入的region
+          type: string
+        - name: bucket_name
+          in: formData
+          required: true
+          description: 应用包将存入的桶名
+          type: string
+      responses:
+        '200':
+          description: 返回应用包OBS存储信息
+          schema:
+            $ref: '#/definitions/UploadBuildResponse'
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: ''
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /admin/alluser:
+    get:
+      tags:
+        - 用户管理
+      summary: 获取所有用户
+      description: 管理员获取所有用户信息
+      operationId: AdminGetAllUser
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 获取用户信息成功后显示所有用户信息
+          schema:
+            items:
+              $ref: '#/definitions/GetUserInfo'
+            type: array
+        '500':
+          description: 服务器内部错误
+          schema:
+            type: string
+      x-order: 7
+  /admin/userinfo:
+    put:
+      tags:
+        - 用户管理
+      summary: 管理员修改用户信息
+      description: 管理员可修改用户的邮箱，电话，用户类型，激活状态
+      operationId: AdminModifyUser
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: ReviseUser
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ReviseUser'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '204':
+          description: 返回用户信息
+          schema:
+            $ref: '#/definitions/UserInfo'
+        '400':
+          description: 输入参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+    post:
+      tags:
+        - 用户管理
+      summary: 管理员新增用户
+      description: 管理员新增用户
+      operationId: AddUser
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: UserInfo
+          in: body
+          required: true
+          description: 添加用户信息结构体
+          schema:
+            $ref: '#/definitions/UserInfo'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '201':
+          description: 用户新增成功
+          schema:
+            $ref: '#/definitions/UserInfo'
+        '400':
+          description: 用户名已存在或参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+      x-order: 3
+    delete:
+      tags:
+        - 用户管理
+      summary: 管理员删除用户
+      operationId: AdminDeleteUser
+      parameters:
+        - $ref: '#/parameters/Userid'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '204':
+          description: 删除成功
+          schema:
+            type: string
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /user/origininfo:
+    get:
+      tags:
+        - 用户管理
+      operationId: ListOrigins
+      summary: 查询使用租户详情信息
+      description: 查询使用租户详情信息
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - name: username
+          in: query
+          description: user name
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 36
+        - name: region
+          in: query
+          description: 在某个region下origin信息
+          required: false
+          type: string
+          minLength: 0
+          maxLength: 36
+        - name: origin_domain_name
+          in: query
+          description: 该租户名在所有region下的信息
+          required: false
+          type: string
+          minLength: 0
+          maxLength: 64
+        - name: Auth-Token
+          in: header
+          required: true
+          description: 登录认证Token，通过登录接口获得
+          type: string
+      responses:
+        '200':
+          description: 查询应用进程队列详情响应
+          schema:
+            $ref: '#/definitions/ListOriginInfoResponseBody'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /user/support-regions:
+    get:
+      tags:
+        - 用户管理
+      operationId: ListOSupportRegions
+      summary: 查询支持的region
+      description: 查询支持的region
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 查询应用进程队列详情响应
+          schema:
+            $ref: '#/definitions/ListSupportRegions'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /{project_id}/user/bucket:
+    get:
+      tags:
+        - 其他资源管理
+      summary: 获取当前资源账号指定region 桶名列表
+      description: 获取当前资源账号指定region 桶名列表
+      operationId: UserBucket
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: region
+          in: query
+          required: true
+          type: string
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserBucketResponse'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+      x-order: 7
+  /user/userinfo:
+    get:
+      tags:
+        - 用户管理
+      summary: 获取用户基本信息
+      description: 获取用户基本信息
+      operationId: UserInfo
+      parameters:
+        - $ref: '#/parameters/Userid'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 返回用户信息
+          schema:
+            $ref: '#/definitions/UserInfo'
+        '400':
+          description: 输入参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+    put:
+      tags:
+        - 用户管理
+      summary: 用户修改用户信息
+      operationId: UserReviseInfo
+      parameters:
+        - name: UserReviseInfoBody
+          in: body
+          required: true
+          description: 用户只能修改邮箱和电话
+          schema:
+            $ref: '#/definitions/UserReviseInfoBody'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '204':
+          description: 修改成功
+          schema:
+            $ref: '#/definitions/UserInfo'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /user/resconfig:
+    get:
+      tags:
+        - 用户管理
+      summary: 用户获取租户信息
+      description: 用户能获取拥有的所有租户资源信息
+      operationId: UserGetResConf
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 获取租户信息成功
+          schema:
+            $ref: '#/definitions/ResConfList'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /user/resource:
+    get:
+      tags:
+        - 用户管理
+      summary: 获取单个租户资源详情
+      operationId: UserGetSingleResConf
+      parameters:
+        - $ref: '#/parameters/ResouarceId'
+      responses:
+        '200':
+          description: 资源租户详情
+          schema:
+            $ref: '#/definitions/ResConfig'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /admin/resetpw:
+    post:
+      tags:
+        - 用户管理
+      summary: 管理员重置用户密码
+      operationId: AdminResetPassword
+      parameters:
+        - $ref: '#/parameters/Userid'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/user/image:
+    get:
+      tags:
+        - 其他资源管理
+      summary: 获取当前资源账号指定region镜像列表
+      description: 获取当前资源账号指定region 镜像列表
+      operationId: UserImage
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: region
+          in: query
+          required: true
+          type: string
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserImageResponse'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+      x-order: 7
+  /{project_id}/image-builds:
+    post:
+      tags:
+        - 应用包管理
+      operationId: CreateBuildByImage
+      summary: 创建应用--直接绑定镜像
+      description: 创建应用--直接绑定镜像      注：通过直接绑定镜像创建的应用在删除时不会删除绑定的镜像，会直接删除db记录
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - name: project_id
+          in: path
+          description: ID of project
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+        - name: CreateBuildByImageRequest
+          in: body
+          required: true
+          description: 创建应用-直接绑定镜像 请求体
+          schema:
+            $ref: '#/definitions/CreateBuildByImageRequest'
+      responses:
+        '200':
+          description: 返回新增的应用包基础信息
+          schema:
+            $ref: '#/definitions/Build'
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: ''
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+              type: string
+  /{project_id}/builds:
     get:
       tags:
         - 应用包管理
@@ -1166,13 +2421,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: X-Auth-Token
-          in: header
-          required: true
-          description: 用户token，通过IAM服务获取用户token接口获取（响应消息头中的X-Subject-Token的值）
-          type: string
-          minLength: 1
-          maxLength: 16384
+        - $ref: '#/parameters/Auth-token'
         - name: project_id
           in: path
           description: ID of project
@@ -1187,6 +2436,7 @@ paths:
           format: int32
           minimum: 0
           maximum: 10
+          description: 分页偏移量，为0表示第一页，为1表示从第二页开始显示
         - name: limit
           in: query
           required: false
@@ -1194,6 +2444,20 @@ paths:
           format: int32
           minimum: 1
           maximum: 100
+        - name: name
+          in: query
+          required: false
+          type: string
+        - name: state
+          in: query
+          required: false
+          type: string
+          description: 枚举 INITIALIZED（初始化）  READY（就绪） IMAGE_CREATING（镜像创建中） FAILED（创建失败）
+        - name: creation_time
+          in: query
+          required: false
+          type: string
+          description: '起始时间 + "/" + 结束时间   时间格式为时间戳（秒级） 起始缺失时默认为1 结束缺失时默认为当前时间戳。 例: ”1677486100/1677486300“ 或”/1677486300“或”1677486100/“或”/“'
       responses:
         '200':
           description: Build列表
@@ -1215,7 +2479,7 @@ paths:
               description: >-
                 This field is the request ID number for task tracking. Format is
                 request_uuid-timestamp-hostname.
-        '503':
+        '500':
           description: ''
           schema:
             $ref: '#/definitions/ErrorRsp'
@@ -1225,25 +2489,18 @@ paths:
                 This field is the request ID number for task tracking. Format is
                 request_id-timestamp-hostname
               type: string
-  '/v1/{project_id}/build/{build_id}':
-    get:
+    post:
       tags:
         - 应用包管理
-      operationId: ShowBuild
-      summary: 查询应包详情
-      description: 查询应包详情
+      operationId: CreateBuild
+      summary: 创建应用--指定路径
+      description: 创建应用--指定路径
       x-is-registered: 'Y'
       x-support-sdk: 'Y'
       produces:
         - application/json
       parameters:
-        - name: X-Auth-Token
-          in: header
-          required: true
-          description: 用户token，通过IAM服务获取用户token接口获取（响应消息头中的X-Subject-Token的值）
-          type: string
-          minLength: 1
-          maxLength: 16384
+        - $ref: '#/parameters/Auth-token'
         - name: project_id
           in: path
           description: ID of project
@@ -1251,16 +2508,15 @@ paths:
           type: string
           minLength: 32
           maxLength: 36
-        - name: build_id
-          in: path
-          description: ID of Build
+        - name: CreateBuildRequest
+          in: body
           required: true
-          type: string
-          minLength: 32
-          maxLength: 36
+          description: 创建应用-指定路径 请求体
+          schema:
+            $ref: '#/definitions/CreateBuildRequest'
       responses:
         '200':
-          description: 查询应用包详情响应
+          description: 返回新增的应用包基础信息
           schema:
             $ref: '#/definitions/Build'
           headers:
@@ -1279,7 +2535,7 @@ paths:
               description: >-
                 This field is the request ID number for task tracking. Format is
                 request_uuid-timestamp-hostname.
-        '503':
+        '500':
           description: ''
           schema:
             $ref: '#/definitions/ErrorRsp'
@@ -1289,6 +2545,540 @@ paths:
                 This field is the request ID number for task tracking. Format is
                 request_uuid-timestamp-hostname.
               type: string
+  /{project_id}/builds/{build_id}:
+    get:
+      tags:
+        - 应用包管理
+      operationId: ShowBuild
+      summary: 查询应包详情 包含关联的fleet信息
+      description: 查询应包详情 包含关联的fleet信息
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - name: project_id
+          in: path
+          description: ID of project
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+        - name: build_id
+          in: path
+          description: ID of Build
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+      responses:
+        '200':
+          description: 应用包详情 包含关联的fleet信息
+          schema:
+            $ref: '#/definitions/BuildMsg'
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: ''
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+              type: string
+    put:
+      tags:
+        - 应用包管理
+      operationId: UpdateBuild
+      summary: 更新应用包
+      description: 更新应用包 支持更新名称、版本号、描述，其余均不支持更新
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - name: project_id
+          in: path
+          description: ID of project
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+        - name: build_id
+          in: path
+          description: ID of Build
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+        - name: UpdateBuildRequestBody
+          in: body
+          required: true
+          description: 更新应用包请求体
+          schema:
+            $ref: '#/definitions/UpdateBuildRequestBody'
+      responses:
+        '200':
+          description: 成功 空
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: ''
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+              type: string
+    delete:
+      tags:
+        - 应用包管理
+      operationId: DeleteBuild
+      summary: 删除应用包
+      description: 删除应用包
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - name: project_id
+          in: path
+          description: ID of project
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+        - name: build_id
+          in: path
+          description: ID of Build
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+      responses:
+        '204':
+          description: 成功 空
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '400':
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: 服务端内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+              type: string
+  /{project_id}/user/vpc:
+    get:
+      tags:
+        - 其他资源管理
+      summary: 获取当前资源账号指定region vpc列表
+      description: 获取当前资源账号指定region vpc列表
+      operationId: UserVpc
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: region
+          in: query
+          required: true
+          type: string
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserVpcResponse'
+        '500':
+          description: 服务器内部错误
+          schema:
+            type: string
+      x-order: 7
+  /{project_id}/user/subnet:
+    get:
+      tags:
+        - 其他资源管理
+      summary: 获取当前资源账号指定region 子网列表
+      description: 获取当前资源账号指定region 子网列表
+      operationId: UserSubnet
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: region
+          in: query
+          required: true
+          type: string
+        - name: vpc_id
+          in: query
+          required: true
+          type: string
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserSubnetResponse'
+        '500':
+          description: 服务器内部错误
+          schema:
+            type: string
+      x-order: 7
+  /{project_id}/lts-transfer:
+    put:
+      tags:
+        - 日志管理
+      summary: 更新日志接入描述
+      operationId: UpdateAccessConfig
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: description
+          in: body
+          required: false
+          description: 修改日志接入结构体
+          schema:
+            $ref: '#/definitions/UpdateAccessConfig'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 修改成功
+          schema:
+            $ref: '#/definitions/CreateTransfer'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+    delete:
+      tags:
+        - 日志管理
+      summary: 删除日志转储
+      operationId: DeleteTransfer
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: transfer_id
+          in: query
+          required: true
+          description: 转储id
+          type: string
+          minLength: 32
+          maxLength: 36
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '204':
+          description: 删除成功
+          schema:
+            type: string
+        '500':
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+    post:
+      tags:
+        - 日志管理
+      summary: 创建日志转储
+      description: 为日志流创建日志转储，定期转储至OBS
+      operationId: CreateLogTransfer
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+        - name: CreateTransfer
+          in: body
+          required: false
+          description: 创建日志转储
+          schema:
+            $ref: '#/definitions/CreateTransfer'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/CreateTransferResp'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+    get:
+      tags:
+        - 日志管理
+      summary: 获取单条转储信息
+      description: 日志流只能关联一个日志转储，通过日志流id查询对应的日志转储
+      operationId: QueryTransfer
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: log_transfer_id
+          in: query
+          required: true
+          description: 日志流id
+          type: string
+          minLength: 32
+          maxLength: 36
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 查询成功返回详情
+          schema:
+            $ref: '#/definitions/QureyTransferInfo'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/lts-access-config:
+    post:
+      tags:
+        - 日志管理
+      summary: 新增日志接入
+      operationId: CreateAccessConfig
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+        - name: LTS_Config
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/CreateAccessConfig'
+      responses:
+        '200':
+          description: 日志接入成功参数
+          schema:
+            $ref: '#/definitions/CreateAccessConfigResp'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+    delete:
+      tags:
+        - 日志管理
+      summary: 删除日志接入
+      operationId: DeleteAccessConfig
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+        - name: access_config_id
+          in: query
+          required: true
+          description: 日志接入id
+          type: string
+          minLength: 32
+          maxLength: 36
+      responses:
+        '204':
+          description: 删除成功
+          schema:
+            type: string
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+    get:
+      tags:
+        - 日志管理
+      summary: 查询单条日志接入信息
+      operationId: QueryAccessConfig
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+        - name: access_config_id
+          in: query
+          required: true
+          description: 日志接入id
+          type: string
+          minLength: 32
+          maxLength: 36
+      responses:
+        '200':
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/CreateAccessConfigResp'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/list-lts-transfer:
+    get:
+      tags:
+        - 日志管理
+      summary: 列举所有转储
+      operationId: ListTransfer
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: limit
+          in: query
+          required: false
+          description: 查询数目限制
+          type: integer
+          format: int32
+        - name: offset
+          in: query
+          required: false
+          description: 查询游标
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ListTransferResp'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/list-lts-access-config:
+    get:
+      tags:
+        - 日志管理
+      summary: 列举所有日志接入
+      operationId: ListAccessConfig
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+        - name: limit
+          in: query
+          required: false
+          description: 查询限制最大条数
+          type: integer
+          format: int32
+        - name: offset
+          in: query
+          required: false
+          description: 查询游标
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ListAccessConfig'
+        '400':
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/lts-log-group:
+    post:
+      tags:
+        - 日志管理
+      summary: 创建日志组
+      operationId: CreateLogGroup
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+        - name: CreateLogGroup
+          in: body
+          required: true
+          description: 创建日志组结构体
+          schema:
+            $ref: '#/definitions/CreateLogGroupReq'
+      responses:
+        '200':
+          description: 生成成功信息
+          schema:
+            $ref: '#/definitions/CreateLogGroupResp'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/list-lts-log-group:
+    get:
+      tags:
+        - 日志管理
+      summary: 查询所有日志组信息
+      operationId: ListLogGroup
+      parameters:
+        - $ref: '#/parameters/projectId'
+      responses:
+        '200':
+          description: 日志组列表
+          schema:
+            $ref: '#/definitions/ListLogGroup'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
 definitions:
   CreateFleetRequestBody:
     description: 创建应用进程队列请求体
@@ -1339,6 +3129,19 @@ definitions:
         enum:
           - scase.standard.4u8g
           - scase.standard.8u16g
+      enterprise_project_id:
+        type: string
+        description: fleet所在的企业项目，默认为服务部署时所指定的企业项目，若服务部署时没有指定，则为默认企业项目
+        default: 0
+        example: 238012fd-0649-4fc8-bb89-bf6fc8b38d72
+      vpc_name:
+        type: string
+        description: |-
+          * 指定资源租户上的VPC创建fleet，若指定的VPC不存在则新建fleet失败
+          * 在指定VPC创建Fleet时，会在指定的VPC上创建子网，并且会检查子网是否与已有子网冲突，若冲突则会再次随机子网，最多重复10次
+          * 需要保证指定的VPC网段包含部署时配置的VPC网段，否则可能导致创建fleet失败
+        default: ''
+        example: vpc-metaspace
       server_session_protection_policy:
         type: string
         description: >-
@@ -1377,6 +3180,13 @@ definitions:
         description: 访问配置，即允许外部访问应用进程的IP地址和端口描述
         items:
           $ref: '#/definitions/IpPermission'
+      instance_tags:
+        type: array
+        description: 实例标签数组
+        minItems: 0
+        maxItems: 10
+        items:
+          $ref: '#/definitions/InstanceTag'
     required:
       - name
       - build_id
@@ -1528,10 +3338,38 @@ definitions:
         $ref: '#/definitions/ResourceCreationLimitPolicy'
       creation_time:
         type: string
-        description: '应用进程队列创建时间，结束时间，UTC时间，遵循RFC3339规范，例如2019-12-09T06:10:29Z'
+        description: 应用进程队列创建时间，结束时间，UTC时间，遵循RFC3339规范，例如2019-12-09T06:10:29Z
         minLength: 1
         maxLength: 32
         example: '2020-06-28T00:00:00Z'
+      instance_tags:
+        type: array
+        description: 实例标签数组
+        minItems: 0
+        maxItems: 10
+        items:
+          $ref: '#/definitions/InstanceTag'
+      enterprise_project_id:
+        type: string
+        description: 应用进程队列所在的企业项目
+        minLength: 1
+        maxLength: 1024
+  InstanceTag:
+    properties:
+      key:
+        type: string
+        description: 标签的键
+        example: key
+        minLength: 1
+        maxLength: 36
+      value:
+        type: string
+        description: 标签的值
+        example: value
+        minLength: 0
+        maxLength: 36
+    required:
+      - key
   IpPermission:
     properties:
       protocol:
@@ -1583,6 +3421,177 @@ definitions:
     required:
       - error_code
       - error_msg
+  ListMonitorInstancesResponceBody:
+    properties:
+      total_count:
+        type: integer
+        format: int32
+        description: 实例总数量
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      count:
+        type: integer
+        format: int32
+        description: 筛选出的实例数量
+        minimum: 0
+        maximum: 100
+        example: 1
+      instances:
+        type: array
+        description: 实例数组
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/MonitorInstance'
+  ListMonitorAppProcessResponceBody:
+    properties:
+      total_count:
+        type: integer
+        format: int32
+        description: 进程总数量
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      count:
+        type: integer
+        format: int32
+        description: 筛选出的进程数量
+        minimum: 0
+        maximum: 100
+        example: 1
+      app_processes:
+        type: array
+        description: 进程数组
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/MonitorAppProcess'
+  MonitorAppProcess:
+    allOf:
+      - $ref: '#/definitions/Process'
+    properties:
+      instance_id:
+        type: string
+        description: 实例的id
+        minLength: 1
+        maxLength: 64
+        example: 6066645a-b078-4a00-90d1-7f10aaf87a5b
+  MonitorInstance:
+    properties:
+      instance_id:
+        type: string
+        description: 实例的id
+        minLength: 1
+        maxLength: 64
+        example: 6066645a-b078-4a00-90d1-7f10aaf87a5b
+      instance_name:
+        type: string
+        description: 实例名
+        minLength: 1
+        maxLength: 64
+        example: Fleet_25b24e04-8d6d-11ed-93a1-fa163ecd2586_aass_config-9SK1IKR8
+      life_cycle_state:
+        type: string
+        minLength: 1
+        maxLength: 64
+        description: >-
+          实例所处的生命周期
+          * INSERVICE：已启用
+          * PENDING：正在加入伸缩组
+          * PENDING_WAIT：等待（正在加入伸缩组）
+          * REMOVING：正在移出伸缩组
+          * REMOVING_WAIT：等待（正在移出伸缩组）
+          * STANDBY：已备用
+          * ENTERING_STANDBY：进入备用状态
+        enum:
+          - INSERVICE
+          - PENDING
+          - PENDING_WAIT
+          - REMOVING
+          - REMOVING_WAIT
+          - STANDBY
+          - ENTERING_STANDBY
+        example: INSERVICE
+      health_status:
+        type: string
+        minLength: 1
+        maxLength: 64
+        description: >-
+          实例的健康状态
+          * ERROR：异常状态
+          * NORMAL: 正常状态
+          * INITAILIZING：初始化
+        enum:
+          - ERROR
+          - NORMAL
+          - INITAILIZING
+        example: NORMAL
+      created_at:
+        type: string
+        minLength: 1
+        maxLength: 64
+        description: 实例的创建时间
+        example: '2023-01-06T10:52:54Z'
+      process_count:
+        type: integer
+        format: int32
+        description: 实例上进程的数量
+        minimum: 0
+        maximum: 50
+        example: 1
+      ip_address:
+        type: string
+        minLength: 1
+        maxLength: 64
+        description: 实例的公网IP地址
+        example: 100.93.15.206
+      server_session_count:
+        type: integer
+        format: int32
+        description: 实例上会话的数量
+        minimum: 0
+        maximum: 2500
+        example: 1
+  ListMonitorServerSessionResponceBody:
+    properties:
+      total_count:
+        type: integer
+        format: int32
+        description: 会话总数量
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      count:
+        type: integer
+        format: int32
+        description: 筛选出的会话数量
+        minimum: 0
+        maximum: 100
+        example: 1
+      server_sessions:
+        type: array
+        description: 会话数组
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/MonitorServerSession'
+  MonitorServerSession:
+    allOf:
+      - $ref: '#/definitions/ServerSession'
+    properties:
+      instance_id:
+        type: string
+        description: 会话所在实例的id
+        minLength: 1
+        maxLength: 64
+        example: 77317ac6-acd8-11ec-a7e0-6805cab276a1
+      process_id:
+        type: string
+        description: 会话所在进程的id
+        minLength: 1
+        maxLength: 64
+        example: 77317ac6-acd8-11ec-a7e0-6805cab276a1
   ListFleetsResponseBody:
     properties:
       count:
@@ -1691,6 +3700,13 @@ definitions:
         description: 是否使能自动弹性伸缩，默认值为true，为false时策略仍旧存在，但是不会触发弹性伸缩动作
         default: 'true'
         example: 'true'
+      instance_tags:
+        type: array
+        description: 实例标签数组
+        minItems: 0
+        maxItems: 10
+        items:
+          $ref: '#/definitions/InstanceTag'
       resource_creation_limit_policy:
         $ref: '#/definitions/ResourceCreationLimitPolicy'
   ShowInboundPermissionResponseBody:
@@ -1765,7 +3781,7 @@ definitions:
         type: string
         minLength: 1
         maxLength: 128
-        description: '事件发生时间，UTC时间，遵循RFC3339规范，例如2019-12-09T06:10:29Z'
+        description: 事件发生时间，UTC时间，遵循RFC3339规范，例如2019-12-09T06:10:29Z
         example: '2020-06-28T00:00:00Z'
       message:
         type: string
@@ -1933,10 +3949,17 @@ definitions:
     required:
       - count
     properties:
+      total_count:
+        type: integer
+        format: int32
+        description: 策略总个数
+        minimum: 0
+        maximum: 50
+        example: 1
       count:
         type: integer
         format: int32
-        description: 策略个数
+        description: 查询出的策略个数
         minimum: 0
         maximum: 50
         example: 1
@@ -1977,6 +4000,12 @@ definitions:
         minLength: 1
         maxLength: 64
         example: 77317ac6-acd8-11ec-a7e0-6805cab276a1
+      alias_id:
+        type: string
+        description: 应用进程队列别名的id
+        minLength: 1
+        maxLength: 64
+        example: 77317ac6-acd8-11ec-a7e0-6805cab276a1
       server_session_properties:
         type: array
         minItems: 0
@@ -2004,7 +4033,6 @@ definitions:
         maxLength: 48
         example: token1
     required:
-      - fleet_id
       - max_client_session_count
   ServerSessionProperty:
     properties:
@@ -2121,15 +4149,15 @@ definitions:
         example: ACCEPT_ALL
       server_session_protection_policy:
         type: string
-        description: >
-          服务服务器会话保护策略
-
-          * NO_PROTECTION:         不保护，缩容时如果有会话在实例上运行，直接缩容    
-
-          * FULL_PROTECTION:       完全保护，缩容时如果有会话在实例上运行，等待会话结束再缩容
-
-          * TIME_LIMIT_PROTECTION:
-          限时保护，缩容时如果有会话在实例上运行，等待一定时间后缩容，等待时间由server_session_protection_time_limit_minutes指定
+        description: |
+          服务服务器会话保护策: >-
+            服务服务器会话保护策略
+          * NO_PROTECTION: >-
+            不保护，缩容时如果有会话在实例上运行，直接缩容    
+          * FULL_PROTECTION: >-
+            完全保护，缩容时如果有会话在实例上运行，等待会话结束再缩容
+          * TIME_LIMIT_PROTECTION: >-
+            限时保护，缩容时如果有会话在实例上运行，等待一定时间后缩容，等待时间由server_session_protection_time_limit_minutes指定
         example: NO_PROTECTION
         enum:
           - NO_PROTECTION
@@ -2138,8 +4166,9 @@ definitions:
       server_session_protection_time_limit_minutes:
         type: integer
         format: int32
-        description: >
-          server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
+        description: |
+          server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一: >-
+            server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
         minimum: 5
         maximum: 1440
         default: 5
@@ -2296,6 +4325,67 @@ definitions:
         minLength: 1
         maxLength: 32
         example: '2020-06-28T00:00:00Z'
+  ListMonitorFleetsResponseBody:
+    properties:
+      total_count:
+        type: integer
+        format: int32
+        description: 当前处于ACTIVE/CREATING/DELETING的应用进程队列总数量
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      count:
+        type: integer
+        format: int32
+        description: 已查询出的处于ACTIVE/CREATING/DELETING的应用进程队列的数量
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      fleets:
+        type: array
+        minItems: 0
+        maxItems: 2147483647
+        description: 应用进程队列详细信息
+        items:
+          $ref: '#/definitions/MonitorFleet'
+      all_fleet_ids_names:
+        type: array
+        minItems: 0
+        maxItems: 2147483647
+        description: 所有应用进程队列的id与名字
+        items:
+          $ref: '#/definitions/FleetIdAndName'
+  FleetIdAndName:
+    properties:
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 1
+        maxLength: 1024
+        example: 25b24e04-8d6d-11ed-93a1-fa163ecd2586
+      name:
+        type: string
+        description: 应用进程队列的id
+        minLength: 1
+        maxLength: 1024
+        example: fleet-name
+  ShowMonitorFleetResponseBody:
+    allOf:
+      - $ref: '#/definitions/MonitorFleet'
+  MonitorFleet:
+    allOf:
+      - $ref: '#/definitions/Fleet'
+      - type: object
+        properties:
+          associated_alias:
+            type: array
+            items:
+              $ref: '#/definitions/associated_alias'
+            description: 应用进程队列已关联的别名列表
+          alias_count:
+            type: integer
+            format: int32
+            description: 应用进程队列已关联的别名数量
   ListClientSessionResponseBody:
     required:
       - count
@@ -2465,7 +4555,7 @@ definitions:
         maxItems: 100
     required:
       - count
-      - app_processes        
+      - app_processes
   Process:
     description: 单个应用进程
     properties:
@@ -2491,15 +4581,15 @@ definitions:
       state:
         type: string
         enum:
-          - CREATING
+          - AVTIVATING
           - ACTIVE
           - ERROR
           - DELETING
           - TERMINATED
-        example: CREATING
+        example: AVTIVATING
         description: |-
           进程状态 
-          * CREATING:     创建中 
+          * AVTIVATING:   创建中 
           * ACTIVE:       活跃 
           * ERROR:        错误
           * DELETING:     删除中 
@@ -2533,8 +4623,7 @@ definitions:
       - count
       - builds
   Build:
-    description: |-
-      应用包
+    description: 应用包
     properties:
       build_id:
         type: string
@@ -2571,6 +4660,1400 @@ definitions:
       operating_system:
         type: string
         description: 操作系统类型
-      bind_fleet_num:
+    type: object
+  ResConfig:
+    type: object
+    description: |-
+      包含
+      Origin_domain_id，Origin_domain_name，Origin_project_id，
+      Res_domain_id，Res_domain_name，Res_project_id，Res_user_name
+      Region，Agency_name，Keypair_name
+    properties:
+      user_id:
+        type: string
+        description: 分配资源的目标用户id，全局唯一，uuid格式
+        minLength: 32
+        maxLength: 36
+        example: 00efa289-bc87-11ed-8e05-fa163ecd2586
+      origin_domain_id:
+        type: string
+        description: 使用租户ID
+        example: b3b22b1e***************03faa
+      origin_domain_name:
+        type: string
+        description: 使用租户名
+        example: domain_name
+        minLength: 32
+        maxLength: 36
+      origin_project_id:
+        type: string
+        description: 使用租户项目ID
+        example: 302afed3b**********5cab2638d
+      res_domain_name:
+        type: string
+        description: 资源租户名
+        minLength: 32
+        maxLength: 36
+        example: _res_domain_name_demo
+      res_domain_id:
+        type: string
+        description: 资源租户ID
+        minLength: 32
+        maxLength: 36
+        example: b3b22b1e***************03faa
+      res_project_id:
+        type: string
+        description: 资源租户项目ID
+        minLength: 32
+        maxLength: 36
+        example: b3b22b1e***************03faa
+      res_user_name:
+        type: string
+        description: 资源租户用户名
+        minLength: 32
+        maxLength: 36
+        example: res_user_demo
+      res_user_id:
+        type: string
+        description: 资源租户用户ID
+        minLength: 32
+        maxLength: 36
+        example: b3b22b1e***************03faa
+      region:
+        type: string
+        description: 区域
+        example: cn-north-4
+      agency_name:
+        type: string
+        description: 委托名
+        example: agnecy_name_demo
+      keypair_name:
+        type: string
+        description: 密钥名
+        example: keypair_name_demo
+      iam_agency_name:
+        type: string
+        description: 云服务委托名
+        minLength: 32
+        maxLength: 36
+        example: iam_agency_demo
+    required:
+      - user_id
+      - origin_domain_id
+      - origin_domain_name
+      - origin_project_id
+      - res_domain_name
+      - res_domain_id
+      - res_project_id
+      - res_user_name
+      - res_user_id
+      - region
+      - agency_name
+      - keypair_name
+  DaoBuild:
+    type: object
+    description: 应用包详情字段
+    properties:
+      id:
+        type: string
+        description: 应用包id
+      project_id:
+        type: string
+        description: project_id
+      name:
+        type: string
+        description: 应用包名
+      description:
+        type: string
+        description: 描述
+      state:
+        type: string
+        description: 应用包状态
+      creation_time:
+        type: string
+        format: date-time
+        description: 创建时间
+      update_time:
+        type: string
+        format: date-time
+        description: 更新时间
+      image_id:
+        type: string
+        description: 镜像id
+      image_region:
+        type: string
+        description: 镜像所在region
+      bucket_name:
+        type: string
+        description: 应用包OBS存储桶名
+      key:
+        type: string
+        description: 应用包OBS存储对象名
+      storage_region:
+        type: string
+        description: 应用包OBS存储region
+      operating_system:
+        type: string
+        description: 应用操作系统
+      version:
+        type: string
+        description: 应用包版本
+      size:
+        type: string
+        description: 应用包大小
+  UpdateBuildRequestBody:
+    type: object
+    description: 更新应用包请求体。会判断name+version的重复
+    required:
+      - name
+      - description
+      - version
+    properties:
+      name:
+        type: string
+        description: 更新/原应用包名
+        minLength: 2
+        maxLength: 50
+        pattern: ^[A-Za-z][\dA-Za-z\_\-]{1,49}$
+      description:
+        type: string
+        description: 更新/原描述
+        minLength: 0
+        maxLength: 100
+      version:
+        type: string
+        description: 更新/原版本
+        minLength: 1
+        maxLength: 50
+  storage_location:
+    type: object
+    description: 应用包路径信息
+    properties:
+      bucket_name:
+        type: string
+        description: 桶名
+        minLength: 1
+        maxLength: 100
+      bucket_key:
+        type: string
+        description: 对象名
+        minLength: 1
+        maxLength: 100
+    required:
+      - bucket_name
+      - bucket_key
+  CreateBuildRequest:
+    type: object
+    description: 创建应用包（指定OBS路径）请求体
+    required:
+      - name
+      - storage_location
+      - version
+      - region
+      - vpc_id
+      - subnet_id
+    properties:
+      name:
+        type: string
+        description: 应用包名  字母开头 允许字母数字下划线 中划线
+        minLength: 2
+        maxLength: 50
+        pattern: ^[A-Za-z][\dA-Za-z\_\-]{1,49}$
+      description:
+        type: string
+        description: 描述
+        minLength: 1
+        maxLength: 100
+      operating_system:
+        type: string
+        description: 操作系统 后端默认值为CentOS 7.2 64bits
+        minLength: 1
+        maxLength: 50
+      storage_location:
+        description: 应用包存储信息
+        $ref: '#/definitions/storage_location'
+      version:
+        type: string
+        description: 版本号
+        minLength: 1
+        maxLength: 50
+      region:
+        type: string
+        description: 您的镜像需要打包到哪个region？
+        minLength: 1
+        maxLength: 50
+      vpc_id:
+        type: string
+        description: 虚拟私有云id 用于创建ECS
+        minLength: 1
+        maxLength: 64
+      subnet_id:
+        type: string
+        description: 子网id 用于创建ECS
+        minLength: 1
+        maxLength: 64
+      enterprise_project:
+        type: string
+        description: 企业项目id 用于镜像绑定 选填
+        minLength: 1
+        maxLength: 64
+  QueryBuildParam:
+    type: object
+    description: 查询应用包参数
+    properties:
+      name:
+        type: string
+        minLength: 1
+        maxLength: 50
+      state:
+        type: string
+      creation_time:
+        type: string
+        description: 起时间/止时间
+  UploadBuildResponse:
+    type: object
+    description: 上传应用包至OBS返回参数
+    required:
+      - bucket_name
+      - bucket_key
+      - storage_region
+    properties:
+      bucket_name:
+        type: string
+        description: 桶名
+      bucket_key:
+        type: string
+        description: 对象名
+      storage_region:
+        type: string
+        description: 存储区域
+  UserInfo:
+    type: object
+    properties:
+      username:
+        type: string
+        description: 用户名
+        minLength: 4
+        maxLength: 31
+        example: user1
+      password:
+        type: string
+        description: 用户登录密码
+        example: '*******'
+      email:
+        type: string
+        description: 邮箱
+        example: demo@123.com
+      phone:
+        type: string
+        description: 电话
+        example: 13800000000
+      activation:
         type: integer
-        description: 关联的应用队列个数      
+        format: int32
+        description: 激活状态 1激活，0未激活，-1冻结
+      usertype:
+        type: integer
+        format: int32
+        description: 用户类型，0普通用户，9管理员
+      TotalResNumber:
+        type: integer
+        format: int32
+        description: 该用户拥有的租户数量
+    required:
+      - username
+      - password
+  UserBucketResponse:
+    type: object
+    description: 获取资源账号特定区域桶名列表 响应体
+    required:
+      - count
+      - bucket_name
+    properties:
+      count:
+        type: string
+      bucket_name:
+        type: array
+        items:
+          type: string
+  AssociatedFleet:
+    properties:
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 0
+        maxLength: 64
+        example: 0051ee5c-609b-11ed-bb1e-fa163ecd2586
+      weight:
+        type: number
+        description: 应用进程队列的权重，浮点数，最多支持到小数点后三位
+        minimum: 0
+        maximum: 1
+        example: 0.1
+  AssociatedFleetResponse:
+    properties:
+      name:
+        type: string
+        description: fleet名称
+        minLength: 0
+        maxLength: 1024
+        example: this is a fleet demo
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 0
+        maxLength: 64
+        example: 0051ee5c-609b-11ed-bb1e-fa163ecd2586
+      weight:
+        type: number
+        description: 应用进程队列的权重，最多支持到小数点后三位，创建会话时根据权重将创建请求分配到不同的fleet上
+        minimum: 0
+        maximum: 1
+        example: 0.1
+      state:
+        type: string
+        description: |-
+          队列状态 
+          * CREATING:     创建中 
+          * ACTIVE:       活跃 
+          * ERROR:        错误
+          * DELETING:     删除中 
+          * TERMINATED:   已终止
+        enum:
+          - CREATING
+          - ACTIVE
+          - ERROR
+          - DELETING
+          - TERMINATED
+        example: ACTIVE
+      instance_count:
+        type: integer
+        format: int32
+        description: 该应用进程队列内存在的实例数量
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      process_count:
+        type: integer
+        format: int32
+        description: 该应用进程队列内存在的进程数量
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      server_session_count:
+        type: integer
+        format: int32
+        description: 该应用进程队列内存在的服务会话数量
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      max_server_session_num:
+        type: integer
+        format: int32
+        description: 该应用进程队列支持的最大服务会话数量
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+  CreateAliasRequestBody:
+    properties:
+      name:
+        type: string
+        description: 别名名称，最大长度不超过1024个ASCII字符
+        minLength: 1
+        maxLength: 1024
+        example: alias-name
+      description:
+        type: string
+        description: 别名描述，最大长度不超过1024个ASCII字符
+        minLength: 1
+        maxLength: 1024
+        example: alias-description
+      type:
+        type: string
+        description: |-
+          别名的类型
+          * ACTIVE: 激活类型，该类型的alias可以指向flee列表t，并且可以使用该alias创建会话
+          * DEACTIVE: 停用类型，该类型的alias不会指向fleet，使用该alias创建会话会直接返回该结构体中message的信息
+        enum:
+          - ACTIVE
+          - DEACTIVE
+        example: ACTIVE
+      message:
+        type: string
+        description: 别名的信息，用于DEACTIVE类型的别名创建会话时的返回信息，最大长度不超过1024个ASCII字符
+        minLength: 0
+        maxLength: 1024
+        example: alias-message
+      associated_fleets:
+        type: array
+        description: 别名关联的fleet
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/AssociatedFleet'
+  UpdateAliasRequestBody:
+    properties:
+      name:
+        type: string
+        description: 别名名称，最大长度不超过1024个ASCII字符
+        minLength: 0
+        maxLength: 1024
+        example: alias-name
+      description:
+        type: string
+        description: 别名描述，最大长度不超过1024个ASCII字符
+        minLength: 0
+        maxLength: 1024
+        example: alias-description
+      type:
+        type: string
+        description: |-
+          别名的类型
+          * ACTIVE: 激活类型，该类型的alias可以指向flee列表t，并且可以使用该alias创建会话
+          * DEACTIVE: 停用类型，该类型的alias不会指向fleet，使用该alias创建会话会直接返回该结构体中message的信息
+        enum:
+          - ACTIVE
+          - DEACTIVE
+        example: ACTIVE
+      message:
+        type: string
+        description: 别名的信息，用于DEACTIVE类型的别名创建会话时的返回信息，最大长度不超过1024个ASCII字符
+        minLength: 0
+        maxLength: 1024
+        example: alias-message
+      associated_fleets:
+        type: array
+        description: 别名关联的fleet
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/AssociatedFleet'
+  CreateAliasResponseBody:
+    allOf:
+      - $ref: '#/definitions/UpdateAliasRequestBody'
+    properties:
+      alias_id:
+        type: string
+        description: 别名ID，随机生成的UUID
+        minLength: 0
+        maxLength: 64
+        example: 0051ee5c-609b-11ed-bb1e-fa163ecd2586
+      creation_time:
+        type: string
+        description: 别名队列创建时间，结束时间，UTC时间，遵循RFC3339规范，例如2019-12-09T06:10:29Z
+        minLength: 1
+        maxLength: 32
+        example: '2020-06-28T00:00:00Z'
+  ShowAliasResponseBody:
+    allOf:
+      - $ref: '#/definitions/Alias'
+  ListAliasResponseBody:
+    properties:
+      total_count:
+        type: integer
+        format: int32
+        description: 别名总数
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      count:
+        type: integer
+        format: int32
+        description: 查询出的别名数量
+        minimum: 0
+        maximum: 2147483647
+        example: 1
+      aliases:
+        description: 应用进程队列数组
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/Alias'
+        type: array
+  Alias:
+    properties:
+      alias_id:
+        type: string
+        description: 别名ID，随机生成的UUID
+        minLength: 0
+        maxLength: 64
+        example: 0051ee5c-609b-11ed-bb1e-fa163ecd2586
+      name:
+        type: string
+        description: 别名名称，最大长度不超过1024个ASCII字符
+        minLength: 0
+        maxLength: 1024
+        example: alias-name
+      description:
+        type: string
+        description: 别名描述，最大长度不超过1024个ASCII字符
+        minLength: 0
+        maxLength: 1024
+        example: alias-description
+      creation_time:
+        type: string
+        description: 别名队列创建时间，结束时间，UTC时间，遵循RFC3339规范，例如2019-12-09T06:10:29Z
+        minLength: 1
+        maxLength: 32
+        example: '2020-06-28T00:00:00Z'
+      type:
+        type: string
+        description: |-
+          别名的类型
+          * ACTIVE: 激活类型，该类型的alias可以指向flee列表t，并且可以使用该alias创建会话
+          * DEACTIVE: 停用类型，该类型的alias不会指向fleet，使用该alias创建会话会直接返回该结构体中message的信息
+          * TERMINATED: 表示该Alias已被删除
+        enum:
+          - ACTIVE
+          - DEACTIVE
+          - TERMINATED
+        example: ACTIVE
+      message:
+        type: string
+        description: 别名的信息，用于DEACTIVE类型的别名创建会话时的返回信息，最大长度不超过1024个ASCII字符
+        minLength: 0
+        maxLength: 1024
+        example: alias-message
+      associated_fleets:
+        type: array
+        description: alias所关联的fleet列表
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/AssociatedFleetResponse'
+  ListOriginInfoResponseBody:
+    type: object
+    description: 使用租户信息响应体
+    properties:
+      total_count:
+        type: integer
+        format: int32
+        description: 该用户下所有使用租户的总数量
+        example: 1
+        minimum: 1
+        maximum: 2147483647
+      count:
+        type: integer
+        format: int32
+        description: 该用户下查询出的所有使用租户的数量
+        example: 1
+        minimum: 1
+        maximum: 2147483647
+      origins:
+        description: 使用租户的详细信息，以domain_id为key
+        properties:
+          origin_domain_id_1:
+            description: 使用租户id
+            properties:
+              origin_domain_name:
+                type: string
+                description: 使用租户名
+                example: origin-domain-name-1
+                minLength: 1
+                maxLength: 1024
+              origin_domain_id:
+                type: string
+                description: 使用租户id
+                example: origin_domain_id
+                minLength: 1
+                maxLength: 1024
+              region:
+                description: 该使用租户在该region下的信息，以具体的region为key
+                properties:
+                  region_1:
+                    description: 使用租户在region_1下的信息
+                    properties:
+                      origin_project_id:
+                        type: string
+                        description: 使用租户的项目id
+                        example: origin-project-id-2
+                        minLength: 1
+                        maxLength: 1024
+                  region_2:
+                    description: 使用租户在region_2下的信息
+                    properties:
+                      origin_project_id_2:
+                        type: string
+                        description: 使用租户的项目id
+                        example: origin-project-id-6
+                        minLength: 1
+                        maxLength: 1024
+  ListSupportRegions:
+    type: object
+    description: 后台支持的region
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 支持的region数量
+        example: 1
+        minimum: 1
+        maximum: 2147483647
+      regions:
+        description: 支持的region数组
+        minItems: 0
+        maxItems: 100
+        items:
+          type: string
+        type: array
+  LoginResponse:
+    type: object
+    properties:
+      username:
+        type: string
+        description: 当前登录用户
+        example: user1
+      Auth_Token:
+        type: string
+        description: 登录后生成的认证token
+        example: eyJhbGciOi*************XVCJ9
+      Activation:
+        type: integer
+        format: int32
+        description: 激活状态，-1冻结，0未激活，-1激活
+      Usertype:
+        type: string
+        description: 用户类型，0普通用户，9管理员
+      total_res_count:
+        type: string
+        description: 用户拥有的租户数量
+  ResConfList:
+    type: object
+    properties:
+      Total:
+        type: integer
+        format: int32
+        description: 资源信息条数
+      ResConfList:
+        type: array
+        items:
+          $ref: '#/definitions/ResConfig'
+  ChangePassBody:
+    type: object
+    required:
+      - username
+      - oldPassword
+      - newPassword
+    properties:
+      username:
+        type: string
+        description: 用户名
+        example: user1
+      oldPassword:
+        type: string
+        description: 旧密码，RSA加密
+        example: '******************'
+      newPassword:
+        type: string
+        description: 新密码，RSA加密
+        example: '******************'
+  LoginParam:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+        description: 登录用户名，英文字母开头，包含字母和数字
+        example: user1
+        minLength: 4
+        maxLength: 31
+      password:
+        type: string
+        description: 登录密码（RSA加密）
+        example: '********************************'
+  ModifyResConfigBody:
+    type: object
+    description: 使用租户的信息为配套使用，需要同时修改
+    required:
+      - id
+      - origin_domain_id
+      - origin_domain_name
+      - origin_project_id
+    properties:
+      id:
+        type: string
+        description: 资源配置id，uuid格式，可通过获取所有租户配置获得
+        example: c0544f73-bce0-11ed-991f-fa163ecd2502
+      origin_domain_id:
+        type: string
+        description: 使用租户id
+        example: b3b22b1e***************03faa
+      origin_domain_name:
+        type: string
+        description: 使用租户名
+        example: domain_name_demo
+      origin_project_id:
+        type: string
+        description: 使用租户项目id
+        example: b3b22b1e***************03faa
+  GetUserInfo:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 用户id，uuid格式，全局唯一
+        example: 302afed3-bcb6-11ed-9295-6805cab2638d
+      username:
+        type: string
+        description: 用户名
+        example: user1
+      Email:
+        type: string
+        description: 邮箱
+        example: user1@demo.com
+      LastLogin:
+        type: string
+        description: 最近登陆时间，UTC时间格式2023-03-08T09:57:09Z
+      Activation:
+        type: integer
+        format: int32
+        description: 激活状态，-1冻结，0未激活，1激活
+      UserType:
+        type: integer
+        format: int32
+        description: 用户类型，0普通用户，9管理员
+      TotalResNumber:
+        type: integer
+        format: int32
+        description: 用户拥有的租户数量
+  ReviseUser:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 用户id
+        example: b3b22b1e***************03faa
+      username:
+        type: string
+        description: 要修改的用户名
+        example: user1
+      email:
+        type: string
+        description: 邮箱
+        example: user1@123.com
+      phone:
+        type: string
+        description: 电话
+        example: 13800000000
+      usertype:
+        type: integer
+        format: int32
+        description: 用户类型
+      activation:
+        type: integer
+        format: int32
+        description: 激活状态
+    required:
+      - id
+  UserReviseInfoBody:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+        description: 用户id
+        example: 16136862-b73a-11ed-ac22-fa163ecd2586
+      email:
+        type: string
+        description: 邮箱
+        example: user1@demo.com
+      phone:
+        type: string
+        description: 电话
+        example: 13000000000
+  UserImageResponse:
+    type: object
+    description: 获取资源账号特定区域私有镜像列表 响应体
+    required:
+      - count
+      - image_list
+      - version
+    properties:
+      count:
+        type: string
+      image_list:
+        type: array
+        items:
+          $ref: '#/definitions/image'
+      version:
+        type: string
+        description: IMS私有镜像 操作系统及版本
+  image:
+    type: object
+    required:
+      - image_id
+      - image_name
+    properties:
+      image_id:
+        type: string
+        description: IMS私有镜像id
+      image_name:
+        type: string
+        description: IMS私有镜像name 会重复
+  CreateBuildByImageRequest:
+    type: object
+    description: 创建应用包（直接绑定镜像）请求体
+    required:
+      - name
+      - version
+      - region
+      - image_id
+    properties:
+      name:
+        type: string
+        description: 应用包名  字母开头 允许字母数字下划线 中划线
+        minLength: 2
+        maxLength: 50
+        pattern: ^[A-Za-z][\dA-Za-z\_\-]{1,49}$
+      description:
+        type: string
+        description: 描述
+        minLength: 1
+        maxLength: 100
+      operating_system:
+        type: string
+        description: 操作系统
+        minLength: 1
+        maxLength: 50
+      version:
+        type: string
+        description: 版本号
+        minLength: 1
+        maxLength: 50
+      region:
+        type: string
+        description: 您的镜像需要打包到哪个region？
+        minLength: 1
+        maxLength: 50
+      image_id:
+        type: string
+        description: IMS私有镜像id
+  BuildMsg:
+    type: object
+    properties:
+      build:
+        $ref: '#/definitions/DaoBuild'
+      fleet_list:
+        $ref: '#/definitions/FleetByBuildList'
+    description: 应用包详情及关联的fleet基本信息
+    required:
+      - build
+      - fleet_list
+  FleetByBuild:
+    type: object
+    description: build关联的fleet基本信息
+    properties:
+      fleet_id:
+        type: string
+      fleet_name:
+        type: string
+      fleet_state:
+        type: string
+        description: fleet状态，会过滤掉terminated状态
+      creation_time:
+        type: string
+  FleetByBuildList:
+    type: object
+    description: build关联的fleet基本信息 列表
+    properties:
+      count:
+        type: string
+      fleet:
+        type: array
+        items:
+          $ref: '#/definitions/FleetByBuild'
+    required:
+      - count
+      - fleet
+  InsertResConfResp:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 租户资源id
+      ResConfig:
+        description: 租户信息
+        $ref: '#/definitions/ResConfig'
+  vpc:
+    type: object
+    required:
+      - vpc_id
+      - vpc_name
+    properties:
+      vpc_id:
+        type: string
+      vpc_name:
+        type: string
+  subnet:
+    type: object
+    required:
+      - subnet_id
+      - subnet_name
+    properties:
+      subnet_id:
+        type: string
+      subnet_name:
+        type: string
+  UserVpcResponse:
+    type: object
+    description: 获取资源账号特定区域vpc列表 响应体
+    required:
+      - count
+      - vpc_list
+    properties:
+      count:
+        type: string
+      vpc_list:
+        type: array
+        items:
+          $ref: '#/definitions/vpc'
+  UserSubnetResponse:
+    type: object
+    description: 获取资源账号特定区域子网列表 响应体
+    required:
+      - count
+      - subnet_list
+    properties:
+      count:
+        type: string
+      subnet_list:
+        type: array
+        items:
+          $ref: '#/definitions/subnet'
+  LTS_Config:
+    type: object
+    required:
+      - lts_group_id
+      - lts_log_path
+    properties:
+      lts_access_config_name:
+        type: string
+        minLength: 1
+        maxLength: 64
+        description: 日志接入名称，为空则按fleetid创建
+        example: log_access_config_name_demo
+      lts_group_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志组id，uuid格式，全局唯一
+        example: 4e2db2de-8809-435c-8a3a-2a614c0947f0
+      lts_log_path:
+        type: array
+        items:
+          type: string
+        description: 日志接入读取路径
+        example: '["/root/log","/root/err_log"]'
+  CreateAccessConfig:
+    type: object
+    required:
+      - fleet_id
+      - lts_config
+    properties:
+      fleet_id:
+        type: string
+        description: Fleetid，应用进程队列id，uuid格式，全局唯一
+        example: 4e2db2de-8809-435c-8a3a-2a614c0947f0
+      lts_config:
+        description: 日志接入配置
+        $ref: '#/definitions/LTS_Config'
+      description:
+        type: string
+        description: 描述
+        example: demo
+  CreateAccessConfigResp:
+    type: object
+    properties:
+      id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志接入配置id，uuid格式
+        example: 587a76e1-ba5a-11ed-bccf-84a93e8b1644
+      fleet_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: Fleetid，应用进程队列id，uuid格式，全局唯一
+        example: 4e2db2de-8809-435c-8a3a-2a614c0947f0
+      log_group_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志组id，uuid格式，全局唯一
+        example: 4e2db2de-8809-435c-8a3a-2a614c0947f0
+      log_stream_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志流id，uuid格式，全局唯一
+        example: 4e2db2de-8809-435c-8a3a-2a614c0947f0
+      log_stream_name:
+        type: string
+        minLength: 1
+        maxLength: 64
+        description: 日志流名称
+        example: log_stream_name_demo
+      host_group_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志组id，uuid格式，全局唯一
+        example: 4e2db2de-8809-435c-8a3a-2a614c0947f0
+      host_group_name:
+        type: string
+        minLength: 1
+        maxLength: 64
+        description: 日志组名称
+        example: log_group_name_demo
+      log_config_path:
+        type: array
+        items:
+          type: string
+        description: 日志接入路径
+        example: /root/log
+      access_config_name:
+        type: string
+        description: 日志接入名称
+        example: log_access_config_name_demo
+      access_config_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志接入id，uuid格式，全局唯一
+        example: 4e2db2de-8809-435c-8a3a-2a614c0947f0
+      description:
+        type: string
+        description: 描述
+        example: demo
+  AccessConfigInfo:
+    type: object
+    properties:
+      access_config_name:
+        type: string
+        description: 日志接入名称
+      access_config_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志接入id，uuid格式，全局唯一
+        example: 4e2db2de-8809-435c-8a3a-2a614c0947f0
+      host_group_id_list:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 主机组id
+      log_group_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志组id，uuid格式，全局唯一
+        example: 4e2db2de-8809-435c-8a3a-2a614c0947f0
+      log_stream_name:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志流名称
+        example: log_stream_name_demo
+      log_stream_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志流id，uuid格式，全局唯一
+        example: 4e2db2de-8809-435c-8a3a-2a614c0947f0
+      log_stream_link:
+        type: string
+        description: 日志流跳转链接，可直接跳转LTS控制台查看
+        example: https://console.huaweiyun.com
+      log_config_path:
+        type: string
+        description: 日志接入配置路径
+        example: /root/log
+      obs_transfer_path:
+        type: string
+        description: obs转储路径
+        example: /bucket/test/LogTank
+      obs_transfer_path_link:
+        type: string
+        description: obs转储链接，可跳转obs桶查看转储日志
+        example: https://console.huaweicloud.com
+      create_time:
+        type: string
+        format: date-time
+        description: 创建时间
+      description:
+        type: string
+        description: 描述
+        example: demo
+  ListAccessConfig:
+    type: object
+    properties:
+      total:
+        type: integer
+        format: int32
+        description: 日志接入总数
+      count:
+        type: string
+        description: 当前页日志接入数量
+      access_config:
+        type: array
+        items:
+          $ref: '#/definitions/AccessConfigInfo'
+        description: 日志接入列表
+  UpdateAccessConfig:
+    type: object
+    required:
+      - access_config_id
+    properties:
+      access_config_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志接入id
+        example: f1727a22-9c57-48d7-aaa2-d6f6892c57a7
+      description:
+        type: string
+        description: 描述
+        example: description test
+  CreateTransfer:
+    type: object
+    required:
+      - log_group_id
+      - log_stream_id
+      - transfer_info
+    properties:
+      log_group_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志组id
+        example: log_group_name_demo
+      log_stream_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志流id
+        example: c5b59698-bcaf-11ed-bd4b-fa163ecd2502
+      transfer_info:
+        description: 日志转储配置详情
+        $ref: '#/definitions/CreateTransferInfo'
+      description:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 描述
+        example: demo
+  CreateTransferInfo:
+    type: object
+    required:
+      - obs_bucket_name
+      - obs_period
+      - obs_transfer_path
+    properties:
+      obs_bucket_name:
+        type: string
+        minLength: 1
+        maxLength: 64
+        description: obs桶名
+        example: obs_bucket_name_demo
+      obs_period:
+        type: string
+        description: 枚举值，2min，5min， 30min，1hour，3hour，6hour，12hour，默认值为2min
+        example: 2min
+      obs_transfer_path:
+        type: string
+        description: 转储obs路径前缀，系统将自动拼接成：OBS桶名/转储前缀/Y/M/D的格式，支持英文字母数字和“-”
+        minLength: 1
+        maxLength: 16
+        example: demo-test
+  CreateTransferResp:
+    type: object
+    properties:
+      log_group_id:
+        type: string
+        description: 日志组id，uuid格式
+        example: 260c57a6-bc9b-11ed-8130-fa163ecd2586
+      log_group_name:
+        type: string
+        description: 日志组名称
+        example: log_group_name_demo
+      log_stream_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志流id，uuid格式
+        example: 7c8b1674-bcaf-11ed-84a2-6805cab2638d
+      log_stream_name:
+        type: string
+        minLength: 1
+        maxLength: 64
+        description: 日志流名称
+        example: log_stream_name_demo
+      log_transfer_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志流id，uuid格式
+        example: 7c8b1674-bcaf-11ed-84a2-6805cab2638d
+      transfer_info:
+        $ref: '#/definitions/CreateTransferInfo'
+  QureyTransferInfo:
+    type: object
+    properties:
+      log_group_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志组id，uuid格式，全局唯一
+        example: 25cc4d27-ba5d-11ed-a7c2-fa163ecd2586
+      log_stream_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志流id，uuid格式，全局唯一
+        example: 25cc4d27-ba5d-11ed-a7c2-fa163ecd2586
+      log_transfer_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志转储id，uuid格式，全局唯一
+        example: 25cc4d27-ba5d-11ed-a7c2-fa163ecd2586
+      transfer_info:
+        items:
+          $ref: '#/definitions/TransferInfo'
+        type: array
+        description: 日志转储信息
+  ListTransferResp:
+    type: object
+    properties:
+      total:
+        type: integer
+        format: int32
+        description: 转储总数
+      count:
+        type: integer
+        format: int32
+        description: 当前查询数
+      log_transfer_list:
+        type: array
+        items:
+          $ref: '#/definitions/QureyTransferInfo'
+  CreateLogGroupReq:
+    type: object
+    required:
+      - log_group_name
+      - ttl_in_day
+    properties:
+      log_group_name:
+        type: string
+        minLength: 1
+        maxLength: 64
+        description: 日志组名称
+        example: log_group_name_test
+      ttl_in_day:
+        type: integer
+        format: int32
+        description: 日志保留时间
+        example: 7
+        minimum: 1
+        maximum: 30
+  Create:
+    type: object
+    properties:
+      log_group_name:
+        type: string
+        description: 日志组名称
+      log_group_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志组id
+      ttl_in_day:
+        type: integer
+        format: int32
+        description: 日志保留时间
+  CreateLogGroupResp:
+    type: object
+    properties:
+      log_group_name:
+        type: string
+        description: 日志组名称
+        example: log_group_name_demo
+      log_group_id:
+        type: string
+        description: 日志组id，uuid格式，全局唯一
+        example: 4e2db2de-8809-435c-8a3a-2a614c0947f0
+      ttl_in_day:
+        type: integer
+        format: int32
+        description: 日志在云日志服务中的保留时间
+        example: 7
+  associated_alias:
+    type: object
+    required:
+      - alias_name
+      - alias_id
+      - status
+    properties:
+      alias_name:
+        type: string
+      alias_id:
+        type: string
+      status:
+        type: string
+  ListLogGroup:
+    type: object
+    properties:
+      total:
+        type: integer
+        format: int32
+        description: 日志组数量
+      log_groups:
+        type: array
+        items:
+          $ref: '#/definitions/LogGroupInfo'
+        description: 日志组列表
+  LogGroupInfo:
+    type: object
+    properties:
+      log_group_name:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志组名称
+        example: log_group_name_demo
+      log_group_id:
+        type: string
+        minLength: 32
+        maxLength: 36
+        description: 日志组id，uuid格式，全局唯一
+        example: c5b59698-bcaf-11ed-bd4b-fa163ecd2502
+      creation_time:
+        type: string
+        description: 日志组创建时间
+      ttl_in_days:
+        type: string
+        description: 日志保留时间
+  TransferInfo:
+    type: object
+    properties:
+      obs_period_unit:
+        type: string
+        description: obs转储周期时间单位，枚举值，为min或hour
+        example: min
+      obs_period:
+        type: integer
+        format: int32
+        description: obs转储周期时间
+        example: 2
+      obs_bucket_name:
+        type: string
+        description: obs转储桶名
+        example: bucket_name_demo
+      obs_transfer_path:
+        type: string
+        description: obs转储路径
+        example: /root/log

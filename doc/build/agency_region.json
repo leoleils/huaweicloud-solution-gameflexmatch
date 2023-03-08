@@ -13,6 +13,7 @@
                 "vpc:vpcs:create",
                 "vpc:networks:get",
                 "vpc:publicIps:create",
+                "vpc:bandwidths:create",
                 "vpc:ports:get",
                 "vpc:publicIps:remove",
                 "vpc:vpcs:update",
@@ -101,9 +102,47 @@
                 "as:configs:list",
                 "as:groups:list",
                 "as:instances:list",
+                "as:acivityLogs:list",
                 "as:tags:get",
                 "as:tags:set",
                 "as:tags:list"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "lts:indiceLogs:list",
+                "lts:transfers:put",
+                "lts:groups:get",
+                "lts:groups:delete",
+                "lts:transfers:delete",
+                "lts:groupTopics:put",
+                "lts:topics:list",
+                "lts:transfers:list",
+                "lts:groups:list",
+                "lts:structConfig:get",
+                "lts:groups:create",
+                "lts:logs:list",
+                "lts:structConfig:create",
+                "lts:buckets:get",
+                "lts:disStreams:list",
+                "lts:logstreams:list",
+                "lts:agentEcs:list",
+                "lts:transfers:action",
+                "lts:transfers:create",
+                "lts:structConfig:put",   
+                "lts:transfersStatus:get",
+                "lts:agentsConf:create",
+                "lts:agents:list",
+                "lts:structConfig:delete",
+                "lts:logIndex:list",
+                "lts:agentSupportedOsLogPaths:list"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "apm:icmgr:list"
             ],
             "Effect": "Allow"
         }
