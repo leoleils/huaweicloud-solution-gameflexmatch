@@ -107,7 +107,6 @@
         },
         {
             "Action": [
-                "lts:filters:list",
                 "lts:indiceLogs:list",
                 "lts:transfers:put",
                 "lts:groups:get",
@@ -127,9 +126,7 @@
                 "lts:agentEcs:list",
                 "lts:transfers:action",
                 "lts:transfers:create",
-                "lts:structConfig:put",
-                "lts:structLog:list",
-                "lts:agentsConf:list",
+                "lts:structConfig:put",   
                 "lts:transfersStatus:get",
                 "lts:agentsConf:create",
                 "lts:agents:list",
