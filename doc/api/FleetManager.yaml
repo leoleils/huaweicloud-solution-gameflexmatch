@@ -5641,7 +5641,7 @@ definitions:
         items:
           type: string
         description: 日志接入读取路径
-        example: /root/log
+        example: '["/root/log","/root/err_log"]'
   CreateAccessConfig:
     type: object
     required:
