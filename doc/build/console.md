@@ -2,7 +2,7 @@
 
 操作系统：CentOS 7.6 64bit
 
-## 本地运行前端代码
+## 准备工作
 
 1. 安装 git
 
@@ -18,7 +18,7 @@ tar xf node-v16.13.1-linux-x64.tar.gz
 mv node-v16.13.1-linux-x64 /usr/local/
 ```
 
-3. 修改 node.sh 文件
+3. 新建并修改 node.sh 文件
 
 ```
 vi /etc/profile.d/node.sh
@@ -48,11 +48,11 @@ npm install -g @vue/cli
 
 ```
 cd /usr/local
-git clone -b master-dev https://codehub-dg-g.huawei.com/PublicCloudSolution/huaweicloud-solution-metaspace-console.git
+git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-metaspace-console.git
 cd huaweicloud-solution-metaspace-console
 ```
 
-8. 修改密码加密公钥配置文件 src/api/crypto.ts
+8. 修改密码加密公钥配置文件 src/api/crypto.ts 第 42 行
 
 ```
 export function encryptedData(data: string) {
@@ -75,7 +75,15 @@ npm install
 npm install --save vue-i18n@next
 ```
 
-11. 在根目录下运行 npm run dev 命令，运行项目
+## 本地运行前端代码
+
+11. 在 env/.env.development 文件里配置后端 IP 和端口
+
+```
+VITE_APP_INTERFACE_URL="https://127.0.0.0:8080"
+```
+
+12. 在根目录下运行 npm run dev 命令，运行项目
 
 ```
 npm run dev
@@ -83,19 +91,19 @@ npm run dev
 
 ## 打包部署
 
-12. 在根目录下运行 npm run build 命令，将项目编译打包至根目录的 dist 文件夹下。
+13. 在根目录下运行 npm run build 命令，将项目编译打包至根目录的 dist 文件夹下。
 
 ```
 npm run build
 ```
 
-13. 安装编译工具及库文件
+14. 安装编译工具及库文件
 
 ```
 yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel
 ```
 
-14. 下载 PCRE 安装包
+15. 下载 PCRE 安装包
 
 ```
 cd /usr/local/src/ || exit
@@ -103,7 +111,7 @@ wget http://downloads.sourceforge.net/project/pcre/pcre/8.35/pcre-8.35.tar.gz
 tar zxvf pcre-8.35.tar.gz
 ```
 
-15. 编译安装
+16. 编译安装
 
 ```
 cd pcre-8.35 || exit
@@ -111,7 +119,7 @@ cd pcre-8.35 || exit
 make && make install
 ```
 
-16. 安装 Nginx
+17. 安装 Nginx
 
 ```
 cd /usr/local/src/ || exit
@@ -120,7 +128,7 @@ tar zxvf nginx-1.7.8.tar.gz
 cd nginx-1.7.8 || exit
 ```
 
-17. 编译安装到/usr/local/webserver/nginx
+18. 编译安装到/usr/local/webserver/nginx
 
 ```
 ./configure --prefix=/usr/local/webserver/nginx --with-http_stub_status_module --with-http_ssl_module --with-pcre=/usr/local/src/pcre-8.35
@@ -128,7 +136,7 @@ make
 make install
 ```
 
-18. 替换 /usr/local/webserver/nginx/conf/nginx.conf 为以下内容
+19. 替换 /usr/local/webserver/nginx/conf/nginx.conf 为以下内容
 
 ```
 worker_processes  1;
@@ -167,14 +175,14 @@ http {
 
 ```
 
-19. 把 dist 目录下的所有文件都复制到 nginx 网站根目录 /usr/local/webserver/nginx/html 下
-20. 配置 nginx 开机自启动，在/lib/systemd/system/目录下创建 nginx.service 文件
+20. 把 dist 目录下的所有文件都复制到 nginx 网站根目录 /usr/local/webserver/nginx/html 下
+21. 配置 nginx 开机自启动，在/lib/systemd/system/目录下创建 nginx.service 文件
 
 ```
 vi /lib/systemd/system/nginx.service
 ```
 
-21. 在该文件中添加如下内容
+22. 在该文件中添加如下内容
 
 ```
 [Unit]
@@ -190,19 +198,19 @@ PrivateTmp=true
 WantedBy=multi-user.target
 ```
 
-22. 设置文件的执行权限
+23. 设置文件的执行权限
 
 ```
 chmod a+x /lib/systemd/system/nginx.service
 ```
 
-23. 设置开机自启动
+24. 设置开机自启动
 
 ```
 systemctl enable nginx.service
 ```
 
-24. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
+25. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
 
 ```
 ./nginx
