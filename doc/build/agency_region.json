@@ -76,7 +76,11 @@
             "Action": [
                 "ims:images:get",
                 "ims:*:get*",
-                "ims:*:list*"
+                "ims:*:list*",
+                "ims:images:upload",
+                "ims:serverImages:create",
+                "ims:wholeImages:create",
+                "ims:images:delete"
             ],
             "Effect": "Allow"
         },
