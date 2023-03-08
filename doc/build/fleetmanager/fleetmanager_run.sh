@@ -48,7 +48,9 @@ export GCM_NONCE=********************					# 本地数据加密的GCM 16位Nonce
 export DEFAULT_IMAGE_REF="CentOS 7.2 64bit" # 用于镜像打包的ECS默认操作系统
 export DEFAULT_SCRIPT_PATH=metaspace/image_env.sh # 镜像环境配置脚本 OBS路径 桶名/对象名
 export DEFAULT_AUXPROXY_PATH=metaspace/auxproxy.zip # AuxProxy组件压缩包 OBS路径 用于镜像环境配置 桶名/对象名
-export IMAGE_DISK_SIZE=40
+export IMAGE_DISK_SIZE=40 # 用于镜像打包的ECS默认磁盘大小
+export LTS_AGENCY_NAME={agency_name} # LTS委托，用于镜像打包的ECS安装ICagent，配置方式见README
+export DEFAULT_IMAGE_FLAVOR=s6.large.2 # 用于镜像打包的ECS默认规格
 
 # 服务其他配置
 export AASS_ENABLE_HMAC=false							# aass是否开启hmac验证
@@ -70,6 +72,7 @@ export WEB_HTTPS_PORT=31002								# fleetmanager的启动端口
 export LOGIN_SESSION_LIFETIME=43200						# 登录会话的过期时间(s)
 export JWTKEY={jwt_token_generate_key}					# 登录会话token生成的key
 export JWT_TOKEN_LIFETIME=7200							# 登录会话token的有效时间(s)						
+export DEFAULT_LOGIN_PASSWORD={default_login_password}  # 登录默认密码设置
 
 function start_service(){
 	cd /home/bin/

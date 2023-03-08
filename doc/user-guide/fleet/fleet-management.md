@@ -16,7 +16,7 @@
 
 2.选择“Fleet管理 > 基本信息和创建 > 新建Fleet”。
 
-![create_fleet](../../../../img/fleet/create_fleet.PNG)
+![create_fleet](../../../img/fleet/create_fleet.PNG)
 
 3.配置基本信息、资源信息等参数，您也可以通过json文件直接导入参数，或通过已填参数导出json文件。重点配置参数说明如下表所示
 
@@ -54,12 +54,12 @@
 2.选择“Fleet管理 > 基本信息和创建。
 
 3.在Fleet列表中，需修改的Fleet所在行中，单击“ 详情”。
-![update_fleet](../../../../img/fleet/update_fleet.PNG)
+![update_fleet](../../../img/fleet/update_fleet.PNG)
 
 4.单击参数栏后的”修改“，在侧弹窗中输入需修改的内容。
 
 5.单击“保存”完成修改。
-![update_fleet2](../../../../img/fleet/update_fleet2.PNG)
+![update_fleet2](../../../img/fleet/update_fleet2.PNG)
 
 
 
@@ -85,6 +85,6 @@
 2.选择“Fleet管理 > 基本信息和创建。
 
 3.在Fleet列表中，需删除的Fleet所在行中，单击“ 删除”。
-![delete_fleet](../../../../img/fleet/delete_fleet.PNG)
+![delete_fleet](../../../img/fleet/delete_fleet.PNG)
 
 4.在弹出的对话框中，单击”确定“。

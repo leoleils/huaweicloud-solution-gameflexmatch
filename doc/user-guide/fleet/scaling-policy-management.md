@@ -15,7 +15,7 @@
 1.登录`Metaspace`管理控制台。
 
 2.选择“Fleet管理 > 弹性伸缩策略管理 > 新建AutoScaling”。
-![create_scaling_policy](../../../../img/fleet/create_scaling_policy.PNG)
+![create_scaling_policy](../../../img/fleet/create_scaling_policy.PNG)
 
 3.配置fleet_id，名称，策略类型等参数，重点配置参数说明如下表所示
 
@@ -51,7 +51,7 @@
 
 4.在弹性伸缩策略列表中，需修改的弹性伸缩策略所在行中，单击“ 详情”。
 
-![update_scaling_policy](../../../../img/fleet/update_scaling_policy.PNG)
+![update_scaling_policy](../../../img/fleet/update_scaling_policy.PNG)
 
 5.在侧弹窗中单击参数后的”修改“，输入修改后的内容。
 
@@ -79,6 +79,6 @@
 
 4.在弹性伸缩策略列表中，需删除的弹性伸缩策略所在行中，单击“ 删除”。
 
-![delete_scaling_policy](../../../../img/fleet/delete_scaling_policy.PNG)
+![delete_scaling_policy](../../../img/fleet/delete_scaling_policy.PNG)
 
 5.在弹出的对话框中单击“确认”完成删除。
