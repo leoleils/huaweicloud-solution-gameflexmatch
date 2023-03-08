@@ -41,7 +41,7 @@ Metaspace平台提供对应用进程队列中的实例接入日志自动化管�
    
 ![prepare_build_transfer](../../../img/lts/prepare_build_transfer.png)
 
-6. 创建日志接入后，日志接入信息需要10分钟左右才能在
+6. 创建日志接入后，需要10分钟左右才能在云日志服务中查看到详细日志信息
 
 
 
