@@ -43,11 +43,13 @@ MetaSpace平台由五个服务组件组成：
       + 创建委托资源账号委托给管理账号：
          - 创建委托可以参考链接[创建委托（委托方操作）](https://support.huaweicloud.com/intl/zh-cn/usermanual-iam/iam_06_0002.html)，并将资源账号委托给管理账号；
          - 授予该委托`DEW KeypairFullAccess`权限
+         - 授予该委托`OBS Administrator`权限
          - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见[doc/build/agency_region.json](/doc/build/agency_region.json)与[doc/build/agency_global.json](/doc/build/agency_global.json)，由于区域级委托与全局级委托不能同时配置，该步骤需要为委托新建两种权限并关联
          
       + (可选)若想使用LTS配置日志转存，需在委托资源账号下创建LTS委托，给ECS以安装ICagent：
         
            委托配置流程见[创建icagent委托](https://support.huaweicloud.com/usermanual-lts/lts_03_0002.html)。
+           其中需要授予的权限为：`APM Administrator`与`LTS Administrator`
            
    + 准备管理面资源，并将管理面资源部署在同一`VPC`下，以下测试规格，具体规格按需选择：
            
@@ -75,25 +77,34 @@ MetaSpace平台由五个服务组件组成：
 
 2. **环境依赖**:
    + go1.16及以上版本
+   + go代理: https://repo.huaweicloud.com/repository/goproxy/
 3. **文件编译**：
-   + 将源码下载到本地，编译`linux`可执行的二进制文件，**以下步骤中{version}中的变量需按具体情况更改**
+   + 将源码下载到本地，`windows`下编译`linux`可执行的二进制文件，**以下步骤中{version}中的变量需按具体情况更改**
     ```sh
         # 设置编译的可执行文件的操作系统
         go env -w GOOS=linux
+        # 配置go代理
+        go env -w GO111MODULE=on
+        go env -w GOPROXY=https://repo.huaweicloud.com/repository/goproxy/
+        go env -w GONOSUMDB=*
         # 1. fleetmanager
         cd ~/huaweicloud-solution-metaspace-fleetmanager
+        # 下载依赖包
+        go mod tidy
         go build ./main.go
         # 修改文件名
         mv main fleetmanager-{version}
 
         # 2. appgateway
         cd ~/huaweicloud-solution-metaspace-appgateway
+        go mod tidy
         go build ./cmd/application_gateway.go
         # 修改文件名
         mv application_gateway appgateway-{version}
 
         # 3. aass
         cd ~/huaweicloud-solution-metaspace-aass
+        go mod tidy
         go build ./cmd/application-auto-scaling-service/application_auto_scaling_service.go
         # 修改文件名
         mv application_auto_scaling_service aass-{version}
@@ -137,7 +148,7 @@ MetaSpace平台由五个服务组件组成：
         openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
         openssl x509 -in tls.crt -text
     ```
-   + 获取网络传输的RSA非对称加密的公钥与私钥，用户敏感数据的加密与解密
+   + 获取网络传输的RSA非对称加密的公钥与私钥，用户敏感数据如登录密码以及云资源的加密与解密
     ```sh
         # 1. 创建RSA私钥，长度可以为1024，也可以为2048
         cd /home/tlsSecret
@@ -266,10 +277,6 @@ MetaSpace平台由五个服务组件组成：
    + 部署过程中必要的参数注解详见 [doc/build/param-annotation.md](/doc/build/param-annotation.md)
    + 平台用户管理模块使用详见 [doc/build/user-management.md](/doc/build/user-management.md)
    + console平台的用户指南详见`/doc/user-guide`
-
-## 日志导出功能
-Metaspace平台可以借助华为云LTS服务，实现服务组件以及托管应用的日志转存功能
-详细过程步骤请[参考链接](https://support.huaweicloud.com/usermanual-lts/lts_04_1031.html)
 
 ## 辅助工具
 1. 加密工具：提供了GCM与RSA加解密敏感数据的工具，详见`/tools/cipher`

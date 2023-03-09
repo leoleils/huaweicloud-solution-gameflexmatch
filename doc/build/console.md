@@ -210,8 +210,10 @@ chmod a+x /lib/systemd/system/nginx.service
 systemctl enable nginx.service
 ```
 
-25. 在 /usr/local/webserver/nginx/sbin 目录下运行./nginx，启动 nginx
+25. 启动nginx服务 
 
 ```
-./nginx
+systemctl start nginx.service
 ```
+
+26. 浏览器输入该ECS绑定的ip地址即可访问metaspace前端界面，或输入: http://{ipv4}:80
