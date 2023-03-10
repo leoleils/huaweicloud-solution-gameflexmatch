@@ -7,14 +7,7 @@ import (
 	"fmt"
 )
 
-const (
-	// aes-gcm加密的24位秘钥
-	key   = "************************"
-	// aes-gcm加密的16位初始向量
-	nonce = "****************"
-)
-
-func AESGCMEncrypt(plaintextStr string) (string, error) {
+func AESGCMEncrypt(plaintextStr string, key string, nonce string) (string, error) {
 	// 将明文和密钥转换为字节切片
 	plaintext := []byte(plaintextStr)
 	keyByte := []byte(key)
@@ -38,7 +31,7 @@ func AESGCMEncrypt(plaintextStr string) (string, error) {
 	return base64.RawURLEncoding.EncodeToString(ciphertext), nil
 }
 
-func AESGCMDecrypt(ciphertextStr string) (string, error) {
+func AESGCMDecrypt(ciphertextStr string, key string, nonce string) (string, error) {
 	// 将密文,密钥和生成的随机数转换为字节切片
 	ciphertext, _ := base64.RawURLEncoding.DecodeString(ciphertextStr)
 	nonceByte, _ := base64.RawURLEncoding.DecodeString(nonce)
@@ -60,20 +53,4 @@ func AESGCMDecrypt(ciphertextStr string) (string, error) {
 		return "", err
 	}
 	return string(plaintext), nil
-}
-
-func main() {
-	plaintext := "CqMeiuKLco6MIhAEhKJroFU150qXhwW7zJROQx5i"
-	ciphertext, err := AESGCMEncrypt(plaintext)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(ciphertext)
-	plaintext2, err := AESGCMDecrypt(ciphertext)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(plaintext2)
 }
