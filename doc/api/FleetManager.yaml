@@ -4943,7 +4943,7 @@ definitions:
       email:
         type: string
         description: 邮箱
-        example: demo@123.com
+        example: "*******"
       phone:
         type: string
         description: 电话
@@ -5432,7 +5432,7 @@ definitions:
       email:
         type: string
         description: 邮箱
-        example: user1@123.com
+        example: "********"
       phone:
         type: string
         description: 电话

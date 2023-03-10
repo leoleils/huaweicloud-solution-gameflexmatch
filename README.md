@@ -140,7 +140,7 @@ MetaSpace平台由五个服务组件组成：
 
         # Please enter the following 'extra' attributes
         # to be sent with your certificate request
-        # A challenge password []:metaspace@123
+        # A challenge password []:********
         # An optional company name []:Huawei
 
         openssl req -in tls.csr -text
