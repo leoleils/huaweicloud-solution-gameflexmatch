@@ -10,8 +10,32 @@
 
 ## 接口对接
 接口对接分为两部分，一部分是租户管理面与MetaSpace服务的交互（通过RESTful API交互），一部分是与租户托管应用与MetaSpace服务的交互（通过集成SDK交互）整体流程如下：
-<img src="/img/developer.jpg" width="80%">
+<img src="../../img/developer.jpg" width="80%">
 
+### 接口认证
+在调用所有的接口前，需要进行认证校验
+1. 构造登录请求，其中密码为RSA加密后的密文，加密的公钥需与fleetmanager部署的后端私钥保持一致，加密脚本可参考`/tools/cipher`
+
+`POST URL: /v1/user/login`
+`Request Body`: 
+```json
+{
+    "username": "admin",
+    "password": "cipher-password"
+}
+```
+`Response Body`:
+```json
+{
+    "username": "admin",
+    "id": "63da950a-b3ea-11ed-bb27-fa163**********",
+    "Auth-Token": "eyJhbGciO*************eXrA",
+    "Activation": 1,
+    "UserType": 9,
+    "total_res_count": 1
+}
+```
+2. 将`Response`中的`Auth-Token`字段以及字段值加入到请求体的`header`里，即可正常访问`metaspace`接口业务
 ### 租户管理面与metaspace服务的交互接口说明：
 详细接口信息看`API`接口文档，下面对接口做一些说明：
 1. **CreateFleet**
@@ -24,7 +48,7 @@
 `Fleet`创建之后默认会启动一个虚拟机来启动进程，需要等`Fleet`的状态为`active`，通过这个接口可以修改指定`Fleet`的虚拟机最大值、最少值和期望值
  
 4. **UpdateFleet**
-该接口主要是修改`Fleet`的属性，比如打开弹性伸缩
+该接口主要是修改`Fleet`的属性，比如打开弹性伸缩，修改实例标签，会话保护策略与保护时长等
  
 5. **CreateScalingPolicy**
 `Fleet`创建之后默认不启动弹性伸缩，需要等`Fleet`的状态为`active`，调用`updateFleet` 开启弹性伸缩，然后通过`CreateScalingPolicy`可以配置自己的弹性阈值
