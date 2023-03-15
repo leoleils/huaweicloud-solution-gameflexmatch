@@ -34,6 +34,9 @@ export HTTPS_KEY_FILE=/home/tlsSecret/tls.key
 export SERVER_HMAC_CONF_FILE=/home/aass/configmap/server_hmac_conf.json
 export HTTPS_LISTEN_ADDR=0.0.0.0
 
+export GCM_KEY=******************     # GCM加解密所用的24位key
+export GCM_NONCE=**************		# GCM加解密所用的16位Nonce
+
 # 日志配置
 export LOG_ROTATE_SIZE=100				# 单个日志文件的最大尺寸(M)		
 export LOG_BACKUP_COUNT=100				# 日志文件的的最大数量

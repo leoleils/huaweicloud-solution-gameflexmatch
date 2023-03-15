@@ -29,7 +29,7 @@ export DEFAULT_FLEET_SPECIFICATION=scase.standard.4u8g	# 默认的实例规格
 export DEFAULT_SCALING_INTERVAL=10						# 默认的弹性伸缩时间间隔
 export DEFAULT_GROUP_MAX_SIZE=1							# 默认的弹性伸缩组最大数量
 export DEFAULT_GROUP_MIN_SIZE=1							# 默认的弹性伸缩组最小数量
-export DEFAULT_GROUP_DESIRED_SIZE						# 默认的弹性伸缩最最小数量
+export DEFAULT_GROUP_DESIRED_SIZE=1						# 默认的弹性伸缩最最小数量
 export FLEET_DISK_TYPE=SYS								# fleet磁盘类型
 export FLEET_DISK_SIZE=40								# fleet磁盘尺寸(G)
 export FLEET_VOLUME_TYPE=SAS							# fleet卷类型
@@ -49,7 +49,6 @@ export DEFAULT_IMAGE_REF="CentOS 7.2 64bit" # 用于镜像打包的ECS默认操�
 export DEFAULT_SCRIPT_PATH=metaspace/image_env.sh # 镜像环境配置脚本 OBS路径 桶名/对象名
 export DEFAULT_AUXPROXY_PATH=metaspace/auxproxy.zip # AuxProxy组件压缩包 OBS路径 用于镜像环境配置 桶名/对象名
 export IMAGE_DISK_SIZE=40 # 用于镜像打包的ECS默认磁盘大小
-export LTS_AGENCY_NAME={agency_name} # LTS委托，用于镜像打包的ECS安装ICagent，配置方式见README
 export DEFAULT_IMAGE_FLAVOR=s6.large.2 # 用于镜像打包的ECS默认规格
 
 # 服务其他配置
