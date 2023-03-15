@@ -24,6 +24,7 @@ MetaSpace平台由五个服务组件组成：
         |   |-- api                 -- api技术文档
         |   |-- build               -- 测试环境部署指导
         |   |-- developer           -- 开发者对接指南(c#)
+        |   |-- user-guide          -- 用户指南
         |-- img                     
         |-- tools                   -- 使用脚本工具
         |   |-- cipher              -- 敏感数据的加密解密工具
@@ -33,7 +34,7 @@ MetaSpace平台由五个服务组件组成：
 2. 提供了`C#`语言的开发者对接指南，详见 [doc/developer](/doc/developer/developer_guide.md)
 
 ## API技术文档
-提供了[fleetmanager](/doc/api/FleetManager.yaml)/[appgateway](/doc/api/AppGateway.yaml)/[aass](/doc/api/AASS.yaml)的API技术文档的`Yaml`文件，可以在[swagger](https://editor.swagger.io/)中导入查看，参考文档详见：`/doc/api/`
+提供了[fleetmanager](/doc/api/FleetManager.yaml)，可以在[swagger](https://editor.swagger.io/)中导入查看，参考文档详见：`/doc/api/`
 
 ## 部署指南
 1. **准备工作**
@@ -44,9 +45,9 @@ MetaSpace平台由五个服务组件组成：
          - 创建委托可以参考链接[创建委托（委托方操作）](https://support.huaweicloud.com/intl/zh-cn/usermanual-iam/iam_06_0002.html)，并将资源账号委托给管理账号；
          - 授予该委托`DEW KeypairFullAccess`权限
          - 授予该委托`OBS Administrator`权限
-         - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见[doc/build/agency_region.json](/doc/build/agency_region.json)与[doc/build/agency_global.json](/doc/build/agency_global.json)，由于区域级委托与全局级委托不能同时配置，该步骤需要为委托新建两种权限并关联
+         - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见[doc/build/agency_region.json](/doc/build/agency_region.json)，由于区域级委托与全局级委托不能同时配置，该步骤需要为委托新建两种权限并关联
          
-      + (可选)若想使用LTS配置日志转存，需在委托资源账号下创建LTS委托，给ECS以安装ICagent：
+      + 使用LTS配置日志转存，需在委托资源账号下创建LTS委托，给ECS以安装ICagent：
         
            委托配置流程见[创建icagent委托](https://support.huaweicloud.com/usermanual-lts/lts_03_0002.html)。
            其中需要授予的权限为：`APM Administrator`与`LTS Administrator`
@@ -55,9 +56,10 @@ MetaSpace平台由五个服务组件组成：
            
            | 购买账号 |      资源类型       |  资源规格  | 数量  |
            | :------: | :-----------------: | :--------: | :---: |
-           | 资源账号 |         ECS         | 2vCPUs/4GB |   3   |
+           | 资源账号 |         ECS         | 2vCPUs/4GB |   4   |
            | 资源账号 |         RDS         | 2vCPUs/4GB |   3   |
            | 资源账号 | GaussDB(for Influx) | 2vCPUs/4GB |   1   |
+           | 资源账号 |        REDIS        | 2vCPUs/2GB |   1   |
         
            RDS可以按需选择单机或主备节点
            influxdb选择集群(默认3节点)
@@ -68,7 +70,8 @@ MetaSpace平台由五个服务组件组成：
            | ECS-01 |  appgateway  |  60003   |        Y        |
            | ECS-02 |     aass     |   9091   |        N        |
            | ECS-03 | fleetmanager |  31002   |        Y        |
-           入方向至少需要保障`60003`端口和`31002`端口开放
+           | ECS-04 |   console    |    80    |        Y        |
+           入方向至少需要保障`60003`端口和`31002`与`80`端口开放
       
       + 准备`RDS`数据库，默认端口为`3306`，依次为三个服务组件(`appgateway`/`aass`/`fleetmanager`)创建数据库，创建用户并授予**读写权限**
       + 创建`GaussDB(for Influx)`：选择购买`InfluxDB`，并开启`SSL`安全连接，使用默认证书即可，为服务组件创建数据库(`aass`/`appgateway`)，`aass`与`appgateway`共用一个`influxDB`的数据库
@@ -79,7 +82,7 @@ MetaSpace平台由五个服务组件组成：
    + go1.16及以上版本
    + go代理: https://repo.huaweicloud.com/repository/goproxy/
 3. **文件编译**：
-   + 将源码下载到本地，`windows`下编译`linux`可执行的二进制文件，**以下步骤中{version}中的变量需按具体情况更改**
+   + 将源码下载到本地，编译`linux`可执行的二进制文件，**以下步骤中{version}中的变量需按具体情况更改**
     ```sh
         # 设置编译的可执行文件的操作系统
         go env -w GOOS=linux
@@ -112,6 +115,7 @@ MetaSpace平台由五个服务组件组成：
         # 4. auxproxy
         cd ~/huaweicloud-solution-metaspace-auxproxy
         go build ./cmd/auxproxy.go
+        go mod tidy
 
     ```
 4. **证书准备**
@@ -273,7 +277,6 @@ MetaSpace平台由五个服务组件组成：
 6. **其他说明**：
    + 前端部署指导详见 [doc/build/console.md](/doc/build/console.md)
    + 应用镜像制作详见 [doc/build/make-image-guide.md](/doc/build/make-image-guide.md)
-   + 应用的资源数据导入详见 [doc/build/user-data-import.md](/doc/build/user-data-import.md)
    + 部署过程中必要的参数注解详见 [doc/build/param-annotation.md](/doc/build/param-annotation.md)
    + 平台用户管理模块使用详见 [doc/build/user-management.md](/doc/build/user-management.md)
    + console平台的用户指南详见`/doc/user-guide`
