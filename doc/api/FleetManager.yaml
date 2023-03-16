@@ -2894,7 +2894,7 @@ paths:
       operationId: QueryTransfer
       parameters:
         - $ref: '#/parameters/projectId'
-        - name: log_transfer_id
+        - name: log_stream_id
           in: query
           required: true
           description: 日志流id
@@ -3018,6 +3018,7 @@ paths:
           description: 查询游标
           type: integer
           format: int32
+        - $ref: '#/parameters/Auth-token'
       responses:
         '200':
           description: ''
@@ -3101,6 +3102,7 @@ paths:
       operationId: ListLogGroup
       parameters:
         - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
       responses:
         '200':
           description: 日志组列表
