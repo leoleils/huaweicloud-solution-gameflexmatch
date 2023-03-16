@@ -114,8 +114,8 @@ MetaSpace平台由五个服务组件组成：
 
         # 4. auxproxy
         cd ~/huaweicloud-solution-metaspace-auxproxy
-        go build ./cmd/auxproxy.go
         go mod tidy
+        go build ./cmd/auxproxy.go
 
     ```
 4. **证书准备**
