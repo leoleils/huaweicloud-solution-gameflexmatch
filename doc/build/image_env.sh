@@ -49,7 +49,6 @@ openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
 mkdir -p /etc/auxproxy/logs
 
 systemctl enable auxproxy.service
-systemctl start auxproxy.service
 
 # download LTS-ICAgent
 mkdir -p /etc/lts

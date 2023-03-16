@@ -21,8 +21,8 @@ tags:
   - name: 别名管理
   - name: 应用包管理
   - name: 用户管理
-  - name: 其他资源管理
   - name: 日志管理
+  - name: 其他资源管理
 parameters:
   Auth-token:
     name: Auth-token
@@ -2204,6 +2204,41 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /{project_id}/bandwidths:
+    get:
+      tags:
+        - 其他资源管理
+      summary: 获取共享带宽列表
+      description: 获取当前资源账号下的共享带宽列表
+      operationId: Bandwidths
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: region
+          in: query
+          required: true
+          type: string
+        - name: share_type
+          in: query
+          required: false
+          type: string
+          enum:
+            - PRE
+            - WHOLE
+          default: PRE
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ListBandwidthsResp'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
   /{project_id}/user/bucket:
     get:
       tags:
@@ -2806,7 +2841,7 @@ paths:
       operationId: DeleteTransfer
       parameters:
         - $ref: '#/parameters/projectId'
-        - name: transfer_id
+        - name: log_transfer_id
           in: query
           required: true
           description: 转储id
@@ -2859,7 +2894,7 @@ paths:
       operationId: QueryTransfer
       parameters:
         - $ref: '#/parameters/projectId'
-        - name: log_transfer_id
+        - name: log_stream_id
           in: query
           required: true
           description: 日志流id
@@ -2891,7 +2926,7 @@ paths:
         - $ref: '#/parameters/Auth-token'
         - name: LTS_Config
           in: body
-          required: false
+          required: true
           schema:
             $ref: '#/definitions/CreateAccessConfig'
       responses:
@@ -2983,6 +3018,7 @@ paths:
           description: 查询游标
           type: integer
           format: int32
+        - $ref: '#/parameters/Auth-token'
       responses:
         '200':
           description: ''
@@ -3066,6 +3102,7 @@ paths:
       operationId: ListLogGroup
       parameters:
         - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
       responses:
         '200':
           description: 日志组列表
@@ -3079,6 +3116,60 @@ paths:
           description: 内部错误
           schema:
             $ref: '#/definitions/ErrorRsp'
+  /{project_id}/builds/support-image:
+    get:
+      tags:
+        - 应用包管理
+      operationId: ListSupportImage
+      summary: 查询应用包列表
+      description: 查询应用包列表
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - name: project_id
+          in: path
+          description: ID of project
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+        - name: region
+          in: query
+          required: true
+          type: string
+          description: region 例cn-north-7
+      responses:
+        '200':
+          description: Build列表
+          schema:
+            $ref: '#/definitions/ListSupportImageBody'
+          headers:
+            X-Request-Id:
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_id-timestamp-hostname
+              type: string
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: ''
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_id-timestamp-hostname
+              type: string
 definitions:
   CreateFleetRequestBody:
     description: 创建应用进程队列请求体
@@ -3110,14 +3201,9 @@ definitions:
           * cn-north-4: 北京四
         enum:
           - cn-north-4
-      bandwidth:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 200
-        default: 1
-        example: 100
-        description: 应用队列单实例公网出带宽最大值，默认1，单位Mbps，范围1-200，可提单提高配额
+      public_ip:
+        $ref: '#/definitions/PublicIp'
+        description: ECS的IP配置
       instance_specification:
         type: string
         description: |-
@@ -3134,14 +3220,16 @@ definitions:
         description: fleet所在的企业项目，默认为服务部署时所指定的企业项目，若服务部署时没有指定，则为默认企业项目
         default: 0
         example: 238012fd-0649-4fc8-bb89-bf6fc8b38d72
-      vpc_name:
+      vpc_id:
         type: string
-        description: |-
-          * 指定资源租户上的VPC创建fleet，若指定的VPC不存在则新建fleet失败
-          * 在指定VPC创建Fleet时，会在指定的VPC上创建子网，并且会检查子网是否与已有子网冲突，若冲突则会再次随机子网，最多重复10次
-          * 需要保证指定的VPC网段包含部署时配置的VPC网段，否则可能导致创建fleet失败
-        default: ''
-        example: vpc-metaspace
+        description: VPC id
+        default: 52d872a5-acd3-11ec-a7e0-6805cab276a1
+        example: 52d872a5-acd3-11ec-a7e0-6805cab276a1
+      subnet_id:
+        type: string
+        description: 子网id
+        default: 52d872a5-acd3-11ec-a7e0-6805cab276a1
+        example: 52d872a5-acd3-11ec-a7e0-6805cab276a1
       server_session_protection_policy:
         type: string
         description: >-
@@ -3161,8 +3249,7 @@ definitions:
       server_session_protection_time_limit_minutes:
         type: integer
         format: int32
-        description: >-
-          server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
+        description: server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
         minimum: 5
         maximum: 1440
         default: 5
@@ -3187,11 +3274,15 @@ definitions:
         maxItems: 10
         items:
           $ref: '#/definitions/InstanceTag'
+      scaling_group_capacity:
+        description: 伸缩组实例初始容量参数
+        $ref: '#/definitions/ScalingGroupCapacity'
     required:
       - name
       - build_id
       - runtime_configuration
       - inbound_permissions
+    type: object
   CreateFleetResponseBody:
     required:
       - fleet
@@ -3229,6 +3320,62 @@ definitions:
       - launch_path
       - parameters
       - concurrent_executions
+  PublicIp:
+    description: ECS的ip配置
+    properties:
+      ip_type:
+        type: string
+        description: 公共ip池的类型，目前只支持5_bgp与5_sbgp
+        minLength: 1
+        maxLength: 64
+        example: 5_bgp
+        default: 5_bgp
+      bandwidth:
+        $ref: '#/definitions/Bandwidth'
+  Bandwidth:
+    description: 带宽配置
+    properties:
+      share_type:
+        type: string
+        description: |-
+          带宽的类型: 
+          PER: 独享带宽
+          WHOLE: 共享带宽
+        minLength: 1
+        maxLength: 64
+        example: PER
+        default: PER
+        enum:
+          - PER
+          - WHOLE
+      size:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 2000
+        default: 1
+        example: 1
+        description: 应用队列单实例公网出带宽最大值，默认1Mbps，范围1-200Mbps，可提单提高配额
+      charging_mode:
+        type: string
+        description: |-
+          带宽的计费方式: 
+          traffic：按流量计费
+          bandwidth: 按带宽计费
+        minLength: 1
+        maxLength: 64
+        example: traffic
+        default: traffic
+        enum:
+          - bandwidth
+          - traffic
+      id:
+        type: string
+        description: 共享带宽的id，当带宽类型为共享带宽时，该项必选
+        minLength: 1
+        maxLength: 64
+        example: ''
+        default: ''
   Fleet:
     description: 应用进程队列
     properties:
@@ -3287,6 +3434,14 @@ definitions:
         default: 1
         example: 1
         description: 应用队列单实例公网出带宽最大值，默认1Mbps，范围1-200Mbps，可提单提高配额
+      bandwidth_share_type:
+        type: string
+        default: PRE
+        example: PRE
+        description: 应用队列单实例公网带宽的类型，支持共享与独享类型
+        enum:
+          - PRE
+          - WHOLE
       instance_specification:
         type: string
         description: |-
@@ -3697,9 +3852,9 @@ definitions:
         example: 5
       enable_auto_scaling:
         type: boolean
-        description: 是否使能自动弹性伸缩，默认值为true，为false时策略仍旧存在，但是不会触发弹性伸缩动作
-        default: 'true'
-        example: 'true'
+        description: 是否使能自动弹性伸缩，默认值为false，为false时策略仍旧存在，但是不会触发弹性伸缩动作
+        default: 'false'
+        example: 'false'
       instance_tags:
         type: array
         description: 实例标签数组
@@ -3838,6 +3993,74 @@ definitions:
         maximum: 200
         description: 应用进程队列在所在region的目标实例数量
         example: 1
+  ListBandwidthsResp:
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 带宽的数量
+        minimum: 0
+        example: 1
+      bandwidths:
+        type: array
+        description: 带宽列表
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/BandwidthResponse'
+  BandwidthResponse:
+    properties:
+      id:
+        type: string
+        description: 带宽id
+        example: 53503686-a9af-11ec-828d-fa163ee7efa6
+      name:
+        type: string
+        description: 带宽名
+        example: Bandwidth
+      bandwidth_type:
+        type: string
+        description: 带宽的类型：share为共享带宽，bgp为动态bgp
+        example: share
+        enum:
+          - share
+          - bgp
+      share_type:
+        type: string
+        description: 共享带宽的类型标识是否为共享带宽：PRE为独占带宽，WHOLE为共享带宽
+        example: PRE
+        enum:
+          - PRE
+          - WHOLE
+      charging_mode:
+        type: string
+        description: 带宽的计费方式：bandwidth为按带宽计费，traffic为按流量计费
+        example: traffic
+        enum:
+          - bandwidth
+          - traffic
+      size:
+        type: integer
+        format: int32
+        description: 带宽大小
+        minimum: 0
+        example: 1
+      status:
+        type: string
+        description: |-
+          带宽的状态： 
+          - FREEZED：冻结
+          - NORMAL：正常
+        example: NORMAL
+        enum:
+          - FREEZED
+          - NORMAL
+      created_at:
+        type: string
+        description: |-
+          功能说明：资源更新时间，UTC时间
+          格式： yyyy-MM-ddTHH:mm:ss
+        example: '0000-00-00T00:00:00'
   UpdateFleetInstanceCapacityRequestBody:
     properties:
       minimum:
@@ -4897,6 +5120,16 @@ definitions:
         description: 企业项目id 用于镜像绑定 选填
         minLength: 1
         maxLength: 64
+      user:
+        type: string
+        description: 用户
+      group:
+        type: string
+        description: 用户组
+      user_password:
+        type: string
+        description: 'linux密码 正则 ^[a-zA-Z\d.\-_=@#]{8,20}$ 大小写字母 数字 . - = _ @ #'
+        pattern: ^[a-zA-Z\d.\-_=@#]{8,20}$
   QueryBuildParam:
     type: object
     description: 查询应用包参数
@@ -4943,7 +5176,7 @@ definitions:
       email:
         type: string
         description: 邮箱
-        example: "*******"
+        example: '*******'
       phone:
         type: string
         description: 电话
@@ -5091,6 +5324,10 @@ definitions:
         maxItems: 100
         items:
           $ref: '#/definitions/AssociatedFleet'
+    required:
+      - name
+      - description
+      - type
   UpdateAliasRequestBody:
     properties:
       name:
@@ -5432,7 +5669,7 @@ definitions:
       email:
         type: string
         description: 邮箱
-        example: "********"
+        example: '*******'
       phone:
         type: string
         description: 电话
@@ -5626,16 +5863,17 @@ definitions:
   LTS_Config:
     type: object
     required:
-      - lts_group_id
+      - lts_access_config_name
+      - log_group_id
       - lts_log_path
     properties:
       lts_access_config_name:
         type: string
         minLength: 1
         maxLength: 64
-        description: 日志接入名称，为空则按fleetid创建
+        description: 日志接入名称
         example: log_access_config_name_demo
-      lts_group_id:
+      log_group_id:
         type: string
         minLength: 32
         maxLength: 36
@@ -6057,3 +6295,34 @@ definitions:
         type: string
         description: obs转储路径
         example: /root/log
+  ScalingGroupCapacity:
+    type: object
+    properties:
+      min_instance_number:
+        type: integer
+        format: int32
+        description: 伸缩组内最小实例数（台），默认1台
+        example: 1
+      max_instance_number:
+        type: integer
+        format: int32
+        description: 伸缩组内最大实例数（台），弹性伸缩组限制最大300台实例，默认1台
+        example: 1
+      desire_instance_number:
+        type: integer
+        format: int32
+        description: 期望实例数（台），创建弹性伸缩组后创建的实例数，默认1台，最小实例数≤期望实例数≤最大实例数≤300
+        example: 1
+  ListSupportImageBody:
+    type: object
+    description: 创建应用包时 支持选择的公共操作系统
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 总数
+      support_image_list:
+        type: array
+        items:
+          type: string
+        description: 支持的公共镜像列表
