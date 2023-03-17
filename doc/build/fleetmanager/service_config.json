@@ -37,6 +37,9 @@
             }
         }
     },
+    "support_public_image": {
+        "cn-north-4": "CentOS 7.2 64bit,CentOS 7.9 64bit,CentOS 8.1 64bit,Ubuntu 22.04 server 64bit"
+    },
     "internal_inbound_permissions": [
         {
             "protocol": "TCP",
