@@ -49,6 +49,12 @@ function getJsonValuesByAwk() {
 
 echo "start cleanup"
 
+count=`lsof -i:60001 | grep -v "COMMAND"| wc -l`
+if [ 0 == $count ];then
+	echo "auxproxy is not running,do not need to cleanup, exit"
+	exit 0
+fi
+
 shutdown_code=""
 while [ "$shutdown_code" != "202" ]; do
 	export shutdown_code=$(curl -k -X POST https://localhost:60001/v1/cleanup -o /dev/null -s -w %{http_code})
