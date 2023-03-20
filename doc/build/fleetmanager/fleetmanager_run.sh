@@ -74,6 +74,8 @@ export JWTKEY={jwt_token_generate_key}					# 登录会话token生成的key
 export JWT_TOKEN_LIFETIME=7200							# 登录会话token的有效时间(s)						
 export DEFAULT_LOGIN_PASSWORD={default_login_password}  # 登录默认密码设置
 
+export WORKFLOW_PATH=/home/fleetmanager/bin/conf/workflow/ # workflow文件所在文件夹路径，注意以/结尾
+
 function start_service(){
 	cd /home/bin/
 	./fleetmanager-${version}
