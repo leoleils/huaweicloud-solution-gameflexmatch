@@ -51,6 +51,7 @@ export DEFAULT_AUXPROXY_PATH=metaspace/auxproxy.zip # AuxProxy组件压缩包 OB
 export IMAGE_DISK_SIZE=40 # 用于镜像打包的ECS默认磁盘大小
 export DEFAULT_IMAGE_FLAVOR=s6.large.2 # 用于镜像打包的ECS默认规格
 export PROFILE_STORAGE_REGION={region} # 管理账号存放auxproxy及部署脚本的区域
+export DEFAULT_BUILD_BANDWIDTH=10 # 用于镜像打包的ECS绑定的EIP默认带宽
 
 # 服务其他配置
 export AASS_ENABLE_HMAC=false							# aass是否开启hmac验证
