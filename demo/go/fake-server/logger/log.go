@@ -3,49 +3,89 @@ package logger
 import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
+	"fake-server/config"
+	"fmt"
 	"os"
 )
 
-var logger *zap.Logger
+var Logger *FMLogger
 
-func getEncoder() zapcore.Encoder {
-	return zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
+const (
+	DefaultLogRotateSize = 100
+	DefaultLogBackupCount = 100
+	DefaultLogMaxAge = 100
+
+)
+type FMLogger struct {
+	logger *zap.SugaredLogger
 }
 
-func getLogWriter() zapcore.WriteSyncer {
-	file, err := os.Create("/local/app/log/log.txt")
-	if err != nil {
-		return zapcore.AddSync(file)
+// Debugf print debug message
+func (l *FMLogger) Debugf(format string, a ...interface{}) {
+	l.logger.Debugf(format, a...)
+}
+
+// Infof print info message
+func (l *FMLogger) Infof(format string, a ...interface{}) {
+	l.logger.Infof(format, a...)
+}
+
+// Warnf print warning message
+func (l *FMLogger) Warnf(format string, a ...interface{}) {
+	l.logger.Warnf(format, a...)
+}
+
+// Errorf print error message
+func (l *FMLogger) Errorf(format string, a ...interface{}) {
+	l.logger.Errorf(format, a...)
+}
+
+// WithField tag logger with key and value
+func (l *FMLogger) WithField(k string, v interface{}) *FMLogger {
+	logger := &FMLogger{
+		logger: l.logger.With(k, v),
 	}
-	defer file.Close()
 
-    err = file.Chmod(0600)
-	if err != nil {
-		return zapcore.AddSync(file)
+	return logger
+}
+
+func Init(fields ...zap.Field) (*FMLogger, error) {
+	// 创建日志配置
+	var encoderConfig = zap.NewProductionEncoderConfig()
+	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+
+	// 创建Console输出Core
+	consoleEncoder := zapcore.NewJSONEncoder(encoderConfig)
+	atomicLevel := zap.NewAtomicLevel()
+
+	consoleCore := zapcore.NewCore(consoleEncoder, zapcore.Lock(os.Stdout), atomicLevel)
+	filePath := config.GlobalConfig.LogPath + "/run.log"
+	// 创建日志输出Core
+	fmt.Printf("Init logger setting: MaxSize: %d, MaxAge: %d, MaxBackups: %d, logPath: %s\n", 
+			DefaultLogRotateSize, DefaultLogMaxAge, DefaultLogBackupCount, filePath)
+	fileWriter := zapcore.AddSync(&lumberjack.Logger{
+		Filename:   filePath,
+		MaxSize:    DefaultLogRotateSize, 	// megabytes
+		MaxAge: 	DefaultLogBackupCount, 		// backup log files 7 Days
+		MaxBackups: 	DefaultLogMaxAge,	// backup log files 100
+		Compress:   true,
+	})
+	fileCore := zapcore.NewCore(
+		zapcore.NewJSONEncoder(encoderConfig),
+		fileWriter,
+		atomicLevel,
+	)
+	cores := zapcore.NewTee(fileCore, consoleCore)
+	log := zap.New(cores)
+	log = log.WithOptions(
+		zap.ErrorOutput(os.Stdout), // error message output to stdout
+		zap.AddCaller(),            // add function caller info to log
+		zap.AddCallerSkip(1),       // make stack having right depth to get function call
+		zap.Fields(fields...),      // add common log info, like local_ip
+	)
+	logger := FMLogger{
+		logger: log.Sugar(),
 	}
-	return zapcore.AddSync(file)
-}
-
-func init() {
-	writeSyncer := getLogWriter()
-	encoder := getEncoder()
-	core := zapcore.NewCore(encoder, writeSyncer, zapcore.DebugLevel)
-
-	logger = zap.New(core)
-}
-
-func Info(msg string, fields ...zap.Field) {
-	logger.Info(msg, fields...)
-}
-
-func Warn(msg string, fields ...zap.Field) {
-	logger.Warn(msg, fields...)
-}
-
-func Error(msg string, fields ...zap.Field) {
-	logger.Error(msg, fields...)
-}
-
-func Fatal(msg string, fields ...zap.Field) {
-	logger.Fatal(msg, fields...)
+	return &logger, nil
 }
