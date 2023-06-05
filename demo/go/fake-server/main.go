@@ -25,14 +25,17 @@ import (
 	"syscall"
 )
 
-func startGrpcServer() int {
+func startGrpcServer() (int, error) {
 	// 启动grpc server，监听agent回调
 	grpcServer := api.GetRpcService()
-	grpcServer.StartGrpcServer()
+	err := grpcServer.StartGrpcServer()
+	if err != nil {
+		return -1, err
+	}
 	grpcPort := grpcServer.GetGrpcPort()
 
 	// 返回 grpc port
-	return grpcPort
+	return grpcPort, nil
 }
 
 // main intercepts the log file of the SuperTuxKart gameserver and uses it
@@ -42,19 +45,32 @@ const (
 	DefaultlogPath	= "/local/app/fake-server/log"
 	DefaultHttpStartPort = 1025
 	DefaultHttpEndPort = 60001
+	DefaultProcessExitedMinute = 5  // min
+	DefaultProcessRunMinute = 10
+	DefaultGameSessionRetainMinute = 1
+	DefaultMaxGameSessionCount = 50
 )
 
 func main() {
 	// 启动Grpc Server
 	flag.StringVar(&config.GlobalConfig.LogPath, "log-path", DefaultlogPath, "log path")
+	flag.StringVar(&config.GlobalConfig.Ak, "ak", "", "log path")
+	flag.StringVar(&config.GlobalConfig.Sk, "sk", "", "log path")
 	flag.IntVar(&config.GlobalConfig.HttpStartPort, "start-port", DefaultHttpStartPort, "http server start port")
 	flag.IntVar(&config.GlobalConfig.HttpEndPort, "end-port", DefaultHttpEndPort, "http server end port")
+	flag.IntVar(&config.GlobalConfig.GameSessionRetainMinute, "session-retain-time", DefaultGameSessionRetainMinute, "game session retain minute")
+	flag.IntVar(&config.GlobalConfig.ProcessRunMinute, "process-run-time", DefaultProcessRunMinute, "process run time minute")
+	flag.IntVar(&config.GlobalConfig.MaxGameSessionCount, "max-game-session-count", DefaultMaxGameSessionCount, "max game session count")
 	flag.Parse()
 	
 	logger.Logger, _ = logger.Init()
-	grpcPort := startGrpcServer()
-
-	gseManager := gsemanager.GetGseManager()
+	logger.Logger.Infof("[fake server init]config: %+v", config.GlobalConfig)
+	grpcPort, err := startGrpcServer()
+	if err != nil {
+		logger.Logger.Errorf("start grpc server failed: %+v", err)
+		os.Exit(0)
+	}
+	logger.Logger.Infof("[fake server init] grpc port %d", grpcPort)
 
 	if config.GlobalConfig.HttpEndPort <= config.GlobalConfig.HttpStartPort {
 		logger.Logger.Errorf("http end port should lagger then http start port")
@@ -62,8 +78,16 @@ func main() {
 	}
 	logger.Logger.Infof("http port will be [%d, %d)", config.GlobalConfig.HttpStartPort, config.GlobalConfig.HttpEndPort)
 	httpServer := api.NewHttpProcess()
-	httpServer.StartHttpServer()
+	err = httpServer.StartHttpServer()
+	if err != nil {
+		logger.Logger.Errorf("start http server failed: %+v", err)
+		os.Exit(0)
+	}
+	gseManager := gsemanager.GetGseManager()
 	gseManager.ProcessReady(nil, int32(httpServer.GetHttpPort()), int32(grpcPort))
+
+	grpcService := api.GetRpcService()
+	go grpcService.HandleReadyProcess()
 	sigChan := make(chan os.Signal)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGQUIT)
 	select {
