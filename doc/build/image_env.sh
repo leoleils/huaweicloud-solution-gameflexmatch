@@ -6,6 +6,9 @@ LTS_IP=$4
 APP_FILE=$5
 AUX_FILE=$6
 APP_NAME=$7
+USER=$8
+GROUP=$9
+PWD=${10}
 
 # download rarlab
 mkdir /tmp/rar
@@ -14,6 +17,11 @@ wget --no-check-certificate https://www.rarlab.com/rar/rarlinux-x64-612.tar.gz
 tar -xzvf rarlinux-x64-612.tar.gz
 cd rar
 make
+
+useradd ${USER}
+groupadd ${GROUP}
+usermod -g ${GROUP} ${USER}
+echo ${USER}:${PWD} | chpasswd
 
 # download app
 mkdir -p /local/app/${APP_NAME}
@@ -25,6 +33,7 @@ fi
 if [ "${APP_FILE##*.}" = "rar" ]; then
 	unrar e  ${APP_FILE}
 fi
+chown -R ${USER}:${GROUP} /local/app/${APP_NAME}
 chmod 750 *
 
 # download auxproxy
@@ -37,6 +46,7 @@ fi
 if [ "${AUX_FILE##*.}" = "rar" ]; then
 	unrar e  ${AUX_FILE}
 fi
+chown -R ${USER}:${GROUP} /etc/auxproxy
 chmod 750 *
 mv auxproxy.service /etc/systemd/system
 
