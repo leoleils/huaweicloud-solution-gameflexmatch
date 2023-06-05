@@ -1,10 +1,9 @@
-package logger
+package main
 
 import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"fake-server/config"
 	"fmt"
 	"os"
 )
@@ -60,8 +59,7 @@ func Init(fields ...zap.Field) (*FMLogger, error) {
 	atomicLevel := zap.NewAtomicLevel()
 
 	consoleCore := zapcore.NewCore(consoleEncoder, zapcore.Lock(os.Stdout), atomicLevel)
-	pid := os.Getpid()
-	filePath := config.GlobalConfig.LogPath + fmt.Sprintf("/run_%d.log", pid)
+	filePath := "./run.log"
 	// 创建日志输出Core
 	fmt.Printf("Init logger setting: MaxSize: %d, MaxAge: %d, MaxBackups: %d, logPath: %s\n", 
 			DefaultLogRotateSize, DefaultLogMaxAge, DefaultLogBackupCount, filePath)
