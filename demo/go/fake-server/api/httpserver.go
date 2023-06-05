@@ -57,24 +57,26 @@ func (h *httpProcess) registerApi() {
 	http.HandleFunc("/", h.HelloWorld)
 }
 
-func (h *httpProcess) StartHttpServer() {
+func (h *httpProcess) StartHttpServer() error {
 	port := h.GenerateHttpRandomPort(config.GlobalConfig.HttpStartPort, config.GlobalConfig.HttpEndPort)
 	listen, err := net.Listen("tcp4", fmt.Sprintf(":%d", port))
 	if err != nil {
 		logger.Logger.Errorf("http fail to listen", zap.Error(err))
-		return
+		return fmt.Errorf("http fail to listen")
 	}
 	addr := listen.Addr().String()
 	portStr := strings.Split(addr, ":")[1]
 	h.httpPort, err = strconv.Atoi(portStr)
 	if err != nil {
 		logger.Logger.Errorf("http fail to get port", zap.Error(err))
+		return fmt.Errorf("http fail to get port")
 	}
 	logger.Logger.Infof("http listen port is", zap.Int("port", h.httpPort))
 
 	h.registerApi()
 	logger.Logger.Infof("start http server success")
 	go http.Serve(listen, nil)
+	return nil
 }
 
 func (h *httpProcess) GetHttpPort() int {
@@ -98,15 +100,22 @@ func (h *httpProcess) getContext() context.Context {
 
 func (h *httpProcess) Login(w http.ResponseWriter, req *http.Request) {
 	playSessionId := req.URL.Query().Get("playerSessionId")
+	gameSessionId := req.URL.Query().Get("gameSessionId")
 
 	if playSessionId == "" {
 		resp, _ := h.writeResp(http.StatusBadRequest, "playerSessionId cant be empty", nil)
 		fmt.Fprintf(w, "%s", resp)
 		return
 	}
+	
+	if gameSessionId == "" {
+		resp, _ := h.writeResp(http.StatusBadRequest, "gameSessionId cant be empty", nil)
+		fmt.Fprintf(w, "%s", resp)
+		return
+	}
 
 	gseManager := gsemanager.GetGseManager()
-	_, err := gseManager.AcceptPlayerSession(playSessionId)
+	_, err := gseManager.AcceptPlayerSession(playSessionId, gameSessionId)
 
 	if err != nil {
 		code := int32(http.StatusInternalServerError)
@@ -127,6 +136,7 @@ func (h *httpProcess) Login(w http.ResponseWriter, req *http.Request) {
 
 func (h *httpProcess) LoginOut(w http.ResponseWriter, req *http.Request) {
 	playSessionId := req.URL.Query().Get("playerSessionId")
+	gameSessionId := req.URL.Query().Get("gameSessionId")
 
 	if playSessionId == "" {
 		resp, _ := h.writeResp(http.StatusBadRequest, "playerSessionId cant be empty", nil)
@@ -135,7 +145,7 @@ func (h *httpProcess) LoginOut(w http.ResponseWriter, req *http.Request) {
 	}
 
 	gseManager := gsemanager.GetGseManager()
-	_, err := gseManager.RemovePlayerSession(playSessionId)
+	_, err := gseManager.RemovePlayerSession(playSessionId, gameSessionId)
 	if err != nil {
 		code := int32(http.StatusInternalServerError)
 		errMsg := err.Error()
@@ -155,7 +165,8 @@ func (h *httpProcess) LoginOut(w http.ResponseWriter, req *http.Request) {
 
 func (h *httpProcess) TerminateSession(w http.ResponseWriter, req *http.Request) {
 	gseManager := gsemanager.GetGseManager()
-	_, err := gseManager.TerminateGameServerSession()
+	gameSessionId := req.URL.Query().Get("gameSessionId")
+	_, err := gseManager.TerminateGameServerSession(gameSessionId)
 
 	if err != nil {
 		code := int32(http.StatusInternalServerError)
@@ -230,9 +241,10 @@ func (h *httpProcess) DescribePlayerSessions(w http.ResponseWriter, req *http.Re
 
 func (h *httpProcess) UpdatePlayerSessionCreationPolicy(w http.ResponseWriter, req *http.Request) {
 	newPolicy := req.URL.Query().Get("newPlayerSessionCreationPolicy")
+	gameSessionId := req.URL.Query().Get("gameSessionId")
 
 	gseManager := gsemanager.GetGseManager()
-	_, err := gseManager.UpdatePlayerSessionCreationPolicy(newPolicy)
+	_, err := gseManager.UpdatePlayerSessionCreationPolicy(newPolicy, gameSessionId)
 
 	if err != nil {
 		code := int32(http.StatusInternalServerError)

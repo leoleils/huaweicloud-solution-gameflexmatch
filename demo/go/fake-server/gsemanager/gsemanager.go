@@ -2,16 +2,19 @@ package gsemanager
 
 import (
 	"context"
+	"fake-server/config"
 	"fake-server/grpcsdk"
 	"fake-server/logger"
 	"fmt"
+	"os"
+	"strconv"
+	"sync"
+	"time"
+
 	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"os"
-	"strconv"
-	"sync"
 )
 
 var (
@@ -27,8 +30,11 @@ const (
 
 type gsemanager struct {
 	pid                 string
-	gameServerSession   *grpcsdk.ServerSession
-	playerSessionIDList []string
+	gameSessionMux sync.Mutex
+	gameSessions   map[string]*grpcsdk.ServerSession
+
+	playSessionMux		sync.Mutex
+	playerSessions		map[string][]string
 	terminationTime     int64
 	rpcClient           grpcsdk.ScaseGrpcSdkServiceClient
 }
@@ -56,7 +62,8 @@ func GetGseManager() *gsemanager {
 	once.Do(func() {
 		gseManagerIns = &gsemanager{
 			pid:                 strconv.Itoa(os.Getpid()),
-			playerSessionIDList: make([]string, 0),
+			playerSessions: make(map[string][]string, 0),
+			gameSessions: make(map[string]*grpcsdk.ServerSession, 0),
 		}
 
 		url := fmt.Sprintf("%s:%d", localhost, agentPort)
@@ -72,30 +79,49 @@ func GetGseManager() *gsemanager {
 	return gseManagerIns
 }
 
-func (g *gsemanager) SetGameServerSession(gameserversession *grpcsdk.ServerSession) {
-	g.gameServerSession = gameserversession
+// 设置会话
+func (g *gsemanager) SetGameServerSession(gameserversession *grpcsdk.ServerSession) error {
+	g.gameSessionMux.Lock()
+	defer g.gameSessionMux.Unlock()
+	if len(g.gameSessions) > config.GlobalConfig.MaxGameSessionCount {
+		return fmt.Errorf("set game session %s err because game session count cant lagger than %d, now: %d", 
+			gameserversession.ServerSessionId, config.GlobalConfig.MaxGameSessionCount, len(g.gameSessions))
+	}
+	g.gameSessions[gameserversession.ServerSessionId] = gameserversession
+	return nil
 }
 
-func (g *gsemanager) AddPlayerSessionID(playerSessionID string) {
-	g.playerSessionIDList = append(g.playerSessionIDList, playerSessionID)
-}
-
-func (g *gsemanager) RemovePlayerSessionID(playerSessionID string) {
-	for i, id := range g.playerSessionIDList {
-		if id == playerSessionID {
-			g.playerSessionIDList = append(g.playerSessionIDList[:i], g.playerSessionIDList[i+1:]...)
-			return
+func (g *gsemanager) RemoveAllPlayerSession(gameSessionId string) {
+	g.playSessionMux.Lock()
+	if _, ok := g.playerSessions[gameSessionId]; !ok {
+		logger.Logger.Infof("game session %s have no play sessions", gameSessionId)
+		g.playSessionMux.Unlock()
+		return
+	}
+	playSessionIds := g.playerSessions[gameSessionId]
+	g.playSessionMux.Unlock()
+	for _, id := range playSessionIds {
+		_, err := g.RemovePlayerSession(id, gameSessionId)
+		if err != nil {
+			logger.Logger.Infof("RemoveAllPlayerSession failed for ", zap.String("palyersesionid", id), zap.Error(err))
 		}
 	}
 }
 
-func (g *gsemanager) RemoveAllPlayerSession() {
-	fmt.Printf("player sessionID: %+v", g.playerSessionIDList)
-	for _, id := range g.playerSessionIDList {
-		_, err := g.RemovePlayerSession(id)
+// 启动一个定时器，纳管服务端会话，一段时间后自动结束
+func (g *gsemanager) HandleGameSession(gameSessionId string) {
+	gameSessionRetainMinute := config.GlobalConfig.GameSessionRetainMinute
+	logger.Logger.Infof("[clean game session] the game session will retain %d minute", gameSessionRetainMinute)
+	timeChannel := time.After(time.Duration(gameSessionRetainMinute) * time.Minute)
+	select {
+	case <-timeChannel:
+		logger.Logger.Infof("terminate game session %s after %d minutes", gameSessionId, gameSessionRetainMinute)
+		resp, err := g.TerminateGameServerSession(gameSessionId)
 		if err != nil {
-			logger.Logger.Infof("RemoveAllPlayerSession failed for ", zap.String("palyersesionid", id), zap.Error(err))
+			logger.Logger.Errorf("terminate game session %s err %+v, resp: %+v", gameSessionId, err, resp)
+			return
 		}
+		logger.Logger.Infof("success to terminate game session %s", gameSessionId)
 	}
 }
 
@@ -151,37 +177,92 @@ func (g *gsemanager) ActivateGameServerSession(gameServerSessionId string, maxPl
 }
 
 // 3. AcceptPlayerSession
-func (g *gsemanager) AcceptPlayerSession(playerSessionId string) (*grpcsdk.AuxProxyResponse, error) {
-
-	logger.Logger.Infof("start to AcceptPlayerSession", zap.String("playerSessionId", playerSessionId))
+func (g *gsemanager) AcceptPlayerSession(playerSessionId string, gameSessionId string) (*grpcsdk.AuxProxyResponse, error) {
+	logger.Logger.Infof("start to AcceptPlayerSession", zap.String("playerSessionId", playerSessionId), zap.String("gameSessionId", gameSessionId))
+	g.gameSessionMux.Lock()
+	if _, ok := g.gameSessions[gameSessionId]; !ok {
+		logger.Logger.Infof("game session %s not found", gameSessionId)
+		return nil, fmt.Errorf("game session %s not found", gameSessionId)
+	}
+	g.gameSessionMux.Unlock()
+	g.playSessionMux.Lock()
 	req := &grpcsdk.AcceptClientSessionRequest{
-		ServerSessionId: g.gameServerSession.ServerSessionId,
+		ServerSessionId: gameSessionId,
 		ClientSessionId: playerSessionId,
 	}
+	if _, ok := g.playerSessions[gameSessionId]; !ok {
+		playSessiondIds := make([]string, 0)
+		playSessiondIds = append(playSessiondIds, playerSessionId)
+		g.playerSessions[gameSessionId] = playSessiondIds
+	} else {
+		playsessiondIds := g.playerSessions[gameSessionId]
+		playsessiondIds = append(playsessiondIds, playerSessionId)
+		g.playerSessions[gameSessionId] = playsessiondIds
+	}
+	g.playSessionMux.Unlock()
 
 	return g.rpcClient.AcceptClientSession(g.getContext(), req)
 }
 
 // 4. RemovePlayerSession
-func (g *gsemanager) RemovePlayerSession(playerSessionId string) (*grpcsdk.AuxProxyResponse, error) {
-	logger.Logger.Infof("start to RemovePlayerSession", zap.String("playerSessionId", playerSessionId))
+func (g *gsemanager) RemovePlayerSession(playerSessionId string, gameSessionId string) (*grpcsdk.AuxProxyResponse, error) {
+	g.playSessionMux.Lock()
+	idx := -1
+	if _, ok := g.playerSessions[gameSessionId]; !ok {
+		return nil, fmt.Errorf("game session %s not found", gameSessionId)
+	}
+	for i, pyid := range g.playerSessions[gameSessionId] {
+		if pyid == playerSessionId {
+			idx = i
+			break
+		}
+	}
+	if idx == -1 {
+		return nil, fmt.Errorf("play session %s not found", playerSessionId)
+	}
+	g.playerSessions[gameSessionId] = append(g.playerSessions[gameSessionId][:idx], g.playerSessions[gameSessionId][idx+1:]...)
+	g.playSessionMux.Unlock()
+	logger.Logger.Infof("Remove play session %s success on game session %s", playerSessionId, gameSessionId)
 	req := &grpcsdk.RemoveClientSessionRequest{
-		ServerSessionId: g.gameServerSession.GetServerSessionId(),
+		ServerSessionId: gameSessionId,
 		ClientSessionId: playerSessionId,
 	}
 
 	return g.rpcClient.RemoveClientSession(g.getContext(), req)
 }
 
+func (g *gsemanager) TerminateAllGameServerSession() error {
+	g.gameSessionMux.Lock()
+	gameSessions := g.gameSessions
+	g.gameSessionMux.Unlock()
+	logger.Logger.Infof("start terminate all game session")
+	for key, _ := range gameSessions {
+		resp, err := g.TerminateGameServerSession(key)
+		if err != nil {
+			logger.Logger.Errorf("terminated game session %s failed, err %+v, resp: %+v", key, err, resp)
+			return err
+		}
+		logger.Logger.Infof("success to terminate game session %s", key)
+	}
+	return nil
+}
+
 // 5. TerminateGameServerSession
-func (g *gsemanager) TerminateGameServerSession() (*grpcsdk.AuxProxyResponse, error) {
-	if g.gameServerSession == nil || g.gameServerSession.ServerSessionId == "" {
+func (g *gsemanager) TerminateGameServerSession(gameSessionId string) (*grpcsdk.AuxProxyResponse, error) {
+	g.gameSessionMux.Lock()
+	if _, ok := g.gameSessions[gameSessionId]; !ok {
 		logger.Logger.Infof("gameServerSession is nil or server session id is empty, skip TerminateGameServerSession")
+		g.gameSessionMux.Unlock()
 		return nil, nil
 	}
-	logger.Logger.Infof("start to TerminateGameServerSession", zap.String("serverSessionID", g.gameServerSession.ServerSessionId))
+	logger.Logger.Infof("start to TerminateGameServerSession", zap.String("serverSessionID", gameSessionId))
+	delete(g.gameSessions, gameSessionId)
+	g.gameSessionMux.Unlock()
+	logger.Logger.Infof("start to clear PlayerServerSession", zap.String("serverSessionID", gameSessionId))
+	g.RemoveAllPlayerSession(gameSessionId)
+	logger.Logger.Infof("success to clear PlayerServerSession", zap.String("serverSessionID", gameSessionId))
 	req := &grpcsdk.TerminateServerSessionRequest{
-		ServerSessionId: g.gameServerSession.ServerSessionId,
+		ServerSessionId: gameSessionId,
 	}
 
 	return g.rpcClient.TerminateServerSession(g.getContext(), req)
@@ -219,10 +300,10 @@ func (g *gsemanager) DescribePlayerSessions(gameServerSessionId, playerId, playe
 }
 
 // 8. UpdatePlayerSessionCreationPolicy
-func (g *gsemanager) UpdatePlayerSessionCreationPolicy(newPolicy string) (*grpcsdk.AuxProxyResponse, error) {
+func (g *gsemanager) UpdatePlayerSessionCreationPolicy(newPolicy string, gameSessionId string) (*grpcsdk.AuxProxyResponse, error) {
 	logger.Logger.Infof("start to UpdatePlayerSessionCreationPolicy", zap.String("newPolicy", newPolicy))
 	req := &grpcsdk.UpdateClientSessionCreationPolicyRequest{
-		ServerSessionId:                g.gameServerSession.ServerSessionId,
+		ServerSessionId:                gameSessionId,
 		NewClientSessionCreationPolicy: newPolicy,
 	}
 
@@ -237,6 +318,30 @@ func (g *gsemanager) ReportCustomData(currentCustomCount, maxCustomCount int32) 
 	return &grpcsdk.AuxProxyResponse{}, nil
 }
 
-func (g *gsemanager) DescribeGameServerSession() string {
-	return fmt.Sprintf("game server session id %s", g.gameServerSession.ServerSessionId)
+// 接管待清理的进程
+func (g *gsemanager) HandingTerminatingProcess(terminationTime int64) {
+	g.SetTerminationTime(terminationTime)
+	ticker := time.NewTicker(10 * time.Second)
+	for {
+		<-ticker.C
+		g.gameSessionMux.Lock()
+		if len(g.gameSessions) > 0 {
+			keys := make([]string, 0, len(g.gameSessions))
+			for key := range g.gameSessions{
+				keys = append(keys, key)
+			}
+			logger.Logger.Infof("[clean game session] the process still exist game session: %d, game session ids: %+v", len(g.gameSessions), keys)
+			g.gameSessionMux.Unlock()
+			continue
+		}
+		g.gameSessionMux.Unlock()
+		logger.Logger.Infof("[clean game session] the process have no game session, end the process")
+		ticker.Stop()
+		_, err := g.ProcessEnding()
+		if err != nil {
+			logger.Logger.Errorf("[clean game session] process ending failed, %+v", err)
+		}
+		time.Sleep(3 * time.Second)
+		os.Exit(1)
+	}
 }
