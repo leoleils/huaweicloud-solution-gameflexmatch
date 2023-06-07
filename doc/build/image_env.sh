@@ -53,7 +53,7 @@ mv auxproxy.service /etc/systemd/system
 mkdir -p /etc/auxproxy/security
 cd /etc/auxproxy/security
 openssl genrsa -out tls.key 3072
-openssl req -new -key tls.key -out tls.csr -subj "/OU=metaspace/"
+openssl req -new -key tls.key -out tls.csr -subj "/OU=gamebounce/"
 openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
 
 mkdir -p /etc/auxproxy/logs
