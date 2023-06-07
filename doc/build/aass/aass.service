@@ -9,6 +9,7 @@ ExecStart=/home/aass/bin/aass_run.sh
 Restart=always
 RestartSec=30
 TimeoutSec=0
+StandardOutput=null
 
 [Install]
 WantedBy=multi-user.target

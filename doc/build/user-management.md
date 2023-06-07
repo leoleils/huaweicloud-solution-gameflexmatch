@@ -1,9 +1,9 @@
 # 用户管理
 
-## 一、Metaspace账号管理架构介绍
+## 一、gamebounce账号管理架构介绍
 
 ### 账号说明
-+ Admin/User: Metaspace平台的账号，分为管理员和普通用户，可以关联不同的使用租户
++ Admin/User: gamebounce平台的账号，分为管理员和普通用户，可以关联不同的使用租户
 + OriginDomain: 使用租户，仅作为映射，可以与ResourceDomain映射关联，用于隐藏资源租户信息
 + ResourceDomain: 资源租户，账号为华为云租户，委托给管理用户管理，用于创建应用进程队列的资源
 + ManagerDomain: 管理租户，账号为华为云租户，使用委托管理多个资源租户创建资源

@@ -24,6 +24,7 @@ tags:
   - name: 日志管理
   - name: 其他资源管理
   - name: 首页
+  - name: 实例规格管理
 parameters:
   Auth-token:
     name: Auth-token
@@ -197,26 +198,14 @@ paths:
           description: 创建成功响应
           schema:
             $ref: '#/definitions/CreateFleetResponseBody'
-          headers:
-            X-Request-Id:
-              type: string
-              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
         '400':
           description: 参数错误
           schema:
             $ref: '#/definitions/ErrorRsp'
-          headers:
-            X-Request-Id:
-              type: string
-              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
         '500':
           description: 服务器内部错误
           schema:
             $ref: '#/definitions/ErrorRsp'
-          headers:
-            X-Request-Id:
-              type: string
-              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
     get:
       tags:
         - 应用进程队列管理
@@ -3238,6 +3227,288 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /{project_id}/resource-specification:
+    post:
+      tags:
+        - 实例规格管理
+      summary: 创建实例规格
+      description: 创建实例规格
+      operationId: CreateResourceSpecification
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: ResourceSpecificationRequest
+          in: body
+          required: true
+          description: 创建实例规格请求体
+          schema:
+            $ref: '#/definitions/ResourceSpecificationRequest'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '201':
+          description: 创建成功响应
+          schema:
+            $ref: '#/definitions/resourceSpecificationResp'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+    get:
+      tags:
+        - 实例规格管理
+      summary: 获取实例规格详情
+      description: 获取实例规格详情
+      operationId: ListResourceSpecification
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
+        - name: name
+          in: query
+          required: false
+          description: 实例规格名字,支持模糊搜索
+          type: string
+          minLength: 1
+          maxLength: 1024
+      responses:
+        '201':
+          description: 创建成功响应
+          schema:
+            $ref: '#/definitions/ResourceSpecificationResponse'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+    put:
+      tags:
+        - 实例规格管理
+      operationId: UpdateResourceSpecification
+      summary: 更新实例规格基本信息
+      description: 更新实例规格基本信息,更新前请确认fleet是否关联ResourceSpecification，若关联，则无法被修改
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+        - in: body
+          name: UpdateResourceSpecificationRequest
+          description: 修改的实例规格数据
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateResourceSpecificationRequest'
+      responses:
+        '204':
+          description: 更新实例规格基本信息成功
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /{project_id}/user/inbound-permission:
+    get:
+      tags:
+        - 用户管理
+      summary: 获取租户可操作的所有安全组
+      description: 获取租户可操作的所有安全组
+      operationId: InboundPermission
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 返回安全组id和name
+          schema:
+            items:
+              $ref: '#/definitions/security_group'
+            type: array
+        '400':
+          description: 输入参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/user/resource-specification:
+    get:
+      tags:
+        - 用户管理
+      summary: 获取租户可操作的所有实例规格
+      description: 获取租户可操作的所有实例规格
+      operationId: ResourceSpecification
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 返回安全组id和name
+          schema:
+            items:
+              $ref: '#/definitions/security_group'
+            type: array
+        '400':
+          description: 输入参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/resource-specification/{resource_specification_id}:
+    get:
+      tags:
+        - 实例规格管理
+      summary: 获取实例规格基本信息
+      description: 获取实例规格基本信息
+      operationId: ShowResourceSpecification
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: resource_specification_id
+          in: path
+          required: true
+          type: string
+        - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
+      responses:
+        '201':
+          description: 创建成功响应
+          schema:
+            $ref: '#/definitions/ResourceSpecificationResponse'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+              type: string
+    delete:
+      tags:
+        - 实例规格管理
+      operationId: DeleteResourceSpecification
+      summary: 删除实例规格
+      description: 删除前请确认fleet是否关联ResourceSpecification，若关联，则无法被删除
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: resource_specification_id
+          in: path
+          required: true
+          type: string
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '204':
+          description: 删除实例规格成功
+          schema:
+            type: string
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /project_id/available-zone:
+    get:
+      tags:
+        - 其他资源管理
+      summary: 获取创建ECS的可用区
+      operationId: GetAvailableZones
+      parameters:
+        - name: region
+          in: query
+          required: true
+          description: 区域
+          type: string
+      responses:
+        '200':
+          description: 获取成功
+          schema:
+            type: array
+            items:
+              type: string
+        '500':
+          description: 获取可用区失败
+          schema:
+            $ref: '#/definitions/ErrorRsp'
 definitions:
   CreateFleetRequestBody:
     description: 创建应用进程队列请求体
@@ -3272,17 +3543,6 @@ definitions:
       public_ip:
         $ref: '#/definitions/PublicIp'
         description: ECS的IP配置
-      instance_specification:
-        type: string
-        description: |-
-          实例规格，当前只支持2种标准型 
-          * scase.standard.4u8g
-          * scase.standard.8u16g
-        default: scase.standard.4u8g
-        example: scase.standard.4u8g
-        enum:
-          - scase.standard.4u8g
-          - scase.standard.8u16g
       enterprise_project_id:
         type: string
         description: fleet所在的企业项目，默认为服务部署时所指定的企业项目，若服务部署时没有指定，则为默认企业项目
@@ -3345,6 +3605,23 @@ definitions:
       scaling_group_capacity:
         description: 伸缩组实例初始容量参数
         $ref: '#/definitions/ScalingGroupCapacity'
+      resource_specification_id:
+        type: string
+        description: 实力规格id
+      security_group_ids:
+        type: array
+        items:
+          type: string
+        description: 安全组id
+      available_zones:
+        type: array
+        description: 创建实例资源的可用区，可通过接口获取，为空时随机选择可用区（推荐），不为空则按照可用区优先顺序创建
+        example:
+          - cn-north-4a
+        items:
+          type: string
+        minItems: 0
+        maxItems: 10
     required:
       - name
       - build_id
@@ -4816,6 +5093,22 @@ definitions:
             type: integer
             format: int32
             description: 应用进程队列已关联的别名数量
+          instance_count:
+            type: integer
+            format: int32
+            description: 应用进程队列的实例数量
+          process_count:
+            type: integer
+            format: int32
+            description: 应用进程队列的进程数量
+          server_session_count:
+            type: integer
+            format: int32
+            description: 应用进程队列的会话数量
+          max_server_session_count:
+            type: integer
+            format: int32
+            description: 应用进程队列的最大会话数量
   ListClientSessionResponseBody:
     required:
       - count
@@ -5289,6 +5582,7 @@ definitions:
       - region
       - vpc_id
       - subnet_id
+      - bandwidth
     properties:
       name:
         type: string
@@ -5300,10 +5594,10 @@ definitions:
         type: string
         description: 描述
         minLength: 1
-        maxLength: 100
+        maxLength: 1024
       operating_system:
         type: string
-        description: 操作系统 后端默认值为CentOS 7.2 64bits
+        description: 操作系统 选择公有镜像时输入名称，选择私有镜像时输入私有镜像id。后端默认值为公有镜像CentOS 7.2 64bits
         minLength: 1
         maxLength: 50
       storage_location:
@@ -5351,6 +5645,9 @@ definitions:
         format: int32
         description: 公有为0，私有为1
         default: 0
+      bandwidth:
+        description: 应用包EIP设置
+        $ref: '#/definitions/buildbandwidth'
   QueryBuildParam:
     type: object
     description: 查询应用包参数
@@ -6551,3 +6848,294 @@ definitions:
         items:
           type: string
         description: 支持的公共镜像列表
+  ResourceSpecificationRequest:
+    type: object
+    required:
+      - name
+      - region
+      - resource_specification
+      - flavor
+    properties:
+      name:
+        type: string
+        example: test
+        description: 实例规格的别名
+        minLength: 1
+        maxLength: 1024
+      region:
+        type: string
+        example: cn-north-4
+        description: 应用进程队列所在的region
+        minLength: 1
+        maxLength: 64
+      resource_specification:
+        type: string
+        example: scase_standard_2u4g
+        description: 实例规格
+        minLength: 1
+        maxLength: 1024
+      flavor:
+        type: array
+        items:
+          type: string
+          minLength: 1
+          maxLength: 1024
+        example:
+          - Si2.large.2
+          - Si3.large.2
+          - ac7.large.2
+          - c3.large.2
+        description: 实例规格的具体详情
+        minItems: 1
+        maxItems: 10
+  ResourceSpecificationResponse:
+    type: object
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+        format: int32
+        example: 1
+        description: 实例规格数量
+      resource_specifications:
+        items:
+          properties:
+            id:
+              type: string
+              example: 9158fb9b-3cc6-42bc-a995-98998fc654fa
+              description: 实例规格id
+            region:
+              type: string
+              example: cn-north-7
+              description: 应用进程队列所在的region
+            name:
+              type: string
+              example: 111
+              description: 实例规格所起别名
+            resource_specification:
+              type: string
+              example: scase_standard_2u4g
+              description: 实例规格
+            flavor:
+              type: array
+              items:
+                type: string
+              example:
+                - air7.28xlarge.4
+                - Si2.large.2
+                - Si3.large.2
+                - ac7.large.2
+                - c3.large.2
+              description: 实例规格详情
+            creation_time:
+              type: string
+              example: '2023-05-17T02:46:49+08:00'
+              description: 创建时间
+        description: 实例规格相关参数
+        type: array
+      id:
+        type: string
+        example: 1ad09fc2-7ebb-40ba-86c0-02d2c3c358cd
+      region:
+        type: string
+        example: ''
+      name:
+        type: string
+        example: 乌兰三可用 别删
+      resource_specification:
+        type: string
+        example: scase_standard_2u4g
+      flavor:
+        type: array
+        items:
+          type: string
+        example:
+          - c6.large.2
+          - c7.large.2
+          - s6.large.2
+          - s7.large.2
+          - c3.large.2
+          - s2.large.2
+      creation_time:
+        type: string
+        example: '2023-05-19T02:39:44+08:00'
+      update_time:
+        type: string
+        example: '2023-05-19T02:39:44+08:00'
+      fleet_count:
+        type: integer
+        format: int32
+        example: 0
+      associated_fleets:
+        items:
+          properties:
+            name:
+              type: string
+              example: auxproxy-01-0523
+            fleet_id:
+              type: string
+              example: b4e3f48b-f946-11ed-86f2-fa163ecd2586
+            state:
+              type: string
+              example: ACTIVE
+            instance_count:
+              type: integer
+              format: int32
+              example: 4
+            process_count:
+              type: integer
+              format: int32
+              example: 50
+            max_server_session_count:
+              type: integer
+              format: int32
+              example: 20
+            creation_time:
+              type: string
+              example: '2023-05-23T08:49:20+08:00'
+        type: array
+  UpdateResourceSpecificationRequest:
+    type: object
+    required:
+      - id
+      - new_name
+      - resource_specification
+      - flavor
+    properties:
+      id:
+        type: string
+        example: 5a9c7fb3-f3b2-11ed-895f-286ed488f081
+        minLength: 1
+        maxLength: 128
+      name:
+        type: string
+        example: test-1
+        minLength: 1
+        maxLength: 1024
+      region:
+        type: string
+        example: cn-north-7
+        minLength: 1
+        maxLength: 128
+      new_name:
+        type: string
+        example: test-666
+        minLength: 1
+        maxLength: 1024
+      resource_specification:
+        type: string
+        example: scase_standard_2u4g
+        minLength: 1
+        maxLength: 1024
+      flavor:
+        type: array
+        items:
+          minLength: 1
+          maxLength: 1024
+          type: string
+        example:
+          - Si2.large.2
+          - Si3.large.2
+          - ac7.large.2
+          - c3.large.2
+        minItems: 1
+        maxItems: 10
+  security_group:
+    type: object
+    properties:
+      security_group_id:
+        type: string
+        example: '"50119d3d-f960-4d4c-aeba-483f9488844d"'
+      security_group_name:
+        type: string
+        example: '"50119d3d-f960-4d4c-aeba-483f9488844d"'
+    example: ''
+  security_group_copy:
+    type: object
+    properties:
+      security_group_id:
+        type: string
+        example: '"50119d3d-f960-4d4c-aeba-483f9488844d"'
+      security_group_name:
+        type: string
+        example: '"50119d3d-f960-4d4c-aeba-483f9488844d"'
+    example: ''
+  resourceSpecificationResp:
+    type: object
+    properties:
+      resource_specifications:
+        properties:
+          id:
+            type: string
+            example: 9158fb9b-3cc6-42bc-a995-98998fc654fa
+          region:
+            type: string
+            example: cn-north-7
+          name:
+            type: integer
+            format: int32
+            example: 111
+          resource_specification:
+            type: string
+            example: scase_standard_2u4g
+          flavor:
+            type: array
+            items:
+              type: string
+            example:
+              - air7.28xlarge.4
+              - Si2.large.2
+              - Si3.large.2
+              - ac7.large.2
+              - c3.large.2
+          creation_time:
+            type: string
+            example: '2023-05-17T02:46:49+08:00'
+  buildbandwidth:
+    type: object
+    description: 应用包创建临时EIP参数--带宽大小与计费方式（按带宽/按流量）
+    properties:
+      size:
+        type: integer
+        format: int32
+        description: 大小 1~2000
+        minimum: 1
+        maximum: 2000
+      charging_mode:
+        type: string
+        description: 枚举 bandwidth , traffic
+    required:
+      - size
+      - charging_mode
+  associated_fleets:
+    type: object
+    properties:
+      associated_fleets:
+        items:
+          properties:
+            name:
+              type: string
+              example: auxproxy-01-0523
+            fleet_id:
+              type: string
+              example: b4e3f48b-f946-11ed-86f2-fa163ecd2586
+            state:
+              type: string
+              example: ACTIVE
+            instance_count:
+              type: integer
+              format: int32
+              example: 4
+            process_count:
+              type: integer
+              format: int32
+              example: 50
+            max_server_session_count:
+              type: integer
+              format: int32
+              example: 20
+            creation_time:
+              type: string
+              example: '2023-05-23T08:49:20+08:00'
+        type: array
