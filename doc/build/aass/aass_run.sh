@@ -38,9 +38,12 @@ export GCM_KEY=******************     # GCM加解密所用的24位key
 export GCM_NONCE=**************		# GCM加解密所用的16位Nonce
 
 # 日志配置
-export LOG_ROTATE_SIZE=100				# 单个日志文件的最大尺寸(M)		
+export LOG_ROTATE_SIZE=1024				# 单个日志文件的最大尺寸(M)		
 export LOG_BACKUP_COUNT=100				# 日志文件的的最大数量
 export LOG_MAX_AGE=7					# 单个日志文件存储的最大时间
+
+# 与auxproxy连接的方式
+export CONNECT_TO_AUXPROXY_BY_IP=privateIP	# 若使用公网IP，则该字段为publicIP
 
 function start_service(){
 	cd /home/bin/

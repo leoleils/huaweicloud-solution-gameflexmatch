@@ -1,7 +1,7 @@
-# MetaSpace控制台快速入门
+# gamebounce控制台快速入门
 ## 1. 用户管理，关联资源用户
-+ metaspace的用户分为两种类型，一种是用于登录控制台的MetaSpace用户，一种是用于创建与管理计算、网络等资源的华为云租户
-+ 管理员第一次登录或普通用户第一次登录时，需重置密码，并关联华为云租户，以正常使metaspace控制台
++ gamebounce的用户分为两种类型，一种是用于登录控制台的gamebounce用户，一种是用于创建与管理计算、网络等资源的华为云租户
++ 管理员第一次登录或普通用户第一次登录时，需重置密码，并关联华为云租户，以正常使gamebounce控制台
 ### Step1. 管理员新建用户NewUser
 + 管理员登录
 ![登录](../../img/user/login.jpg)
@@ -35,14 +35,14 @@
     ```
     2. 资源租户信息：
     ```
-    资源租户id: 华为云租户，用于创建metaspace资源的租户id
-    资源租户名: 华为云租户，用于创建metaspace资源的租户名
-    资源租户项目id: 华为云租户，资源租户用于创建metaspace资源所对应项目id
+    资源租户id: 华为云租户，用于创建gamebounce资源的租户id
+    资源租户名: 华为云租户，用于创建gamebounce资源的租户名
+    资源租户项目id: 华为云租户，资源租户用于创建gamebounce资源所对应项目id
     资源用户名: 资源租户下的iam用户名
     资源用户id: 资源租户下的iam用户id
-    Region: 资源租户用于创建metaspace资源的对应region
-    委托名: 资源租户委托给管理租户，便于metaspace使用管理租户管理资源租户，管理租户对应fleetmanager与aass后台部署时所对应的租户
-    密钥名: metaspace弹性扩容虚机时的登录认证密钥
+    Region: 资源租户用于创建gamebounce资源的对应region
+    委托名: 资源租户委托给管理租户，便于gamebounce使用管理租户管理资源租户，管理租户对应fleetmanager与aass后台部署时所对应的租户
+    密钥名: gamebounce弹性扩容虚机时的登录认证密钥
     云服务委托名: 目前用于打包镜像时安装ICAgent以及使用lts云日志服务的日志转储
     ```
     3. 委托的创建详见[/README.md](../../README.md)
@@ -56,7 +56,7 @@
 + 查看NewUser关联的资源租户信息
 ![资源租户详情](../../img/user/res-info.jpg)
 
-+ 资源租户关联成功，现在可以使用正常使用metaspace了
++ 资源租户关联成功，现在可以使用正常使用gamebounce了
 
 
 ## 2. 应用上传，制作镜像
@@ -127,7 +127,7 @@
 + 修改 `基本信息->是否开启弹性伸缩` 字段，开启弹性伸缩能力
 ![修改fleet信息](../../img/auto-scaling/modify-fleet-info.jpg)
 
-+ 现在metaspace可以根据负载情况弹性扩缩容计算资源了
++ 现在gamebounce可以根据负载情况弹性扩缩容计算资源了
 
 
 ## 5. 快速创建别名(alias)关联(可选)

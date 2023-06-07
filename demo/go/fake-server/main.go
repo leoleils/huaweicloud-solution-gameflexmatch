@@ -41,14 +41,14 @@ func startGrpcServer() (int, error) {
 // main intercepts the log file of the SuperTuxKart gameserver and uses it
 // to determine if the game server is ready or not.
 const (
-	// DefaultlogPath	= "D://Desktop//workdir//MetaSpace//MetaSpace-dev//fake-server//log"
-	DefaultlogPath	= "/local/app/fake-server/log"
-	DefaultHttpStartPort = 1025
-	DefaultHttpEndPort = 60001
-	DefaultProcessExitedMinute = 5  // min
-	DefaultProcessRunMinute = 10
+	// DefaultlogPath	= "D://Desktop//workdir//gamebounce//gamebounce-dev//fake-server//log"
+	DefaultlogPath                 = "/local/app/fake-server/log"
+	DefaultHttpStartPort           = 1025
+	DefaultHttpEndPort             = 60001
+	DefaultProcessExitedMinute     = 5 // min
+	DefaultProcessRunMinute        = 10
 	DefaultGameSessionRetainMinute = 1
-	DefaultMaxGameSessionCount = 50
+	DefaultMaxGameSessionCount     = 50
 )
 
 func main() {
@@ -62,7 +62,7 @@ func main() {
 	flag.IntVar(&config.GlobalConfig.ProcessRunMinute, "process-run-time", DefaultProcessRunMinute, "process run time minute")
 	flag.IntVar(&config.GlobalConfig.MaxGameSessionCount, "max-game-session-count", DefaultMaxGameSessionCount, "max game session count")
 	flag.Parse()
-	
+
 	logger.Logger, _ = logger.Init()
 	logger.Logger.Infof("[fake server init]config: %+v", config.GlobalConfig)
 	grpcPort, err := startGrpcServer()
