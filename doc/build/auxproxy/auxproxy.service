@@ -11,6 +11,7 @@ Restart=always
 RestartSec=30
 TimeoutSec=0
 KillMode=process
+StandardOutput=null
 
 [Install]
 WantedBy=multi-user.target
