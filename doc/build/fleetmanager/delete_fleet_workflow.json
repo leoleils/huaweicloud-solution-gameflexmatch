@@ -25,6 +25,27 @@
       }
     },
     {
+      "name": "prepare_res_domain",
+      "description": "按需同步res_domain资源",
+      "task_type": "PREPARE_RES_DOMAIN",
+      "execute_failure": {
+        "retry_policy": {
+          "logic": "default",
+          "repeat": 1,
+          "delay_seconds": 5
+        },
+        "ignore": false
+      },
+      "rollback_failure": {
+        "retry_policy": {
+          "logic": "default",
+          "repeat": 0,
+          "delay_seconds": 0
+        },
+        "ignore": true
+      }
+    },
+    {
       "name": "delete_scaling_group",
       "description": "删除伸缩组资源",
       "task_type": "DELETE_SCALING_GROUP",
