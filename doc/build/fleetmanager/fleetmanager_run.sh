@@ -76,7 +76,7 @@ export WORKFLOW_PATH=/home/fleetmanager/bin/conf/workflow/ # workflow文件所�
 export FLEET_SERVER_SESSION_BACKUP_DAYS=1				# 数据表自动清理的配置(day)
 
 function start_service(){
-	cd /home/bin/
+	cd /home/fleetmanager/bin/
 	./fleetmanager-${version}
 }
 

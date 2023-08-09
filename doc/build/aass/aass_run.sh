@@ -46,7 +46,7 @@ export LOG_MAX_AGE=7					# 单个日志文件存储的最大时间
 export CONNECT_TO_AUXPROXY_BY_IP=privateIP	# 若使用公网IP，则该字段为publicIP
 
 function start_service(){
-	cd /home/bin/
+	cd /home/aass/bin/
 	./aass-${version}
 }
 
