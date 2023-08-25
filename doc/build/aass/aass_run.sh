@@ -1,23 +1,23 @@
 #!/bin/bash
 
-version={version}							# aass的版本名
+version={version}											# aass的版本名
 
 # influxDB的相关配置
 export INFLUX_ADDRESS=https://{influx_host}:{influx_port}	# influxDB的地址与端口
-export INFLUX_PASSWORD={influx_pwd}			# 加密后的influxDB密码
-export INFLUX_DATABASE={influx_database}	# influxDB数据库，与appgateway配置相同
+export INFLUX_PASSWORD={influx_pwd}							# 加密后的influxDB密码
+export INFLUX_DATABASE={influx_database}					# influxDB数据库，与appgateway配置相同
 export INFLUX_USER={influx_username}
 
 # AASS的数据库相关配置
-export MYSQL_ADDRESS={mysql_host}:{mysql_port}		# 数据库的地址与端口
+export MYSQL_ADDRESS={mysql_host}:{mysql_port}				# 数据库的地址与端口
 export MYSQL_DB_NAME={mysql_aass_database}
-export MYSQL_PASSWORD={mysql_pwd} 			# 加密后的mysql密码
+export MYSQL_PASSWORD={mysql_pwd} 							# 加密后的mysql密码
 export MYSQL_USER={mysql_username}
 export MYSQL_CHARSET=utf8
 
 # 服务账号的相关配置
-export SERVICE_AK={ak}						# 加密后的管理用户ak
-export SERVICE_SK={sk}						# 加密后的管理用户sk
+export SERVICE_AK={ak}										# 加密后的管理用户ak
+export SERVICE_SK={sk}										# 加密后的管理用户sk
 export SERVICE_DOMAIN_ID={managerUser_domain_id}
 
 # 其他配置
@@ -36,21 +36,21 @@ export HTTPS_KEY_FILE=/home/tlsSecret/tls.key
 export SERVER_HMAC_CONF_FILE=/home/aass/configmap/server_hmac_conf.json
 export HTTPS_LISTEN_ADDR=0.0.0.0
 
-export GCM_KEY=******************     # GCM加解密所用的24位key
-export GCM_NONCE=**************		# GCM加解密所用的16位Nonce
+export GCM_KEY=******************    						# GCM加解密所用的24位key
+export GCM_NONCE=**************								# GCM加解密所用的16位Nonce
 
 # 日志配置
-export LOG_ROTATE_SIZE=1024				# 单个日志文件的最大尺寸(M)		
-export LOG_BACKUP_COUNT=100				# 日志文件的的最大数量
-export LOG_MAX_AGE=7					# 单个日志文件存储的最大时间
+export LOG_ROTATE_SIZE=1024									# 单个日志文件的最大尺寸(M)		
+export LOG_BACKUP_COUNT=100									# 日志文件的的最大数量
+export LOG_MAX_AGE=7										# 单个日志文件存储的最大时间
 
 # 与auxproxy连接的方式，默认为私网
-export CONNECT_TO_AUXPROXY_BY_IP=privateIP	# 若使用公网IP，则该字段为publicIP
+export CONNECT_TO_AUXPROXY_BY_IP=privateIP					# 若使用公网IP，则该字段为publicIP
 
 # redis连接配置
-export REDIS_ADDRESS={influx_host}:{influx_port}  # redis连接ip与端口
-export REDIS_PASSWORD=************   			# redis连接密码，GCM加密 
-export REDIS_DB=1								# redis库序号，默认为1
+export REDIS_ADDRESS={influx_host}:{influx_port}  			# redis连接ip与端口
+export REDIS_PASSWORD=************   						# redis连接密码，GCM加密 
+export REDIS_DB=1											# redis库序号，默认为1
 
 function start_service(){
 	cd /home/aass/bin/

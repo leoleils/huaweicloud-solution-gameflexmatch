@@ -21,6 +21,12 @@
         "ecs_service": {
             "{region}": "https://ecs.{region}.{endpoint}"
         },
+        "swr_service": {
+            "{region}": "https://swr-api.{region}.{endpoint}"
+        },
+        "cci_service": {
+            "{region}": "https://cci.{region}.{endpoint}"
+        },
         "internal_iam_endpoint": ""
     },
     "fleet_cidr": {
