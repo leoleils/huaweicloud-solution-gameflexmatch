@@ -28,6 +28,8 @@ export CLOUD_CLIENT_AS_ENDPOINT=https://as.{region}.{endpoint}
 export CLOUD_CLIENT_ECS_ENDPOINT=https://ecs.{region}.{endpoint}
 export CLOUD_CLIENT_IAM_ENDPOINT=https://iam.{region}.{endpoint}
 export CLOUD_CLIENT_LTS_ENDPOINT=https://lts.{region}.{endpoint}
+export CLOUD_CLIENT_SMN_ENDPOINT=https://smn.{region}.{endpoint}
+export CLOUD_CLIENT_CCI_ENDPOINT=https://cci.{region}.{endpoint}
 export CONFIG_FILE=/home/aass/configmap/service_config.json
 export HTTPS_CERT_FILE=/home/tlsSecret/tls.crt
 export HTTPS_KEY_FILE=/home/tlsSecret/tls.key
@@ -42,8 +44,13 @@ export LOG_ROTATE_SIZE=1024				# 单个日志文件的最大尺寸(M)
 export LOG_BACKUP_COUNT=100				# 日志文件的的最大数量
 export LOG_MAX_AGE=7					# 单个日志文件存储的最大时间
 
-# 与auxproxy连接的方式
+# 与auxproxy连接的方式，默认为私网
 export CONNECT_TO_AUXPROXY_BY_IP=privateIP	# 若使用公网IP，则该字段为publicIP
+
+# redis连接配置
+export REDIS_ADDRESS={influx_host}:{influx_port}  # redis连接ip与端口
+export REDIS_PASSWORD=************   			# redis连接密码，GCM加密 
+export REDIS_DB=1								# redis库序号，默认为1
 
 function start_service(){
 	cd /home/aass/bin/
