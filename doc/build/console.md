@@ -52,7 +52,7 @@ git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solut
 cd huaweicloud-solution-gamebounce-console
 ```
 
-8. 修改密码加密公钥配置文件 src/api/crypto.ts 第 42 行
+8. 修改密码加密公钥配置文件 代码根目录/src/api/crypto.ts 第 42 行
 
 ```
 export function encryptedData(data: string) {
@@ -63,7 +63,7 @@ export function encryptedData(data: string) {
 }
 ```
 
-9. 在根目录下运行 npm install 命令，安装项目所需要的依赖
+9. 在代码根目录下运行 npm install 命令，安装项目所需要的依赖
 
 ```
 npm install
@@ -91,7 +91,7 @@ npm run dev
 
 ## 打包部署
 
-13. 在根目录下运行 npm run build 命令，将项目编译打包至根目录的 dist 文件夹下。
+13. 在代码根目录下运行 npm run build 命令，将项目编译打包至根目录的 dist 文件夹下。
 
 ```
 npm run build
