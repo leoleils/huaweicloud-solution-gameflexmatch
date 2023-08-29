@@ -27,4 +27,4 @@ gamebounce平台支持预先创建实例规格组模板，在创建fleet提供�
 
 ## 使用实例规格组
 
-以VM为例，在创建fleet时选择刚创建的实例规格![使用vm实例规格组](../../../../../metaspace/huaweicloud-solution-metaspace/img/lts/use_vm_spec.jpg)
+以VM为例，在创建fleet时选择刚创建的实例规格![使用vm实例规格组](../../../img/specification/use_vm_spec.jpg)

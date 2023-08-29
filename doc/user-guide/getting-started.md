@@ -18,12 +18,12 @@
   1. 使用租户信息
 
         ```
-        租户名称: GFM平台租户信息名称
-        项目id: 用于GFM创建资源资源的API项目id，可在华为云控制台-我的凭证-API凭证中获取
-        AccessKey: 用于GFM访问API使用的密钥，可在华为云控制台-我的凭证-访问密钥中获取
-        SecretAccessKey: 用于GFM访问API使用的密钥，可在华为云控制台-我的凭证-访问密钥中获取
-        Region: 资源租户用于创建GFM资源的对应region
-        密钥名: GFM弹性扩容虚机时的登录认证密钥
+        租户名称: gamebounce平台租户信息名称
+        项目id: 用于gamebounce创建资源资源的API项目id，可在华为云控制台-我的凭证-API凭证中获取
+        AccessKey: 用于gamebounce访问API使用的密钥，可在华为云控制台-我的凭证-访问密钥中获取
+        SecretAccessKey: 用于gamebounce访问API使用的密钥，可在华为云控制台-我的凭证-访问密钥中获取
+        Region: 资源租户用于创建gamebounce资源的对应region
+        密钥名: gamebounce弹性扩容虚机时的登录认证密钥
         云服务委托名: 目前用于打包镜像时安装ICAgent以及使用lts云日志服务的日志转储
       ```
     2. 应用包信息
@@ -115,8 +115,15 @@
 + 找到弹性伸缩策略创建入口
 ![创建弹性伸缩策略入口](../../img/auto-scaling/create-auto-scaling-input.jpg)
 
-+ 选择弹性伸缩策略绑定的fleet_id，填写必要参数，点击创建
++ 选择弹性伸缩策略，填写必要参数，点击创建
 ![创建弹性伸缩策略](../../img/auto-scaling/create-auto-scaling.jpg)
+
++ 在伸缩策略详情页，选择新建关联
+
+  ![绑定伸缩策略](../../img/auto-scaling/create_relation.jpg)
++ 选择策略需要关联的fleet
+
+  ![选择fleet关联的策略](../../img/auto-scaling/create_relation_select_fleet.jpg)
 
 + 确认弹性伸缩策略是否创建成功
 ![弹性伸缩策略列表](../../img/auto-scaling/auto-scaling-list.jpg)

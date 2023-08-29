@@ -17,11 +17,10 @@
 2.选择“Fleet管理 > 伸缩策略管理 > 新建伸缩策略”。
 ![create_scaling_policy](../../../img/fleet/create_scaling_policy.PNG)
 
-3.配置fleet_id，名称，策略类型等参数，重点配置参数说明如下表所示
+3.配置名称，策略类型和指标等参数，重点配置参数说明如下表所示
 
 | 参数               | 解释                                       | 取值样例       |
 | ------------------ | ------------------------------------------ | -------------- |
-| fleet_id           | 需配置策略的应用进程队列的id               | -              |
 | 名称               | 创建的弹性伸缩策略名称                     | -              |
 | 策略类型           | 伸缩策略类型，当前支持基于目标的策略       | 基于目标的策略 |
 | 指标名称           | 策略需要控制的指标名称，当前支持可用会话比 | 可用会话比     |
@@ -53,7 +52,7 @@
 ![update_scaling_policy](../../../img/fleet/update_scaling_policy.PNG)
 
 4.在详情页中单击参数后的”修改“，输入修改后的内容，并单击“保存”完成修改。
-![update_scaling_policy](../../../img/fleet/update_scaling_policy2.PNG)
+![update_scaling_policy](../../../img/fleet/update_scaling_policy2.jpg)
 
 
 
