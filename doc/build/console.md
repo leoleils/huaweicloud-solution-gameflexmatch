@@ -1,4 +1,4 @@
-# gamebounce 前端测试部署流程
+# GameFlexMatch 前端测试部署流程
 
 操作系统：CentOS 7.6 64bit
 
@@ -48,8 +48,8 @@ npm install -g @vue/cli
 
 ```
 cd /usr/local
-git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gamebounce-console.git
-cd huaweicloud-solution-gamebounce-console
+git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-console.git
+cd huaweicloud-solution-gameflexmatch-console
 ```
 
 8. 修改密码加密公钥配置文件 代码根目录/src/api/crypto.ts 第 42 行
@@ -216,4 +216,4 @@ systemctl enable nginx.service
 systemctl start nginx.service
 ```
 
-26. 浏览器输入该ECS绑定的ip地址即可访问gamebounce前端界面，或输入: http://{ipv4}:80
+26. 浏览器输入该ECS绑定的ip地址即可访问GameFlexMatch前端界面，或输入: http://{ipv4}:80

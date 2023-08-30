@@ -8124,8 +8124,8 @@ definitions:
         type: string
         minLength: 0
         maxLength: 192
-        description: 显示的名称，该字段不生效，默认为 HWC-SAC-GameBounce
-        example: HWC-SAC-GameBounce
+        description: 显示的名称，该字段不生效，默认为 HWC-SAC-GameFlexMatch
+        example: HWC-SAC-GameFlexMatch
       enterprise_project_id:
         type: string
         minLength: 0

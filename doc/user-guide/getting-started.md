@@ -1,7 +1,7 @@
-# gamebounce控制台快速入门
+# GameFlexMatch控制台快速入门
 ## 1. 用户管理，关联资源用户
-+ gamebounce的用户分为两种类型，一种是用于登录控制台的gamebounce用户，一种是用于创建与管理计算、网络等资源的华为云租户
-+ 管理员第一次登录或普通用户第一次登录时，需重置密码，并关联华为云租户，以正常使gamebounce控制台
++ GameFlexMatch的用户分为两种类型，一种是用于登录控制台的GameFlexMatch用户，一种是用于创建与管理计算、网络等资源的华为云租户
++ 管理员第一次登录或普通用户第一次登录时，需重置密码，并关联华为云租户，以正常使GameFlexMatch控制台
 ### Step1. 管理员新建用户NewUser
 + 管理员登录
 
@@ -18,12 +18,12 @@
   1. 使用租户信息
 
         ```
-        租户名称: gamebounce平台租户信息名称
-        项目id: 用于gamebounce创建资源资源的API项目id，可在华为云控制台-我的凭证-API凭证中获取
-        AccessKey: 用于gamebounce访问API使用的密钥，可在华为云控制台-我的凭证-访问密钥中获取
-        SecretAccessKey: 用于gamebounce访问API使用的密钥，可在华为云控制台-我的凭证-访问密钥中获取
-        Region: 资源租户用于创建gamebounce资源的对应region
-        密钥名: gamebounce弹性扩容虚机时的登录认证密钥
+        租户名称: GameFlexMatch平台租户信息名称
+        项目id: 用于GameFlexMatch创建资源资源的API项目id，可在华为云控制台-我的凭证-API凭证中获取
+        AccessKey: 用于GameFlexMatch访问API使用的密钥，可在华为云控制台-我的凭证-访问密钥中获取
+        SecretAccessKey: 用于GameFlexMatch访问API使用的密钥，可在华为云控制台-我的凭证-访问密钥中获取
+        Region: 资源租户用于创建GameFlexMatch资源的对应region
+        密钥名: GameFlexMatch弹性扩容虚机时的登录认证密钥
         云服务委托名: 目前用于打包镜像时安装ICAgent以及使用lts云日志服务的日志转储
       ```
     2. 应用包信息
@@ -41,7 +41,7 @@
 
 
 
-+ 资源租户关联成功，现在可以使用正常使用gamebounce了
++ 资源租户关联成功，现在可以使用正常使用GameFlexMatch了
 
 
 ## 2. 应用上传，制作镜像
@@ -135,7 +135,7 @@
 + 修改 `基本信息->是否开启弹性伸缩` 字段，开启弹性伸缩能力
 ![修改fleet信息](../../img/auto-scaling/modify-fleet-info.jpg)
 
-+ 现在gamebounce可以根据负载情况弹性扩缩容计算资源了
++ 现在GameFlexMatch可以根据负载情况弹性扩缩容计算资源了
 
 
 ## 5. 快速创建别名(alias)关联(可选)

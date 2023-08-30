@@ -1,6 +1,6 @@
 # 创建实力规格组
 
-gamebounce平台支持预先创建实例规格组模板，在创建fleet提供选择
+GameFlexMatch平台支持预先创建实例规格组模板，在创建fleet提供选择
 
 ![实例规格组](../../../img/specification/create_spec_input.jpg)
 

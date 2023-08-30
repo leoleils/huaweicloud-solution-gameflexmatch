@@ -1,9 +1,9 @@
 # 用户管理
 
-## 一、gamebounce账号管理架构介绍
+## 一、GameFlexMatch账号管理架构介绍
 
 ### 账号说明
-+ Admin/User: gamebounce平台的账号，分为管理员和普通用户，可以关联不同的使用租户
++ Admin/User: GameFlexMatch平台的账号，分为管理员和普通用户，可以关联不同的使用租户
 
 - 租户名称: GFM平台租户信息名称
 - 项目id: 用于GFM创建资源资源的API项目id，可在华为云控制台-我的凭证-API凭证中获取

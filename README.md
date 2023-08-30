@@ -1,23 +1,23 @@
-# huaweicloud-solution-gamebounce
+# huaweicloud-solution-GameFlexMatch
 ---
 ## 简介
 
-`GameBounce`是一个服务托管解决方案，包含四个服务组件(`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`)，可以实现应用的托管、托管应用所需资源的弹性伸缩、应用进程的资源调度管理、应用的灰度发布，多`region`部署时可以实现用户的就近接入，减少时延，以及服务资源的跨地域容灾。可以帮助开发者快速构建稳定、低延时的多人游戏的部署环境，并节省大量的运维成本，支持`Unreal`、`Unity`引擎，`C#`、`C++`以及`gRPC`支持的任何语言的`server`框架部署和运行。
+`GameFlexMatch`是一个服务托管解决方案，包含四个服务组件(`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`)，可以实现应用的托管、托管应用所需资源的弹性伸缩、应用进程的资源调度管理、应用的灰度发布，多`region`部署时可以实现用户的就近接入，减少时延，以及服务资源的跨地域容灾。可以帮助开发者快速构建稳定、低延时的多人游戏的部署环境，并节省大量的运维成本，支持`Unreal`、`Unity`引擎，`C#`、`C++`以及`gRPC`支持的任何语言的`server`框架部署和运行。
 
 
 ## 逻辑架构
 <img src="/img/architecture.jpg" width="80%">
 
-GameBounce平台由五个服务组件组成：
-+ [FleetManager](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gamebounce-fleetmanager): 负责应用进程的全局化动态部署及管理，支持配置动态部署策略，基于成本或时延优化应用分布，负责弹性伸缩策略的配置和服务端会话、客户端会话与应用包的管理，服务端应用的灰度发布等
-+ [AppGateway](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gamebounce-appgateway): 负责应用进程、会话与客户端连接的管理，通过与`AuxProxy`通信获得应用进程信息，决策进程资源的调度
-+ [AASS](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gamebounce-aass): 负责弹性伸缩组和弹性伸缩策略的管理与执行，以及服务端应用资源的监控，调用华为云`AS`(弹性伸缩服务)实现资源的弹性伸缩
-+ [AuxProxy](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gamebounce-auxproxy): 在扩容出的实例中自动拉起，负责应用进程的创建、进程状态的上报以及应用进程的通信
-+ [Console](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gamebounce-console): 运维平台，用于监控`gamebounce`的运行状态，以及运维管理`gamebounce`的`fleet`、应用包与用户信息等
+GameFlexMatch平台由五个服务组件组成：
++ [FleetManager](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-fleetmanager): 负责应用进程的全局化动态部署及管理，支持配置动态部署策略，基于成本或时延优化应用分布，负责弹性伸缩策略的配置和服务端会话、客户端会话与应用包的管理，服务端应用的灰度发布等
++ [AppGateway](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-appgateway): 负责应用进程、会话与客户端连接的管理，通过与`AuxProxy`通信获得应用进程信息，决策进程资源的调度
++ [AASS](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-aass): 负责弹性伸缩组和弹性伸缩策略的管理与执行，以及服务端应用资源的监控，调用华为云`AS`(弹性伸缩服务)实现资源的弹性伸缩
++ [AuxProxy](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-auxproxy): 在扩容出的实例中自动拉起，负责应用进程的创建、进程状态的上报以及应用进程的通信
++ [Console](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-console): 运维平台，用于监控`GameFlexMatch`的运行状态，以及运维管理`GameFlexMatch`的`fleet`、应用包与用户信息等
 
 ## 组织结构
 
-    |-- huaweicloud-solution-gamebounce
+    |-- huaweicloud-solution-gameflexmatch
         |-- demo
         |   |-- go                  -- go语言的服务SDK Demo
         |-- doc
@@ -30,7 +30,7 @@ GameBounce平台由五个服务组件组成：
         |   |-- cipher              -- 敏感数据的加密解密工具
         |   |-- vpc-peering         -- vpc之间创建对等连接工具
 ## 服务端SDK-Demo
-1. 提供了`go`语言的服务端`SDK Demo`，可以与`GameBounce`平台进行无缝对接
+1. 提供了`go`语言的服务端`SDK Demo`，可以与`GameFlexMatch`平台进行无缝对接
 2. 提供了`C#`语言的开发者对接指南，详见 [doc/developer](/doc/developer/developer_guide.md)
 
 ## API技术文档
@@ -39,7 +39,7 @@ GameBounce平台由五个服务组件组成：
 ## 部署指南
 1. **准备工作**
    + 准备华为云资源
-      + 管理账号与资源账号：管理账号用于`GameBounce`的管理面服务组件的管理与执行，资源账号用于计算资源的申请，账号架构详见[doc/build/user-management.md](/doc/build/user-management.md)
+      + 管理账号与资源账号：管理账号用于`GameFlexMatch`的管理面服务组件的管理与执行，资源账号用于计算资源的申请，账号架构详见[doc/build/user-management.md](/doc/build/user-management.md)
       
       + 创建委托资源账号委托给管理账号：
          - 创建委托可以参考链接[创建委托（委托方操作）](https://support.huaweicloud.com/intl/zh-cn/usermanual-iam/iam_06_0002.html)，并将资源账号委托给管理账号；
@@ -64,7 +64,7 @@ GameBounce平台由五个服务组件组成：
            RDS可以按需选择单机或主备节点
            influxdb选择集群(默认3节点)
 
-      + 在华为云`ECS`云服务中购买`4`台`ECS`，分别部署`GameBounce`服务组件，并放通安全组相关端口：
+      + 在华为云`ECS`云服务中购买`4`台`ECS`，分别部署`GameFlexMatch`服务组件，并放通安全组相关端口：
            |        |   服务组件   | 监听端口 | 是否必须配置EIP |
            | :----: | :----------: | :------: | :-------------: |
            | ECS-01 |  appgateway  |  60003   |        Y        |
@@ -92,7 +92,7 @@ GameBounce平台由五个服务组件组成：
         go env -w GOPROXY=https://repo.huaweicloud.com/repository/goproxy/
         go env -w GONOSUMDB=*
         # 1. fleetmanager
-        cd ~/huaweicloud-solution-gamebounce-fleetmanager
+        cd ~/huaweicloud-solution-gameflexmatch-fleetmanager
         # 下载依赖包
         go mod tidy
         go build ./main.go
@@ -100,21 +100,21 @@ GameBounce平台由五个服务组件组成：
         mv main fleetmanager-{version}
 
         # 2. appgateway
-        cd ~/huaweicloud-solution-gamebounce-appgateway
+        cd ~/huaweicloud-solution-gameflexmatch-appgateway
         go mod tidy
         go build ./cmd/application_gateway.go
         # 修改文件名
         mv application_gateway appgateway-{version}
 
         # 3. aass
-        cd ~/huaweicloud-solution-gamebounce-aass
+        cd ~/huaweicloud-solution-gameflexmatch-aass
         go mod tidy
         go build ./cmd/application-auto-scaling-service/application_auto_scaling_service.go
         # 修改文件名
         mv application_auto_scaling_service aass-{version}
 
         # 4. auxproxy
-        cd ~/huaweicloud-solution-gamebounce-auxproxy
+        cd ~/huaweicloud-solution-gameflexmatch-auxproxy
         go mod tidy
         go build ./cmd/auxproxy.go
 
@@ -140,8 +140,8 @@ GameBounce平台由五个服务组件组成：
         # Locality Name (eg, city) [Default City]:ShenZhen
         # Organization Name (eg, company) [Default Company Ltd]:Huawei
         # Organizational Unit Name (eg, section) []:Cloud
-        # Common Name (eg, your name or your server's hostname) []:gamebounce
-        # Email Address []:gamebounce@huawei.com
+        # Common Name (eg, your name or your server's hostname) []:GameFlexMatch
+        # Email Address []:GameFlexMatch@huawei.com
 
         # Please enter the following 'extra' attributes
         # to be sent with your certificate request

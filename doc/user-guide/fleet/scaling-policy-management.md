@@ -12,7 +12,7 @@
 
 ### 操作步骤
 
-1.登录`gamebounce`管理控制台。
+1.登录`GameFlexMatch`管理控制台。
 
 2.选择“Fleet管理 > 伸缩策略管理 > 新建伸缩策略”。
 ![create_scaling_policy](../../../img/fleet/create_scaling_policy.PNG)
@@ -43,7 +43,7 @@
 
 ### 操作步骤
 
-1.登录`gamebounce`管理控制台。
+1.登录`GameFlexMatch`管理控制台。
 
 2.选择“Fleet管理 > 伸缩策略管理”。
 
@@ -67,7 +67,7 @@
 
 ### 操作步骤
 
-1.登录`gamebounce`管理控制台。
+1.登录`GameFlexMatch`管理控制台。
 
 2.选择“Fleet管理 > 伸缩策略管理”。
 

@@ -41,7 +41,7 @@ func startGrpcServer() (int, error) {
 // main intercepts the log file of the SuperTuxKart gameserver and uses it
 // to determine if the game server is ready or not.
 const (
-	// DefaultlogPath	= "D://Desktop//workdir//gamebounce//gamebounce-dev//fake-server//log"
+	// DefaultlogPath	= "D://Desktop//workdir//gameflexmatch//gameflexmatch-dev//fake-server//log"
 	DefaultlogPath                 = "/local/app/fake-server/log"
 	DefaultHttpStartPort           = 1025
 	DefaultHttpEndPort             = 60001
