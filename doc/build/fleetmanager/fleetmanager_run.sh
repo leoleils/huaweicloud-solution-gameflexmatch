@@ -45,7 +45,7 @@ export GCM_NONCE=********************					# 本地数据加密的GCM 16位Nonce
 
 # 应用包打包相关
 export DEFAULT_IMAGE_REF="CentOS 7.2 64bit" # 用于镜像打包的ECS默认操作系统
-export DEFAULT_SCRIPT_PATH=gameflexmatch/image_env.sh # 镜像环境配置脚本 OBS路径 桶名/对象名
+export DEFAULT_SCRIPT_PATH=gameflexmatch/image_env.sh # 镜像环境配置脚本（区分VM和POD类型） OBS路径 桶名/对象名
 export DEFAULT_AUXPROXY_PATH=gameflexmatch/auxproxy.zip # AuxProxy组件压缩包 OBS路径 用于镜像环境配置 桶名/对象名
 export IMAGE_DISK_SIZE=40 # 用于镜像打包的ECS默认磁盘大小
 export DEFAULT_IMAGE_FLAVOR=s6.large.2 # 用于镜像打包的ECS默认规格
