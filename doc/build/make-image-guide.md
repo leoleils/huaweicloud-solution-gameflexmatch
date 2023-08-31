@@ -7,7 +7,7 @@
 
 ## 使用说明：
 
-1.将`Auxproxy`服务组件压缩包（zip或rar，请保证各文件在一级目录，不需要用auxproxy文件夹包含）、镜像打包环境构建脚本[image_env.sh](../../doc/build/image_env.sh)添加至管理账号的OBS桶中
+1.将`Auxproxy`服务组件压缩包（zip或rar，请保证各文件在一级目录，不需要用auxproxy文件夹包含）、镜像打包环境构建脚本[image_env.sh](../../doc/build/image_env.sh)、[docker_image_env.sh](../../doc/build/docker_image_env.sh)添加至管理账号的OBS桶中，分别为VM和POD的镜像构建脚本
 
 2.将应用压缩包（zip或rar）添加至资源账号的OBS桶中
 
