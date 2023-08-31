@@ -1,18 +1,17 @@
 # 用户管理
 
-## 一、gamebounce账号管理架构介绍
+## 一、GameFlexMatch账号管理架构介绍
 
 ### 账号说明
-+ Admin/User: gamebounce平台的账号，分为管理员和普通用户，可以关联不同的使用租户
-+ OriginDomain: 使用租户，仅作为映射，可以与ResourceDomain映射关联，用于隐藏资源租户信息
-+ ResourceDomain: 资源租户，账号为华为云租户，委托给管理用户管理，用于创建应用进程队列的资源
-+ ManagerDomain: 管理租户，账号为华为云租户，使用委托管理多个资源租户创建资源
++ Admin/User: GameFlexMatch平台的账号，分为管理员和普通用户，可以关联不同的使用租户
 
-### 架构介绍
-
-<img src="../../img/user-management.jpg" width="80%">
-
-## 二、用户登录/管理功能使用说明
+- 租户名称: GFM平台租户信息名称
+- 项目id: 用于GFM创建资源资源的API项目id，可在华为云控制台-我的凭证-API凭证中获取
+- AccessKey: 用于GFM访问API使用的密钥，可在华为云控制台-我的凭证-访问密钥中获取
+- SecretAccessKey: 用于GFM访问API使用的密钥，可在华为云控制台-我的凭证-访问密钥中获取
+- Region: 资源租户用于创建GFM资源的对应region
+- 密钥名: GFM弹性扩容虚机时的登录认证密钥
+- 云服务委托名: 目前用于打包镜像时安装ICAgent以及使用lts云日志服务的日志转储
 
 ### 登录
 
@@ -40,7 +39,8 @@
 
 | 用户类型   | 值   |
 | ---------- | ---- |
-| 普通用户   | 0    |
+| 只读用户   | 0    |
+| 普通用户   | 5    |
 | 超级管理员 | 9    |
 
 ### 用户激活状态Activation说明
