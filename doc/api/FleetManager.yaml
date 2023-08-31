@@ -26,6 +26,7 @@ tags:
   - name: 首页
   - name: 实例规格管理
   - name: 事件审计
+  - name: 资源监控
 parameters:
   Auth-token:
     name: Auth-token
@@ -1752,6 +1753,8 @@ paths:
       operationId: AdminGetAllResConfig
       parameters:
         - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
       responses:
         '200':
           description: 返回所有租户信息数量和详情
@@ -1824,13 +1827,13 @@ paths:
       operationId: AdminGetAllUser
       parameters:
         - $ref: '#/parameters/Auth-token'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
       responses:
         '200':
           description: 获取用户信息成功后显示所有用户信息
           schema:
-            items:
-              $ref: '#/definitions/GetUserInfo'
-            type: array
+            $ref: '#/definitions/GetAllUserResp'
         '500':
           description: 服务器内部错误
           schema:
@@ -1932,18 +1935,6 @@ paths:
           type: string
           minLength: 0
           maxLength: 36
-        - name: origin_domain_name
-          in: query
-          description: 该租户名在所有region下的信息
-          required: false
-          type: string
-          minLength: 0
-          maxLength: 64
-        - name: Auth-Token
-          in: header
-          required: true
-          description: 登录认证Token，通过登录接口获得
-          type: string
       responses:
         '200':
           description: 查询应用进程队列详情响应
@@ -2106,7 +2097,7 @@ paths:
         '200':
           description: 修改成功
           schema:
-            $ref: '#/definitions/UserInfo'
+            $ref: '#/definitions/GetUserInfo'
         '400':
           description: 参数错误
           schema:
@@ -2285,6 +2276,11 @@ paths:
           required: false
           type: string
           description: '起始时间 + "/" + 结束时间   时间格式为时间戳（秒级） 起始缺失时默认为1 结束缺失时默认为当前时间戳。 例: ”1677486100/1677486300“ 或”/1677486300“或”1677486100/“或”/“'
+        - name: build_type
+          in: query
+          required: false
+          description: VM 或 POD
+          type: string
       responses:
         '200':
           description: Build列表
@@ -3020,7 +3016,7 @@ paths:
         '201':
           description: 创建成功响应
           schema:
-            $ref: '#/definitions/resourceSpecificationResp'
+            $ref: '#/definitions/ResponseForCreateResourceSpecification'
           headers:
             X-Request-Id:
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
@@ -3041,6 +3037,7 @@ paths:
             X-Request-Id:
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
               type: string
+      x-order: 0
     get:
       tags:
         - 实例规格管理
@@ -3059,11 +3056,16 @@ paths:
           type: string
           minLength: 1
           maxLength: 1024
+        - name: instance_type
+          in: query
+          required: false
+          description: 实例类型
+          type: string
       responses:
         '201':
           description: 创建成功响应
           schema:
-            $ref: '#/definitions/ResourceSpecificationResponse'
+            $ref: '#/definitions/ResponseForListResourceSpecification'
           headers:
             X-Request-Id:
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
@@ -3126,6 +3128,7 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+      x-order: 2
   /{project_id}/user/inbound-permission:
     get:
       tags:
@@ -3196,7 +3199,7 @@ paths:
         '201':
           description: 创建成功响应
           schema:
-            $ref: '#/definitions/ResourceSpecificationResponse'
+            $ref: '#/definitions/ResponseForShowResourceSpecification'
           headers:
             X-Request-Id:
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
@@ -3217,6 +3220,7 @@ paths:
             X-Request-Id:
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
               type: string
+      x-order: 3
     delete:
       tags:
         - 实例规格管理
@@ -3259,6 +3263,7 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+      x-order: 4
   /project_id/available-zone:
     get:
       tags:
@@ -3564,6 +3569,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/limit'
       responses:
         '200':
           description: ''
@@ -4023,82 +4030,6 @@ paths:
           description: 请求错误
           schema:
             $ref: '#/definitions/ErrorRsp'
-  /{project_id}/fleets/pod:
-    post:
-      tags:
-        - 应用进程队列管理
-      operationId: CreateFleetWithPod
-      summary: 创建应用进程队列
-      description: 创建应用进程队列
-      x-is-registered: 'Y'
-      x-support-sdk: 'Y'
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/Auth-token'
-        - $ref: '#/parameters/projectId'
-        - in: body
-          name: CreateFleetRequestBody
-          description: 创建应用进程队列请求体
-          required: true
-          schema:
-            $ref: '#/definitions/CreateFleetRequestBody'
-        - $ref: '#/parameters/Userid'
-      responses:
-        '201':
-          description: 创建成功响应
-          schema:
-            $ref: '#/definitions/CreateFleetResponseBody'
-        '400':
-          description: 参数错误
-          schema:
-            $ref: '#/definitions/ErrorRsp'
-        '500':
-          description: 服务器内部错误
-          schema:
-            $ref: '#/definitions/ErrorRsp'
-      x-order: 1
-  /{project_id}/fleets/pod/{fleet_id}:
-    delete:
-      tags:
-        - 应用进程队列管理
-      operationId: DeleteFleetWithPod
-      summary: 删除应用进程队列
-      description: 删除前请确认该fleet是否关联有alias，若关联，则无法被删除
-      x-is-registered: 'Y'
-      x-support-sdk: 'Y'
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/Auth-token'
-        - $ref: '#/parameters/projectId'
-        - $ref: '#/parameters/fleetId'
-      responses:
-        '204':
-          description: 删除应用进程队列成功
-          schema:
-            type: string
-          headers:
-            X-Request-Id:
-              type: string
-              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-        '400':
-          description: 参数错误
-          schema:
-            $ref: '#/definitions/ErrorRsp'
-          headers:
-            X-Request-Id:
-              type: string
-              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-        '500':
-          description: 服务器内部错误
-          schema:
-            $ref: '#/definitions/ErrorRsp'
-          headers:
-            X-Request-Id:
-              type: string
-              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-      x-order: 3
   /v1/{project_id}/fleets/{fleet_id}/scaling-policies/{policy_id}/bind:
     put:
       tags:
@@ -4144,10 +4075,193 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ErrorRsp'
+  /{project_id}/resource_name:
+    get:
+      tags:
+        - 资源监控
+      operationId: GetResourceMessage
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 服务器名字和id
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ResourceMessage'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/resource-monitoring:
+    get:
+      tags:
+        - 资源监控
+      operationId: ListResourceMonitoring
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+        - name: ResourceMonitoringReq
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/ResourceMonitoringReq'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/BatchListMetricDataResponse'
+        '400':
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+        '500':
+          description: 服务器内部错误
+          schema:
+            type: string
+  /{project_id}/builds/support-docker-image:
+    get:
+      tags:
+        - 应用包管理
+      operationId: ListSupportDockerImage
+      summary: 查询应用包列表
+      description: 查询应用包列表
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+        - name: project_id
+          in: path
+          description: ID of project
+          required: true
+          type: string
+          minLength: 32
+          maxLength: 36
+        - name: region
+          in: query
+          required: false
+          type: string
+          description: region 例cn-north-7
+      responses:
+        '200':
+          description: Build列表
+          schema:
+            $ref: '#/definitions/ListSupportImageBody'
+          headers:
+            X-Request-Id:
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_id-timestamp-hostname
+              type: string
+        '400':
+          description: Error response
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_uuid-timestamp-hostname.
+        '500':
+          description: ''
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              description: >-
+                This field is the request ID number for task tracking. Format is
+                request_id-timestamp-hostname
+              type: string
+      x-order: 7
+  /{project_id}/user/swr-organization:
+    get:
+      tags:
+        - 其他资源管理
+      summary: 获取当前资源账号swr组织列表
+      description: 获取当前资源账号swr组织列表
+      operationId: UserSwrOrganization
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: region
+          in: query
+          required: true
+          type: string
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: ''
+          schema:
+            items:
+              type: string
+            type: array
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+      x-order: 7
+    post:
+      tags:
+        - 其他资源管理
+      summary: 创建SWR组织
+      description: 创建SWR组织
+      operationId: CreateUserSwrOrganization
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: region
+          in: query
+          required: true
+          type: string
+        - $ref: '#/parameters/Auth-token'
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateSwrOrganization'
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+      x-order: 7
+  /{project_id}/user/swr-image:
+    get:
+      tags:
+        - 其他资源管理
+      summary: 获取当前资源账号指定region镜像列表
+      description: 获取当前资源账号指定region 镜像列表
+      operationId: UserSWRImage
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - name: region
+          in: query
+          required: true
+          type: string
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDockerImageResponse'
+        '500':
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+      x-order: 7
 definitions:
   CreateFleetRequestBody:
     description: 创建应用进程队列请求体
     properties:
+      instance_type:
+        type: string
+        description: 实例类型，只支持VM，POD，VM是ECS，POD是容器
       name:
         type: string
         description: 应用进程队列的名称. 可以不唯一.
@@ -4232,7 +4346,7 @@ definitions:
           $ref: '#/definitions/IpPermission'
       instance_tags:
         type: array
-        description: 实例标签数组
+        description: 实例标签数组，仅instance_type为VM时生效
         minItems: 0
         maxItems: 10
         items:
@@ -4250,7 +4364,7 @@ definitions:
         description: 安全组id
       available_zones:
         type: array
-        description: 创建实例资源的可用区，可通过接口获取，为空时随机选择可用区（推荐），不为空则按照可用区优先顺序创建
+        description: 创建实例资源的可用区，可通过接口获取，为空时随机选择可用区（推荐），不为空则按照可用区优先顺序创建，仅instance_type为VM时生效
         example:
           - cn-north-4a
         items:
@@ -4258,6 +4372,7 @@ definitions:
         minItems: 0
         maxItems: 10
     required:
+      - instance_type
       - name
       - build_id
       - vpc_id
@@ -4277,6 +4392,7 @@ definitions:
     properties:
       fleet:
         $ref: '#/definitions/Fleet'
+    type: object
   ProcessConfiguration:
     description: 应用进程描述
     properties:
@@ -4361,6 +4477,9 @@ definitions:
   Fleet:
     description: 应用进程队列
     properties:
+      instance_type:
+        type: string
+        description: 实例类型，只支持VM，POD
       fleet_id:
         type: string
         description: 应用进程队列的id
@@ -4460,8 +4579,7 @@ definitions:
       server_session_protection_time_limit_minutes:
         type: integer
         format: int32
-        description: >-
-          server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
+        description: server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
         minimum: 5
         maximum: 1440
         default: 5
@@ -4491,6 +4609,7 @@ definitions:
         description: 应用进程队列所在的企业项目
         minLength: 1
         maxLength: 1024
+    type: object
   InstanceTag:
     properties:
       key:
@@ -6004,6 +6123,9 @@ definitions:
       operating_system:
         type: string
         description: 操作系统类型
+      build_type:
+        type: string
+        description: 应用包类型
     type: object
   ResConfig:
     type: object
@@ -6055,12 +6177,15 @@ definitions:
         maxLength: 1024
       build_script_path:
         type: string
-        description: 应用包配置脚本路径
+        description: ECS-应用包配置脚本路径
         maxLength: 1024
       file_storage_region:
         type: string
         description: 文件存放Region
         maxLength: 1024
+      docker_build_script_path:
+        type: string
+        description: 容器-应用包配置脚本路径
     required:
       - user_id
       - domain_name
@@ -6076,6 +6201,9 @@ definitions:
       id:
         type: string
         description: 应用包id
+      build_type:
+        type: string
+        description: 应用包类型
       project_id:
         type: string
         description: project_id
@@ -6126,6 +6254,9 @@ definitions:
       group:
         type: string
         description: 用户组
+      build_state_reason:
+        type: string
+        description: 应用包状态原因
   UpdateBuildRequestBody:
     type: object
     description: 更新应用包请求体。会判断name+version的重复
@@ -6171,6 +6302,7 @@ definitions:
     type: object
     description: 创建应用包（指定OBS路径）请求体
     required:
+      - build_type
       - name
       - storage_location
       - version
@@ -6179,12 +6311,17 @@ definitions:
       - subnet_id
       - bandwidth
     properties:
+      build_type:
+        type: string
+        description: 应用包类型 oneof POD VM
       name:
         type: string
-        description: 应用包名  字母开头 允许字母数字下划线 中划线
+        description: |-
+          应用包名  小写字母开头 允许小写字母数字下划线 中划线 点
+          ^\[a-z][\da-z_\-.]{1,49}$
         minLength: 2
         maxLength: 50
-        pattern: ^[A-Za-z][\dA-Za-z\_\-]{1,49}$
+        pattern: ^\[a-z][\da-z_\-.]{1,49}$
       description:
         type: string
         description: 描述
@@ -6194,13 +6331,13 @@ definitions:
         type: string
         description: 操作系统 选择公有镜像时输入名称，选择私有镜像时输入私有镜像id。后端默认值为公有镜像CentOS 7.2 64bits
         minLength: 1
-        maxLength: 50
+        maxLength: 256
       storage_location:
         description: 应用包存储信息
         $ref: '#/definitions/storage_location'
       version:
         type: string
-        description: 版本号
+        description: 版本号^\[a-z][\da-z_\-.]{1,49}$
         minLength: 1
         maxLength: 50
       region:
@@ -6243,6 +6380,9 @@ definitions:
       bandwidth:
         description: 应用包EIP设置
         $ref: '#/definitions/buildbandwidth'
+      organization:
+        type: string
+        description: SWR组织 选择容器时为必填
   QueryBuildParam:
     type: object
     description: 查询应用包参数
@@ -6643,12 +6783,16 @@ definitions:
   ResConfList:
     type: object
     properties:
-      Total:
+      total:
         type: integer
         format: int32
         description: 资源信息条数
         example: 1
-      ResConfList:
+      count:
+        type: integer
+        format: int32
+        description: 显示信息条数
+      res_conf_list:
         type: array
         items:
           $ref: '#/definitions/ResConfig'
@@ -6720,22 +6864,22 @@ definitions:
         type: string
         description: 用户名
         example: user1
-      Email:
+      email:
         type: string
         description: 邮箱
         example: user1@demo.com
-      LastLogin:
+      last_login:
         type: string
         description: 最近登陆时间，UTC时间格式2023-03-08T09:57:09Z
-      Activation:
+      activation:
         type: integer
         format: int32
         description: 激活状态，-1冻结，0未激活，1激活
-      UserType:
+      user_type:
         type: integer
         format: int32
         description: 用户类型，0普通用户，9管理员
-      TotalResNumber:
+      total_res_number:
         type: integer
         format: int32
         description: 用户拥有的租户数量
@@ -6812,6 +6956,7 @@ definitions:
       - version
       - region
       - image_id
+      - build_type
     properties:
       name:
         type: string
@@ -6841,7 +6986,10 @@ definitions:
         maxLength: 50
       image_id:
         type: string
-        description: IMS私有镜像id
+        description: IMS私有镜像id/SWR私有镜像id
+      build_type:
+        type: string
+        description: one of POD VM
   BuildMsg:
     type: object
     properties:
@@ -7271,7 +7419,7 @@ definitions:
         description: 日志保留时间
         example: 7
         minimum: 1
-        maximum: 30
+        maximum: 365
   Create:
     type: object
     properties:
@@ -7398,11 +7546,15 @@ definitions:
   ResourceSpecificationRequest:
     type: object
     required:
+      - instance_type
       - name
       - region
       - resource_specification
       - flavor
     properties:
+      instance_type:
+        type: string
+        description: 实例类型，支持VM,POD，VM为ECS，POD为容器
       name:
         type: string
         example: test
@@ -7418,7 +7570,7 @@ definitions:
       resource_specification:
         type: string
         example: scase_standard_2u4g
-        description: 实例规格
+        description: 实例规格；当instance_type为POD时，该项值为pod
         minLength: 1
         maxLength: 1024
       flavor:
@@ -7432,13 +7584,20 @@ definitions:
           - Si3.large.2
           - ac7.large.2
           - c3.large.2
-        description: 实例规格的具体详情
+        description: |-
+          实例规格的具体详情；
+          当instance_type为POD时，必须满足如下条件：
+          (1)flavor数组长度为1
+          (2)必须按照"{\\"cpu\\":1,\\"memory\\":2}"给定字符串
+          (3)cpu的区间为[1,64]，memory的区间为[2,512]
+          (4)memory和cpu比值的区间为[2,8]
         minItems: 1
         maxItems: 10
-  ResourceSpecificationResponse:
+  ResponseForListResourceSpecification:
     type: object
     required:
       - count
+      - resource_specifications
     properties:
       count:
         type: integer
@@ -7448,6 +7607,9 @@ definitions:
       resource_specifications:
         items:
           properties:
+            instance_type:
+              type: string
+              description: 实例类型
             id:
               type: string
               example: 9158fb9b-3cc6-42bc-a995-98998fc654fa
@@ -7479,73 +7641,38 @@ definitions:
               type: string
               example: '2023-05-17T02:46:49+08:00'
               description: 创建时间
+            update_time:
+              type: string
+            fleet_count:
+              type: string
+            associated_fleets:
+              type: array
+              items:
+                properties:
+                  name:
+                    type: string
+                  fleet_id:
+                    type: string
+                  state:
+                    type: string
+                  instance_count:
+                    type: integer
+                    format: int32
+                  process_count:
+                    type: integer
+                    format: int32
+                  max_server_session_count:
+                    type: integer
+                    format: int32
+                  creation_time:
+                    type: string
         description: 实例规格相关参数
-        type: array
-      id:
-        type: string
-        example: 1ad09fc2-7ebb-40ba-86c0-02d2c3c358cd
-      region:
-        type: string
-        example: ''
-      name:
-        type: string
-        example: 乌兰三可用 别删
-      resource_specification:
-        type: string
-        example: scase_standard_2u4g
-      flavor:
-        type: array
-        items:
-          type: string
-        example:
-          - c6.large.2
-          - c7.large.2
-          - s6.large.2
-          - s7.large.2
-          - c3.large.2
-          - s2.large.2
-      creation_time:
-        type: string
-        example: '2023-05-19T02:39:44+08:00'
-      update_time:
-        type: string
-        example: '2023-05-19T02:39:44+08:00'
-      fleet_count:
-        type: integer
-        format: int32
-        example: 0
-      associated_fleets:
-        items:
-          properties:
-            name:
-              type: string
-              example: auxproxy-01-0523
-            fleet_id:
-              type: string
-              example: b4e3f48b-f946-11ed-86f2-fa163ecd2586
-            state:
-              type: string
-              example: ACTIVE
-            instance_count:
-              type: integer
-              format: int32
-              example: 4
-            process_count:
-              type: integer
-              format: int32
-              example: 50
-            max_server_session_count:
-              type: integer
-              format: int32
-              example: 20
-            creation_time:
-              type: string
-              example: '2023-05-23T08:49:20+08:00'
         type: array
   UpdateResourceSpecificationRequest:
     type: object
     required:
       - id
+      - region
       - new_name
       - resource_specification
       - flavor
@@ -7555,11 +7682,6 @@ definitions:
         example: 5a9c7fb3-f3b2-11ed-895f-286ed488f081
         minLength: 1
         maxLength: 128
-      name:
-        type: string
-        example: test-1
-        minLength: 1
-        maxLength: 1024
       region:
         type: string
         example: cn-north-7
@@ -7575,6 +7697,7 @@ definitions:
         example: scase_standard_2u4g
         minLength: 1
         maxLength: 1024
+        description: 实例规格；当instance_type为POD时，该项值为pod
       flavor:
         type: array
         items:
@@ -7588,6 +7711,13 @@ definitions:
           - c3.large.2
         minItems: 1
         maxItems: 10
+        description: |-
+          实例规格的具体详情；
+          当instance_type为POD时，必须满足如下条件：
+          (1)flavor数组长度为1
+          (2)必须按照"{\"cpu\":1,\"memory\":2}"给定字符串
+          (3)cpu的区间为[1,64]，memory的区间为[2,512]
+          (4)memory和cpu比值的区间为[2,8]
   security_group:
     type: object
     properties:
@@ -7608,14 +7738,18 @@ definitions:
         type: string
         example: '"50119d3d-f960-4d4c-aeba-483f9488844d"'
     example: ''
-  resourceSpecificationResp:
+  ResponseForCreateResourceSpecification:
     type: object
     properties:
       resource_specifications:
         properties:
+          instance_type:
+            type: string
+            description: 实例类型，支持VM,POD，VM为ECS，POD为容器
           id:
             type: string
             example: 9158fb9b-3cc6-42bc-a995-98998fc654fa
+            description: 实例ID
           region:
             type: string
             example: cn-north-7
@@ -7626,6 +7760,7 @@ definitions:
           resource_specification:
             type: string
             example: scase_standard_2u4g
+            description: 实例规格
           flavor:
             type: array
             items:
@@ -7636,9 +7771,14 @@ definitions:
               - Si3.large.2
               - ac7.large.2
               - c3.large.2
+            description: 当instance_type为POD时，长度为1，且按照"{\\"cpu\\":1,\\"memory\\":2}"给定字符串
           creation_time:
             type: string
             example: '2023-05-17T02:46:49+08:00'
+            description: 创建时间，形如2023-08-09T06:45:40Z
+          update_time:
+            type: string
+            description: 更新时间，形如2023-08-09T06:45:40Z
   buildbandwidth:
     type: object
     description: 应用包创建临时EIP参数--带宽大小与计费方式（按带宽/按流量）
@@ -7940,16 +8080,10 @@ definitions:
     properties:
       name:
         type: string
-        minLength: 0
-        maxLength: 256
+        minLength: 1
+        maxLength: 255
         description: 主题的名称
         example: test-topic-name
-      display_name:
-        type: string
-        minLength: 0
-        maxLength: 192
-        description: 显示的名称，该字段不生效，默认为 HWC-SAC-GameBounce
-        example: HWC-SAC-GameBounce
       enterprise_project_id:
         type: string
         minLength: 0
@@ -7957,15 +8091,16 @@ definitions:
         description: 企业项目ID, 默认为 0(default)
         example: '0'
       notice_trace_status:
-        type: string
+        type: array
+        items:
+          type: string
+          example: INCIDENT
         example: INCIDENT
         description: >-
           根据事件的级别决定是否短信或邮件通知，非重
           * NORMAL
           * WARNING
           * INCIDENT
-        minLength: 0
-        maxLength: 32
         enum:
           - NORMAL
           - WARNING
@@ -7989,8 +8124,8 @@ definitions:
         type: string
         minLength: 0
         maxLength: 192
-        description: 显示的名称，该字段不生效，默认为 HWC-SAC-GameBounce
-        example: HWC-SAC-GameBounce
+        description: 显示的名称，该字段不生效，默认为 HWC-SAC-GameFlexMatch
+        example: HWC-SAC-GameFlexMatch
       enterprise_project_id:
         type: string
         minLength: 0
@@ -8330,3 +8465,198 @@ definitions:
         type: string
       region:
         type: string
+  ResourceMessage:
+    type: object
+    properties:
+      service:
+        type: string
+        example: metaspace-fleetmanager
+      dim_name:
+        type: string
+        example: instance_id
+      value:
+        type: string
+        example: 1e03d533-1453-4592-94e1-ec7c68a8783a
+  ResourceMonitoringReq:
+    type: object
+    properties:
+      metrics:
+        items:
+          properties:
+            namespace:
+              type: string
+              example: SYS.ECS
+            metric_name:
+              type: string
+              example: cpu_util
+            dimensions:
+              items:
+                properties:
+                  name:
+                    type: string
+                    example: instance_id
+                  value:
+                    type: string
+                    example: 4270ff17-aba3-4138-89fa-820594c39755
+              type: array
+        type: array
+      period:
+        type: string
+        example: 1
+      filter:
+        type: string
+        example: 1
+      from:
+        type: integer
+        format: int32
+        example: 1607146998177
+      to:
+        type: integer
+        format: int32
+        example: 1607146998177
+  BatchListMetricDataResponse:
+    type: object
+    properties:
+      metrics:
+        items:
+          properties:
+            unit:
+              type: string
+              example: Ratio
+            datapoints:
+              items:
+                properties:
+                  sum:
+                    type: number
+                    format: float
+                    example: 0.07
+                  timestamp:
+                    type: integer
+                    format: int32
+                    example: 1556625628000
+              type: array
+            namespace:
+              type: string
+              example: SYS.RDS
+            dimensions:
+              items:
+                properties:
+                  name:
+                    type: string
+                    example: rds_cluster_id
+                  value:
+                    type: string
+                    example: 3c8cc15614ab46f5b8743317555e0de2in01
+              type: array
+            metric_name:
+              type: string
+              example: rds021_myisam_buf_usage
+        type: array
+  ResponseForShowResourceSpecification:
+    type: object
+    properties:
+      instance_type:
+        type: string
+        example: POD
+        description: 实例类型，支持VM,POD，VM为ECS，POD为容器
+      id:
+        type: string
+        example: aedf809d-1e1b-4935-a217-e4d0483ee1ff
+        description: 实例ID
+      region:
+        type: string
+        example: ''
+        description: 所属区域
+      name:
+        type: string
+        example: xxxxxx
+        description: 实例规格组名称
+      resource_specification:
+        type: string
+        example: pod_2u4g
+        description: 实例规格；当instance_type为POD时，该项值为pod
+      flavor:
+        type: array
+        items:
+          type: string
+        example:
+          - '{"cpu":2'
+          - '"memory":4}'
+        description: |-
+          实例规格的具体详情；
+          当instance_type为POD时，必须满足如下条件：
+          (1)flavor数组长度为1
+          (2)按照"{\"cpu\":1,\"memory\":2}"给定字符串
+          (3)cpu的区间为[1,64]，memory的区间为[2,512]
+          (4)memory和cpu比值的区间为[2,8]
+      creation_time:
+        type: string
+        example: '2023-08-09T06:45:41Z'
+        description: 创建时间，UTC字符串
+      update_time:
+        type: string
+        example: '2023-08-09T07:14:49Z'
+        description: 更新时间，UTC字符串
+      fleet_count:
+        type: integer
+        format: int32
+        example: 0
+        description: 关联Fleet数量
+      associated_fleets:
+        type: string
+        example: null
+        description: 关联Fleet详细信息
+  ListSupportDockerImageBody:
+    type: object
+    description: 创建应用包时 支持选择操作系统
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 总数
+      support_image_list:
+        type: array
+        items:
+          type: string
+        description: 支持的公共镜像列表
+  CreateSwrOrganization:
+    type: object
+    description: 创建SWR组织
+    required:
+      - region
+      - organization
+    properties:
+      region:
+        type: string
+      organization:
+        type: string
+        description: 组织名称 正则 ^[a-z][a-z0-9]{0,63}$
+  UserDockerImageResponse:
+    type: object
+    description: 获取SWR私有镜像
+    required:
+      - count
+      - docker_image_list
+    properties:
+      count:
+        type: string
+      docker_image_list:
+        type: array
+        items:
+          type: string
+  GetAllUserResp:
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 当前页面的用户数量
+      total:
+        type: integer
+        format: int32
+        description: 所有用户数量
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/GetUserInfo'
+        description: 用户详情

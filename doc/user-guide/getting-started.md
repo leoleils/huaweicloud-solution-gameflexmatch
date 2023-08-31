@@ -1,68 +1,54 @@
-# gamebounce控制台快速入门
+# GameFlexMatch控制台快速入门
 ## 1. 用户管理，关联资源用户
-+ gamebounce的用户分为两种类型，一种是用于登录控制台的gamebounce用户，一种是用于创建与管理计算、网络等资源的华为云租户
-+ 管理员第一次登录或普通用户第一次登录时，需重置密码，并关联华为云租户，以正常使gamebounce控制台
++ GameFlexMatch的用户分为两种类型，一种是用于登录控制台的GameFlexMatch用户，一种是用于创建与管理计算、网络等资源的华为云租户
++ 管理员第一次登录或普通用户第一次登录时，需重置密码，并关联华为云租户，以正常使GameFlexMatch控制台
 ### Step1. 管理员新建用户NewUser
 + 管理员登录
-![登录](../../img/user/login.jpg)
 
-+ 找到新增用户入口
-  
-![管理员新增用户入口](../../img/user/admin-add-user-input.jpg)
-
-+ 新增普通用户，以NewUser为例
-![管理员新增用户](../../img/user/admin-add-user.jpg)
 
 ### Step2. 首次登录重置密码
-+ NewUser首次登录控制台，需修改密码
-![首次登录修改密码](../../img/user/modify-pw.jpg)
++ 若管理员首次登录控制台，需修改密码
+![首次登录修改密码](../../img/user/admin-modify-pw.jpg)
 
-### Step3. 普通用户或管理员首次进入若未关联资源租户，需先关联资源租户
-+ 需联系管理员为NewUser关联资源租户
-![提示关联资源租户](../../img/user/no-associated-res-domain.jpg)
-### Step4. 管理员为NewUser关联资源租户
-+ 管理员登录控制台
-+ 管理员为NewUser新增关联租户
-
-![关联资源租户入口](../../img/user/admin-add-res-for-user-input.jpg)
+### Step3. 管理员首次进入若未关联资源租户，需先关联资源租户
+ ![提示关联资源租户](../../img/user/admin-add-res-window.jpg)
 
 + **填写相关关联的资源租户相关信息**，简介如下:
-    1. 使用租户信息：
-    ```
-    使用租户id: 临时参数，后续废弃，可填写资源租户id
-    使用租户名: 临时参数，后续废弃，可填写资源租户名
-    使用租户项目id: 临时参数，后续废弃，可填写资源租户项目id
-    ```
-    2. 资源租户信息：
-    ```
-    资源租户id: 华为云租户，用于创建gamebounce资源的租户id
-    资源租户名: 华为云租户，用于创建gamebounce资源的租户名
-    资源租户项目id: 华为云租户，资源租户用于创建gamebounce资源所对应项目id
-    资源用户名: 资源租户下的iam用户名
-    资源用户id: 资源租户下的iam用户id
-    Region: 资源租户用于创建gamebounce资源的对应region
-    委托名: 资源租户委托给管理租户，便于gamebounce使用管理租户管理资源租户，管理租户对应fleetmanager与aass后台部署时所对应的租户
-    密钥名: gamebounce弹性扩容虚机时的登录认证密钥
-    云服务委托名: 目前用于打包镜像时安装ICAgent以及使用lts云日志服务的日志转储
-    ```
-    3. 委托的创建详见[/README.md](../../README.md)
+
+  1. 使用租户信息
+
+        ```
+        租户名称: GameFlexMatch平台租户信息名称
+        项目id: 用于GameFlexMatch创建资源资源的API项目id，可在华为云控制台-我的凭证-API凭证中获取
+        AccessKey: 用于GameFlexMatch访问API使用的密钥，可在华为云控制台-我的凭证-访问密钥中获取
+        SecretAccessKey: 用于GameFlexMatch访问API使用的密钥，可在华为云控制台-我的凭证-访问密钥中获取
+        Region: 资源租户用于创建GameFlexMatch资源的对应region
+        密钥名: GameFlexMatch弹性扩容虚机时的登录认证密钥
+        云服务委托名: 目前用于打包镜像时安装ICAgent以及使用lts云日志服务的日志转储
+      ```
+    2. 应用包信息
+
+         ```
+         Auxproxy路径:  Auxproxy文件在OBS的存放路径
+         ECS-应用包配置脚本路径: 用于创建ECS资源应用包的脚本文件在OBS的存放路径
+         文件存放Region: OBS桶所在的Region
+         容器-应用包配置脚本路径:  用于创建容器资源应用包的脚本在OBS的存放路径
+         ```
+
+  
 
 ![关联资源租户](../../img/user/admin-add-res-for-user.jpg)
 
-### Step5. 查看NewUser关联的资源租户详情
-+ 查看用户NewUser详情
-![资源租户详情入口](../../img/user/res-info-input.jpg)
 
-+ 查看NewUser关联的资源租户信息
-![资源租户详情](../../img/user/res-info.jpg)
 
-+ 资源租户关联成功，现在可以使用正常使用gamebounce了
++ 资源租户关联成功，现在可以使用正常使用GameFlexMatch了
 
 
 ## 2. 应用上传，制作镜像
 + 应用镜像内包含AuxProxy服务组件以及已完成对接的后端服务应用，并已完成相关的启动配置，用于弹性扩容虚机的模板
-+ 执行该步骤之前，需确保资源租户向管理租户已经配置了正确的委托，以及资源租户配置了正确的云服务委托
++ 执行该步骤之前，需确保资源租户向管理租户已经配置了正确的租户信息
 + 需保证上传的服务端应用可以正常的被启动
++ 详情参考指导文件中应用包部分doc/user-guide/build/build-management.md
 
 ### Step1. 上传应用包，制作镜像
 + 用户登录控制台
@@ -75,11 +61,26 @@
 ### Step2. 查看应用包详情，确认应用状态
 + 进入应用包管理，搜索server-application
 ![搜索应用](../../img/build/build-search.jpg)
-
 + 点击应用名称查看应用详情，确认应用状态拿到应用包id
 ![应用详情](../../img/build/build-info.jpg)
-
 + 当应用状态为就绪时，可以使用该应用创建fleet
+
+
+
+## 3.创建实例规格
+
+- 用户登录控制台
+- 进入“配置”-“实例规格组”模块，创建实例规格组
+
+![创建实例规格](../../img/specification/create_spec_input.JPG)
+
+- 创建实例规格，以vm类型的2u4g规格为例，填写实例规格组名称，选择使用的实例规格，点击确定
+
+  ![创建vm实例规格](../../img/specification/select_vm_spec.JPG)
+
+
+
+
 
 ## 3. 创建Fleet流程
 + 应用进程队列(fleet)是一个管理后端服务应用集群的队列，可以支持手动或自动增加后端服务应用的数量，以满足不同的负载需求
@@ -114,8 +115,15 @@
 + 找到弹性伸缩策略创建入口
 ![创建弹性伸缩策略入口](../../img/auto-scaling/create-auto-scaling-input.jpg)
 
-+ 选择弹性伸缩策略绑定的fleet_id，填写必要参数，点击创建
++ 选择弹性伸缩策略，填写必要参数，点击创建
 ![创建弹性伸缩策略](../../img/auto-scaling/create-auto-scaling.jpg)
+
++ 在伸缩策略详情页，选择新建关联
+
+  ![绑定伸缩策略](../../img/auto-scaling/create_relation.jpg)
++ 选择策略需要关联的fleet
+
+  ![选择fleet关联的策略](../../img/auto-scaling/create_relation_select_fleet.jpg)
 
 + 确认弹性伸缩策略是否创建成功
 ![弹性伸缩策略列表](../../img/auto-scaling/auto-scaling-list.jpg)
@@ -127,7 +135,7 @@
 + 修改 `基本信息->是否开启弹性伸缩` 字段，开启弹性伸缩能力
 ![修改fleet信息](../../img/auto-scaling/modify-fleet-info.jpg)
 
-+ 现在gamebounce可以根据负载情况弹性扩缩容计算资源了
++ 现在GameFlexMatch可以根据负载情况弹性扩缩容计算资源了
 
 
 ## 5. 快速创建别名(alias)关联(可选)
@@ -169,3 +177,45 @@
 
 ![build_access_config3](../../img/lts/build_access_config3.png)
 
+
+
+
+
+# 管理员创建子用户
+
+### Step1. 管理员新建用户NewUser
+
++ 管理员登录
+  ![登录](../../img/user/login.jpg)
+
++ 找到新增用户入口
+
+![管理员新增用户入口](../../img/user/admin-add-user-input.jpg)
+
++ 新增普通用户，以NewUser为例
+  ![管理员新增用户](../../img/user/admin-add-user.jpg)
+
+### Step2. 首次登录重置密码
+
++ NewUser首次登录控制台，需修改密码
+  ![首次登录修改密码](../../img/user/modify-pw.jpg)
+
+### Step3. 普通用户或管理员首次进入若未关联资源租户，需先关联资源租户
+
++ 需联系管理员为NewUser关联资源租户
+  ![提示关联资源租户](../../img/user/no-associated-res-domain.jpg)
+
+### Step4. 管理员为NewUser关联资源租户
+
++ 管理员登录控制台
++ 管理员为NewUser新增关联租户
+
+![关联资源租户入口](../../img/user/admin-add-res-for-user-input.jpg)
+
+### Step5. 查看NewUser关联的资源租户详情
+
++ 查看用户NewUser详情
+  ![资源租户详情入口](../../img/user/res-info-input.jpg)
+
++ 查看NewUser关联的资源租户信息
+  ![资源租户详情](../../img/user/res-info.jpg)
