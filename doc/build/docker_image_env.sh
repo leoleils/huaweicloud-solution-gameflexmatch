@@ -99,7 +99,8 @@ cat > /etc/docker-build/Dockerfile <<- EOF
 FROM ${DOCKER_SYSTEM}
 RUN mkdir -p /etc/auxproxy \
 && mkdir -p /local/app/${APP_NAME} \
-&& mkdir -p /etc/supervisor
+&& mkdir -p /etc/supervisor \
+&& yum -y install supervisor
 COPY auxproxy /etc/auxproxy
 COPY ${APP_NAME} /local/app/${APP_NAME}
 COPY supervisord.conf /etc/supervisor
