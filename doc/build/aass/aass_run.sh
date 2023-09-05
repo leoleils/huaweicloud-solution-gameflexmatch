@@ -48,7 +48,7 @@ export LOG_MAX_AGE=7										# 单个日志文件存储的最大时间
 export CONNECT_TO_AUXPROXY_BY_IP=privateIP					# 若使用公网IP，则该字段为publicIP
 
 # redis连接配置
-export REDIS_ADDRESS={influx_host}:{influx_port}  			# redis连接ip与端口
+export REDIS_ADDRESS={redis_host}:{redis_port}  			# redis连接ip与端口
 export REDIS_PASSWORD=************   						# redis连接密码，GCM加密 
 export REDIS_DB=1											# redis库序号，默认为1
 
