@@ -92,7 +92,8 @@
 + 进入创建fleet界面
 ![创建fleet入口](../../img/fleet/create-fleet-input.jpg)
 
-+ 填写创建fleet的相关信息，支持json格式的文件导入
++ 填写创建fleet的相关信息，支持json格式的文件导入；
++ **注意：为了服务安全，服务组件之间默认使用的是内网通信，因此需要手动选择部署时创建的VPC（即服务组件所在VPC），如果需要支持不同的VPC下创建fleet，需要修改安全组以及启动脚本参数，详情见创建Fleet指导文件**[创建fleet指导](fleet/fleet-management.md) “指定在不同VPC创建fleet”章节
 ![创建fleet](../../img/fleet/create-fleet.jpg)
 
 + 点击创建，开始创建fleet

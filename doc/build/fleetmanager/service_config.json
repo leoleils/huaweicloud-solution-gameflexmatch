@@ -47,6 +47,12 @@
             "ip_range": "{appgateway_host}/32",
             "from_port": 60001,
             "to_port": 60001
+        },
+        {
+            "protocol": "TCP",
+            "ip_range": "{aass_host}/32",
+            "from_port": 9091,
+            "to_port": 9091 
         }
     ],
     "eip_type": {
