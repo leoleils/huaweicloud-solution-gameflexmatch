@@ -89,3 +89,45 @@
 ![delete_fleet](../../../img/fleet/delete_fleet.PNG)
 
 4.在弹出的对话框中，单击”确定“。
+
+
+
+## 指定在不同VPC创建fleet
+
+服务组件之间默认使用内网通信，如果需要将fleet创建在其他VPC下，需要修改服务组件安全组，以及服务组件的启动参数
+
+### 操作步骤
+
+1. 确保fleetmanager配置路径/home/fleetmanager/configmap下的fleetmanager_run.sh脚本已配置所有服务组件的入站规则，确保appgateway和aass的**所有节点**的公网IP都已填入
+
+   ```shell
+       "internal_inbound_permissions": [
+           {
+               "protocol": "TCP",
+               "ip_range": "{appgateway_host}/32",
+               "from_port": 60001,
+               "to_port": 60001
+           },
+           {
+               "protocol": "TCP",
+               "ip_range": "{aass_host}/32",
+               "from_port": 9091,
+               "to_port": 9091 
+           }
+       ],
+   ```
+   
+2. 修改appgateway服务组件/home/appgateway_/bin/appgateway_run.sh参数，修改使用公网通信，保存后重启服务组件
+
+   ```shell
+   export AUXPROXY_IP_TYPE=publicIP #appgateway与auxproxy通信的ip类型:publicIP/privateIP
+   ```
+
+3. 和aass服务组件/home/aass/bin/aass_run.sh参数，修改使用公网通信，保存后重启服务组件
+
+   ```shell
+   # 与auxproxy连接的方式，默认为私网
+   export CONNECT_TO_AUXPROXY_BY_IP=publicIP #aass与auxproxy通信的ip类型:publicIP/privateIP
+   ```
+
+   
