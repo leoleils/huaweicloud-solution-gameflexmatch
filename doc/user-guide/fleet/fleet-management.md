@@ -129,5 +129,4 @@
    # 与auxproxy连接的方式，默认为私网
    export CONNECT_TO_AUXPROXY_BY_IP=publicIP #aass与auxproxy通信的ip类型:publicIP/privateIP
    ```
-4. appgateway 服务节点的安全组60003放通0.0.0.0/32 （此操作有安全风险，请谨慎操作）
    
