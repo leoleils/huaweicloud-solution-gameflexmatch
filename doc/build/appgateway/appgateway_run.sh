@@ -38,7 +38,7 @@ export BACKUP=3						# 运行表中的异常数据备份到备份表中的时间
 
 # 其他配置
 export GATEWAY_ADDR=0.0.0.0:60003
-export AUXPROXY_IP_TYPE=publicIP	# appgateway与auxproxy通信的ip类型 publicIP/privateIP
+export AUXPROXY_IP_TYPE=privateIP	# appgateway与auxproxy通信的ip类型 publicIP/privateIP
 export DEPLOY_MODE=multi-instances	# 多实例multi-instances或单实例singleton
 
 
