@@ -111,8 +111,8 @@
            {
                "protocol": "TCP",
                "ip_range": "{aass_host}/32",
-               "from_port": 9091,
-               "to_port": 9091 
+               "from_port": 60001,
+               "to_port": 60001 
            }
        ],
    ```
