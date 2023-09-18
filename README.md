@@ -39,13 +39,12 @@ GameFlexMatch平台由五个服务组件组成：
 ## 部署指南
 1. **准备工作**
    + 准备华为云资源
-      + 管理账号与资源账号：管理账号用于`GameFlexMatch`的管理面服务组件的管理与执行，资源账号用于计算资源的申请，账号架构详见[doc/build/user-management.md](/doc/build/user-management.md)
+      + 管理账号：管理账号用于`GameFlexMatch`的管理面服务组件的管理与执行以及计算资源的申请
       
-      + 创建委托资源账号委托给管理账号：
-         - 创建委托可以参考链接[创建委托（委托方操作）](https://support.huaweicloud.com/intl/zh-cn/usermanual-iam/iam_06_0002.html)，并将资源账号委托给管理账号；
-         - 授予该委托`DEW KeypairFullAccess`权限
-         - 授予该委托`OBS Administrator`权限
-         - 新建委托策略权限，增加委托权限策略，委托权限`json`视图见[doc/build/agency_region.json](/doc/build/agency_region.json)，由于区域级委托与全局级委托不能同时配置，该步骤需要为委托新建两种权限并关联
+      + 创建权限策略，并给管理账号[授权](https://support.huaweicloud.com/usermanual-iam/iam_01_0652.html)：
+         1. 创建自定义策略，自定义命名如`GameFlexMatch-agency`，并增加权限委托权限`json`视图见[doc/build/agency_region.json](/doc/build/agency_region.json)
+         2. 授予`GameFlexMatch-agency`策略`DEW KeypairFullAccess`权限
+         3. 授予`GameFlexMatch-agency`策略`OBS Administrator`权限
          
       + 使用LTS配置日志转存，需在委托资源账号下创建LTS委托，给ECS以安装ICagent：
         
