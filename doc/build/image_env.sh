@@ -22,7 +22,6 @@ useradd ${USER}
 groupadd ${GROUP}
 usermod -g ${GROUP} ${USER}
 echo ${USER}:${PWD} | chpasswd
-
 # download app
 mkdir -p /local/app/${APP_NAME}
 cd /local/app/${APP_NAME}
@@ -35,7 +34,6 @@ if [ "${APP_FILE##*.}" = "rar" ]; then
 fi
 chown -R ${USER}:${GROUP} /local/app/${APP_NAME}
 chmod 750 *
-
 # download auxproxy
 mkdir -p /etc/auxproxy
 cd /etc/auxproxy
