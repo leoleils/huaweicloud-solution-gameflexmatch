@@ -22,7 +22,6 @@ useradd ${USER}
 groupadd ${GROUP}
 usermod -g ${GROUP} ${USER}
 echo ${USER}:${PWD} | chpasswd
-
 # download app
 mkdir -p /local/app/${APP_NAME}
 cd /local/app/${APP_NAME}
