@@ -34,7 +34,6 @@ if [ "${APP_FILE##*.}" = "rar" ]; then
 fi
 chown -R ${USER}:${GROUP} /local/app/${APP_NAME}
 chmod 750 *
-
 # download auxproxy
 mkdir -p /etc/auxproxy
 cd /etc/auxproxy
