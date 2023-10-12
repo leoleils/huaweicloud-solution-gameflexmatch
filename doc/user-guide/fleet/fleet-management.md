@@ -98,7 +98,7 @@
 
 ### 操作步骤
 
-1. 确保fleetmanager配置路径/home/fleetmanager/configmap下的fleetmanager_run.sh脚本已配置所有服务组件的入站规则，确保appgateway和aass的**所有节点**的公网IP都已填入
+1. 确保fleetmanager配置路径/home/fleetmanager/configmap下的service_config.json脚本已配置所有服务组件的入站规则，确保appgateway和aass的**所有节点**的公网IP都已填入
 
    ```shell
        "internal_inbound_permissions": [
@@ -111,8 +111,8 @@
            {
                "protocol": "TCP",
                "ip_range": "{aass_host}/32",
-               "from_port": 9091,
-               "to_port": 9091 
+               "from_port": 60001,
+               "to_port": 60001 
            }
        ],
    ```
@@ -129,5 +129,4 @@
    # 与auxproxy连接的方式，默认为私网
    export CONNECT_TO_AUXPROXY_BY_IP=publicIP #aass与auxproxy通信的ip类型:publicIP/privateIP
    ```
-
    
