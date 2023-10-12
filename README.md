@@ -6,6 +6,7 @@
 
 
 # 逻辑架构
+<img src="img/architecture.jpg" width="80%">
 
 GameFlexMatch平台由五个服务组件组成：
 
@@ -39,10 +40,6 @@ GameFlexMatch平台由五个服务组件组成：
 购买华为云RDS快速构建，按需选择规格，默认端口3306，创建appgateway，aass和fleetmanager三个数据库。
 
 
-
-### 创建InfluxDB
-
-购买InfluxDB，并开启SSL安全连接，使用默认证书即可，为服务组件创建数据库(aass/appgateway)，aass与appgateway共用一个influxDB的数据库。
 
 
 
