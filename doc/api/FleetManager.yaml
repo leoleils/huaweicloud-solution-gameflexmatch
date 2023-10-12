@@ -80,7 +80,7 @@ parameters:
     type: integer
     format: int32
     minimum: 0
-    maximum: 10
+    maximum: 100
     default: 0
     description: 分页偏移量，为0表示第一页，为1表示从第二页开始显示
   limit:
@@ -178,6 +178,12 @@ parameters:
     in: path
     required: true
     description: 事件id，全局唯一，uuid格式，例如c0544f73-bce0-11ed-991f-fa163ecd2502
+    type: string
+  region:
+    name: region
+    in: query
+    required: false
+    description: 区域，若为空则使用{project_id}对应的region
     type: string
 paths:
   /{project_id}/fleets:
@@ -1930,7 +1936,7 @@ paths:
         - $ref: '#/parameters/Auth-token'
         - name: region
           in: query
-          description: 在某个region下origin信息
+          description: 在某个region下origin信息，若不传则使用projectId映射的region
           required: false
           type: string
           minLength: 0
@@ -2007,10 +2013,7 @@ paths:
       operationId: Bandwidths
       parameters:
         - $ref: '#/parameters/projectId'
-        - name: region
-          in: query
-          required: true
-          type: string
+        - $ref: '#/parameters/region'
         - name: share_type
           in: query
           required: false
@@ -2042,10 +2045,7 @@ paths:
       operationId: UserBucket
       parameters:
         - $ref: '#/parameters/projectId'
-        - name: region
-          in: query
-          required: true
-          type: string
+        - $ref: '#/parameters/region'
         - $ref: '#/parameters/Auth-token'
       responses:
         '200':
@@ -2156,10 +2156,7 @@ paths:
       operationId: UserImage
       parameters:
         - $ref: '#/parameters/projectId'
-        - name: region
-          in: query
-          required: true
-          type: string
+        - $ref: '#/parameters/region'
         - $ref: '#/parameters/Auth-token'
       responses:
         '200':
@@ -2556,10 +2553,7 @@ paths:
       operationId: UserVpc
       parameters:
         - $ref: '#/parameters/projectId'
-        - name: region
-          in: query
-          required: true
-          type: string
+        - $ref: '#/parameters/region'
         - $ref: '#/parameters/Auth-token'
       responses:
         '200':
@@ -2580,10 +2574,7 @@ paths:
       operationId: UserSubnet
       parameters:
         - $ref: '#/parameters/projectId'
-        - name: region
-          in: query
-          required: true
-          type: string
+        - $ref: '#/parameters/region'
         - name: vpc_id
           in: query
           required: true
@@ -3271,11 +3262,7 @@ paths:
       summary: 获取创建ECS的可用区
       operationId: GetAvailableZones
       parameters:
-        - name: region
-          in: query
-          required: true
-          description: 区域
-          type: string
+        - $ref: '#/parameters/region'
       responses:
         '200':
           description: 获取成功
@@ -4079,6 +4066,8 @@ paths:
     get:
       tags:
         - 资源监控
+      summary: 查询所监控的ECS的信息
+      description: 查询所监控的ECS的信息
       operationId: GetResourceMessage
       parameters:
         - $ref: '#/parameters/projectId'
@@ -4098,24 +4087,61 @@ paths:
           description: 服务器内部错误
           schema:
             $ref: '#/definitions/ErrorRsp'
-  /{project_id}/resource-monitoring:
+  /{project_id}/all-resource-monitoring:
     get:
       tags:
         - 资源监控
+      summary: 查询监控的ECS基本信息
+      description: 查询监控的ECS基本信息,如cup,磁盘等
       operationId: ListResourceMonitoring
       parameters:
         - $ref: '#/parameters/projectId'
         - $ref: '#/parameters/Auth-token'
-        - name: ResourceMonitoringReq
-          in: body
+        - name: id
+          in: query
+          required: true
+          description: ECS的id
+          type: string
+        - name: filter
+          in: query
+          required: true
+          description: |-
+            描述
+            数据聚合方式。支持的值为max, min, average, sum, variance。
+          type: string
+        - name: period
+          in: query
+          required: true
+          description: |-
+            描述
+            指标监控数据的聚合粒度,取值范围:1,300,1200,3600,14400,86400;1为监控资源的实时数据;300为聚合5分钟粒度数据,表示5分钟一个数据点;1200为聚合20分钟粒度数据,表示20分钟一个数据点;3600为聚合1小时粒度数据,表示1小时一个数据点
+          type: string
+        - name: from
+          in: query
+          required: true
+          description: |-
+            描述
+            查询数据起始时间,UNIX时间戳,单位毫秒。建议from的值相对于当前时间向前偏移至少1个周期。由于聚合运算的过程是将一个聚合周期范围内的数据点聚合到周期起始边界上,如果将from和to的范围设置在聚合周期内,会因为聚合未完成而造成查询数据为空,所以建议from参数相对于当前时间向前偏移至少1个周期。以5分钟聚合周期为例:假设当前时间点为10:35,10:30~10:35之间的原始数据会被聚合到10:30这个点上,所以查询5分钟数据点时from参数应为10:30或之前。云监控会根据所选择的聚合粒度向前取整from参数;如:1607146998177。
+          type: string
+        - name: to
+          in: query
+          required: true
+          description: |-
+            描述
+            查询数据截止时间UNIX时间戳,单位毫秒。from必须小于to;如:1607150598177。
+          type: string
+        - name: metric_name
+          in: query
           required: false
-          schema:
-            $ref: '#/definitions/ResourceMonitoringReq'
+          type: string
+          description: 资源的监控指标名称,如:CPU使用率;文档数据库中的指标,多个参数用，隔开“cpu_util(CPU使用率),disk_write_bytes_rate(磁盘写带宽),disk_read_bytes_rate(磁盘写带宽),network_vm_connections(网络连接数),network_vm_newconnections(虚拟机整机新建连接数),disk_read_requests_rate(磁盘读IOPS),disk_write_requests_rate(磁盘写IOPS)”
       responses:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/BatchListMetricDataResponse'
+            items:
+              $ref: '#/definitions/ShowMetricDataResponse'
+            type: array
         '400':
           description: 参数错误
           schema:
@@ -4123,7 +4149,7 @@ paths:
         '500':
           description: 服务器内部错误
           schema:
-            type: string
+            $ref: '#/definitions/ErrorRsp'
   /{project_id}/builds/support-docker-image:
     get:
       tags:
@@ -4188,10 +4214,7 @@ paths:
       operationId: UserSwrOrganization
       parameters:
         - $ref: '#/parameters/projectId'
-        - name: region
-          in: query
-          required: true
-          type: string
+        - $ref: '#/parameters/region'
         - $ref: '#/parameters/Auth-token'
       responses:
         '200':
@@ -4213,10 +4236,6 @@ paths:
       operationId: CreateUserSwrOrganization
       parameters:
         - $ref: '#/parameters/projectId'
-        - name: region
-          in: query
-          required: true
-          type: string
         - $ref: '#/parameters/Auth-token'
         - name: body
           in: body
@@ -4240,10 +4259,7 @@ paths:
       operationId: UserSWRImage
       parameters:
         - $ref: '#/parameters/projectId'
-        - name: region
-          in: query
-          required: true
-          type: string
+        - $ref: '#/parameters/region'
         - $ref: '#/parameters/Auth-token'
       responses:
         '200':
@@ -5321,11 +5337,13 @@ definitions:
       policy_type:
         type: string
         enum:
-          - TARGET_BASED
+          - TARGET_BASED_PERCENT
+          - TARGET_BASED_NUM
         description: |-
-          伸缩策略类型，只支持基于目标的策略 
-          * TARGET_BASED: 基于目标的策略，只能有一个基于目标的策略
-        example: TARGET_BASED
+          伸缩策略类型，只支持基于目标的策略，单个伸缩组只能有一个基于目标的策略。
+          * TARGET_BASED_PERCENT: 基于可用会话比目标的策略
+          * TARGET_BASED_NUM: 基于固定可用会话数目标的策略
+        example: TARGET_BASED_PERCENT
       target_based_configuration:
         $ref: '#/definitions/TargetBasedConfiguration'
     required:
@@ -5340,26 +5358,41 @@ definitions:
         description: |-
           指标名称，取值范围
           * PERCENT_AVAILABLE_SERVER_SESSIONS:   空闲server session百分比
+          * NUM_AVAILABLE_SERVER_SESSIONS:    空闲server sessions数量
         enum:
           - PERCENT_AVAILABLE_SERVER_SESSIONS
+          - NUM_AVAILABLE_SERVER_SESSIONS
         default: PERCENT_AVAILABLE_SERVER_SESSIONS
         example: PERCENT_AVAILABLE_SERVER_SESSIONS
       min_target_value:
         type: integer
         format: int32
-        description: 最小可用会话比，低于时扩容
+        description: 最小可用会话比/最小可用会话数，低于时扩容
         minimum: 1
-        maximum: 100
+        maximum: 9999
+        default: 1
       max_target_value:
         type: integer
         format: int32
-        description: 最大可用会话比，低于时缩容
+        description: 最大可用会话比/最大可用会话数，高于时缩容
         minimum: 1
-        maximum: 100
+        maximum: 10000
+        default: 100
+      quick_scaling_out:
+        type: string
+        description: |-
+          * true:     开启辅助快速扩容
+          * false:    关闭辅助快速扩容
+        enum:
+          - 'true'
+          - 'false'
+        default: 'false'
+        example: 'false'
     required:
       - metric_name
       - min_target_value
       - max_target_value
+      - quick_scaling_out
     type: object
   ScalingPolicy:
     properties:
@@ -5379,10 +5412,12 @@ definitions:
         type: string
         description: |-
           策略类型   
-          * TARGET_BASED: 基于目标的策略
+          * TARGET_BASED_PERCENT: 基于可用会话比目标的策略
+          * TARGET_BASED_NUM: 基于固定可用会话数目标的策略
         enum:
-          - TARGET_BASED
-        example: TARGET_BASED
+          - TARGET_BASED_PERCENT
+          - TARGET_BASED_NUM
+        example: TARGET_BASED_PERCENT
       target_based_configuration:
         $ref: '#/definitions/TargetBasedConfiguration'
     required:
@@ -6424,7 +6459,7 @@ definitions:
         example: user1
       password:
         type: string
-        description: 用户登录密码
+        description: 用户登录密码，必须包含字母，数字和大小写
         example: '''*******'''
       email:
         type: string
@@ -7124,6 +7159,8 @@ definitions:
         type: string
         description: 描述
         example: demo
+        minLength: 0
+        maxLength: 128
   CreateAccessConfigResp:
     type: object
     properties:
@@ -7300,12 +7337,6 @@ definitions:
       transfer_info:
         description: 日志转储配置详情
         $ref: '#/definitions/CreateTransferInfo'
-      description:
-        type: string
-        minLength: 32
-        maxLength: 36
-        description: 描述
-        example: demo
   CreateTransferInfo:
     type: object
     required:
@@ -7551,6 +7582,8 @@ definitions:
       - region
       - resource_specification
       - flavor
+      - system_volume_type
+      - system_volume_size
     properties:
       instance_type:
         type: string
@@ -7593,6 +7626,28 @@ definitions:
           (4)memory和cpu比值的区间为[2,8]
         minItems: 1
         maxItems: 10
+      system_volume_type:
+        type: string
+        description: |-
+          VM类型系统盘卷的类型，支持超高IO， 高IO，通用型SSD， 普通IO；**内网只支持超高IO， 高IO**
+          POD类型不支持配置该字段
+      system_volume_size:
+        type: integer
+        format: int32
+        description: |-
+          VM类型系统盘卷的大小，最小值40，最大值1024；
+          POD类型不支持配置该字段
+      data_volume_type:
+        type: string
+        description: |-
+          可选，VM类型数据盘卷的类型，支持超高IO， 高IO，通用型SSD， 普通IO；**内网只支持超高IO， 高IO**
+          POD类型不支持配置该字段
+      data_volume_size:
+        type: integer
+        format: int32
+        description: |-
+          可选，VM类型数据盘卷的大小，最小值40，最大值1024；
+          POD类型不支持配置该字段
   ResponseForListResourceSpecification:
     type: object
     required:
@@ -7645,6 +7700,33 @@ definitions:
               type: string
             fleet_count:
               type: string
+            system_volume_type:
+              type: string
+              description: |-
+                VM系统盘卷的类型，支持VM类型系统盘卷的类型，支持超高IO， 高IO，通用型SSD， 普通IO；
+                POD类型不支持该参数
+            system_volume_size:
+              type: integer
+              format: int32
+              description: |-
+                VM系统盘卷的大小，最小值40，最大值1024。
+                POD类型不支持该参数
+            data_volume_type:
+              type: string
+              description: |-
+                可选，VM数据盘卷的类型，支持VM类型系统盘卷的类型，支持超高IO， 高IO，通用型SSD， 普通IO；
+                POD类型不支持该参数
+            data_volume_size:
+              type: integer
+              format: int32
+              description: |-
+                可选，VM数据盘卷的大小，最小值10，最大值32768
+                POD类型不支持该参数
+            disks_type_and_size:
+              type: string
+              description: |-
+                磁盘类型拼接成字符串，方便前端显示。
+                如果是POD则显示 /
             associated_fleets:
               type: array
               items:
@@ -7676,6 +7758,8 @@ definitions:
       - new_name
       - resource_specification
       - flavor
+      - system_volume_type
+      - system_volume_size
     properties:
       id:
         type: string
@@ -7718,6 +7802,28 @@ definitions:
           (2)必须按照"{\"cpu\":1,\"memory\":2}"给定字符串
           (3)cpu的区间为[1,64]，memory的区间为[2,512]
           (4)memory和cpu比值的区间为[2,8]
+      system_volume_type:
+        type: string
+        description: |-
+          VM系统盘卷的类型，支持超高IO， 高IO，通用型SSD， 普通IO；**内网测试只支持超高IO， 高IO**
+          POD类型不支持该参数
+      system_volume_size:
+        type: integer
+        format: int32
+        description: |-
+          VM系统盘卷的大小，最小值40，最大值1024.
+          POD类型不支持该参数
+      data_volume_type:
+        type: string
+        description: |-
+          可选，VM数据盘卷的类型，支持超高IO， 高IO，通用型SSD， 普通IO；**内网只支持超高IO， 高IO**
+          POD类型不支持该参数
+      data_volume_size:
+        type: integer
+        format: int32
+        description: |-
+          可选，VM数据盘卷的大小，最小值40，最大值1024
+          POD类型不支持该参数
   security_group:
     type: object
     properties:
@@ -8124,8 +8230,8 @@ definitions:
         type: string
         minLength: 0
         maxLength: 192
-        description: 显示的名称，该字段不生效，默认为 HWC-SAC-GameFlexMatch
-        example: HWC-SAC-GameFlexMatch
+        description: 显示的名称，该字段不生效，默认为 HWC-SAC-GameBounce
+        example: HWC-SAC-GameBounce
       enterprise_project_id:
         type: string
         minLength: 0
@@ -8471,12 +8577,15 @@ definitions:
       service:
         type: string
         example: metaspace-fleetmanager
+        description: ecs的名称
       dim_name:
         type: string
         example: instance_id
+        description: 指标名称
       value:
         type: string
         example: 1e03d533-1453-4592-94e1-ec7c68a8783a
+        description: ecs的id
   ResourceMonitoringReq:
     type: object
     properties:
@@ -8606,6 +8715,23 @@ definitions:
         type: string
         example: null
         description: 关联Fleet详细信息
+      system_volume_type:
+        type: string
+        description: VM系统盘卷的类型，支持SSD SAS GPSSD ESSD
+      system_volume_size:
+        type: integer
+        format: int32
+        description: VM系统盘卷的大小，最小值40，最大值1024
+      data_volume_type:
+        type: string
+        description: 可选，VM数据盘卷的类型，支持SSD SAS GPSSD ESSD
+      data_volume_size:
+        type: integer
+        format: int32
+        description: 可选，VM数据盘卷的大小，最小值40，最大值1024
+      disks_type_and_size:
+        type: string
+        description: 磁盘类型拼接成字符串，方便前端显示
   ListSupportDockerImageBody:
     type: object
     description: 创建应用包时 支持选择操作系统
@@ -8623,14 +8749,16 @@ definitions:
     type: object
     description: 创建SWR组织
     required:
-      - region
       - organization
     properties:
       region:
         type: string
       organization:
         type: string
-        description: 组织名称 正则 ^[a-z][a-z0-9]{0,63}$
+        description: 组织名称   说明：小写字母开头，后面跟小写字母、数字、小数点、下划线或中划线（其中下划线最多允许连续两个，中划线允许连续多个，小数点、下划线、中划线不能直接相连），小写字母或数字结尾，1-64个字符
+        minLength: 1
+        maxLength: 64
+        pattern: ^[a-z]+(([._-]?[a-z\d]+)|(_{2}[a-z\d])|(-*[a-z\d]))*$
   UserDockerImageResponse:
     type: object
     description: 获取SWR私有镜像
@@ -8660,3 +8788,40 @@ definitions:
         items:
           $ref: '#/definitions/GetUserInfo'
         description: 用户详情
+  ShowMetricDataResponse:
+    type: object
+    description: "datapoints\nArray of Datapoint objects\t是\t\n指标数据列表。由于查询数据时,云监控会根据所选择的聚合粒度向前取整from参数,所以datapoints中包含的数据点有可能会多于预期。\n\nmetric_name\nstring\t是\t\n指标名称,例如弹性云服务器监控指标中的cpu_util。\n\n200 datapoints\n名称\t类型\t必选\t描述\nmax\ndouble\t否\t\n聚合周期内指标数据的最大值。\n\nmin\ndouble\t否\t\n聚合周期内指标数据的最小值。\n\naverage\ndouble\t否\t\n聚合周期内指标数据的平均值。\n\nsum\ndouble\t否\t\n聚合周期内指标数据的求和值。\n\nvariance\ndouble\t否\t\n聚合周期内指标数据的方差。\n\ntimestamp\nlong\t是\t\n指标采集时间,UNIX时间戳,单位毫秒。\n\nunit\nstring\t否\t\n指标单位。"
+    properties:
+      datapoints:
+        items:
+          properties:
+            average:
+              type: number
+              format: float
+              example: 0.67
+            timestamp:
+              type: integer
+              format: int32
+              example: 1693205483000
+            unit:
+              type: string
+              example: '%'
+        type: array
+      metric_name:
+        type: string
+        example: cpu_util
+  Indicator:
+    type: object
+    properties:
+      Id:
+        type: string
+        example: 60503a0a-464f-11ee-8df9-286ed488f081
+      IndicatorName:
+        type: string
+        example: CPU使用率
+      IndicatorEnName:
+        type: string
+        example: cpu_util
+      description:
+        type: string
+        example: 该指标为从物理机层面采集的CPU使用率，数据准确性低于从弹性云服务器内部采集的数据

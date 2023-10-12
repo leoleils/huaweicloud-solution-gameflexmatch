@@ -30,6 +30,7 @@ export CLOUD_CLIENT_IAM_ENDPOINT=https://iam.{region}.{endpoint}
 export CLOUD_CLIENT_LTS_ENDPOINT=https://lts.{region}.{endpoint}
 export CLOUD_CLIENT_SMN_ENDPOINT=https://smn.{region}.{endpoint}
 export CLOUD_CLIENT_CCI_ENDPOINT=https://cci.{region}.{endpoint}
+export CLOUD_PlATFORM_ADDR=http://169.254.169.254
 export CONFIG_FILE=/home/aass/configmap/service_config.json
 export HTTPS_CERT_FILE=/home/tlsSecret/tls.crt
 export HTTPS_KEY_FILE=/home/tlsSecret/tls.key
