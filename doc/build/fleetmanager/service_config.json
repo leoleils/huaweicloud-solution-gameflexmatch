@@ -27,6 +27,12 @@
         "cci_service": {
             "{region}": "https://cci.{region}.{endpoint}"
         },
+        "evs_service": {
+            "{region}": "https://evs.{region}.{endpoint}"
+        },
+        "ces_service": {
+            "{region}": "https://ces.{region}.{endpoint}"
+        },
         "internal_iam_endpoint": ""
     },
     "fleet_cidr": {
