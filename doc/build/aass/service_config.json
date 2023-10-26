@@ -18,7 +18,7 @@
     "scaling_group":{
       "instance_maximum_limit":200,
       "bandwidth_maximum_limit":300,
-      "supported_volume_types":"SATA;SAS;SSD;GPSSD"
+      "supported_volume_types":"SATA;SAS;GPSSD;SSD;ESSD"
     },
     "clean_up_day_before":14,
     "clean_up_period_hour":1,
