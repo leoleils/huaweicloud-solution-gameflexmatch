@@ -1310,7 +1310,7 @@ paths:
           description: 服务器错误
           schema:
             $ref: '#/definitions/ErrorRsp'
-  /v1/{project_id}/app-processes:
+  /{project_id}/app-processes:
     get:
       tags:
         - 应用进程管理
@@ -1436,6 +1436,11 @@ paths:
           type: string
           minLength: 1
           maxLength: 1024
+        - name: order_by
+          in: query
+          required: false
+          description: 创建时间降序（默认）：”-creation_time“，创建时间升序”creation_time“
+          type: string
       responses:
         '200':
           description: 应用进程队列列表
@@ -1625,7 +1630,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRsp'
       x-order: 0
-  /v1/user/logout:
+  /user/logout:
     post:
       tags:
         - 用户管理
@@ -2277,6 +2282,11 @@ paths:
           in: query
           required: false
           description: VM 或 POD
+          type: string
+        - name: order_by
+          in: query
+          required: false
+          description: 创建时间降序(默认)：”-creation_time“，创建时间升序”creation_time“
           type: string
       responses:
         '200':
@@ -3032,8 +3042,8 @@ paths:
     get:
       tags:
         - 实例规格管理
-      summary: 获取实例规格详情
-      description: 获取实例规格详情
+      summary: 获取实例规格列表
+      description: 获取实例规格列表
       operationId: ListResourceSpecification
       parameters:
         - $ref: '#/parameters/projectId'
@@ -3077,6 +3087,7 @@ paths:
             X-Request-Id:
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
               type: string
+      x-order: 1
     put:
       tags:
         - 实例规格管理
@@ -3838,6 +3849,21 @@ paths:
         - $ref: '#/parameters/Auth-token'
         - $ref: '#/parameters/offset'
         - $ref: '#/parameters/limit'
+        - name: name
+          in: query
+          required: false
+          description: 伸缩策略名称，搜索名称包含name的策略
+          type: string
+        - name: scaling_policy_id
+          in: query
+          required: false
+          description: 伸缩策略Id，搜索策略id为scaling_policy_id的策略
+          type: string
+        - name: policy_type
+          in: query
+          required: false
+          description: 伸缩策略类型，搜索策略类型为policy_type的策略，类型为基于目标会话数类型：TARGET_BASED_NUM，基于目标百分比类型：TARGET_BASED_PERCENT
+          type: string
       responses:
         '200':
           description: 应用进程队列的弹性伸缩策略列表
@@ -3954,7 +3980,29 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-  /v1/{project_id}/fleets/scaling-policies/{policy_id}/bind:
+    get:
+      tags:
+        - 伸缩策略管理
+      summary: 获取单个策略详情
+      operationId: GetOnePolicy
+      parameters:
+        - name: policy_id
+          in: path
+          required: true
+          type: string
+          description: 伸缩策略id
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 请求成功
+          schema:
+            $ref: '#/definitions/AssociatedPolicyOfFleet'
+        '500':
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/fleets/scaling-policies/{policy_id}/bind:
     get:
       tags:
         - 伸缩策略管理
@@ -3976,7 +4024,7 @@ paths:
           description: 请求失败
           schema:
             $ref: '#/definitions/ErrorRsp'
-  /v1/{project_id}/fleets/{fleet_id}/bind:
+  /{project_id}/fleets/{fleet_id}/bind:
     get:
       tags:
         - 伸缩策略管理
@@ -3994,30 +4042,7 @@ paths:
           description: 获取失败
           schema:
             $ref: '#/definitions/ErrorRsp'
-  /v1/{project_id}/fleets/scaling-policies/{policy_id}:
-    get:
-      tags:
-        - 伸缩策略管理
-      summary: 获取单个策略详情
-      operationId: GetOnePolicy
-      parameters:
-        - $ref: '#/parameters/projectId'
-        - name: policy_id
-          in: path
-          required: true
-          type: string
-          description: 伸缩策略id
-        - $ref: '#/parameters/Auth-token'
-      responses:
-        '200':
-          description: 请求成功
-          schema:
-            $ref: '#/definitions/AssociatedPolicyOfFleet'
-        '500':
-          description: 请求错误
-          schema:
-            $ref: '#/definitions/ErrorRsp'
-  /v1/{project_id}/fleets/{fleet_id}/scaling-policies/{policy_id}/bind:
+  /{project_id}/fleets/{fleet_id}/scaling-policies/{policy_id}/bind:
     put:
       tags:
         - 伸缩策略管理
@@ -4271,6 +4296,62 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRsp'
       x-order: 7
+  /{project_id}/list-enterprise:
+    get:
+      tags:
+        - 其他资源管理
+      summary: 获取账号下的企业项目列表
+      operationId: GetEnterpriseList
+      parameters:
+        - $ref: '#/parameters/projectId'
+        - $ref: '#/parameters/region'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/EnterPriseList'
+        '500':
+          description: 请求失败
+          schema:
+            type: string
+  /{project_id}/user/available-disks:
+    get:
+      tags:
+        - 用户管理
+      description: 获取磁盘卷的信息及可购买的可用区
+      operationId: ListAvailableDisk
+      parameters:
+        - $ref: '#/parameters/projectId'
+      responses:
+        '200':
+          description: 返回可用的磁盘信息
+          schema:
+            $ref: '#/definitions/AvailableDisks'
+        '400':
+          description: No AvailableZones support the current resource specification
+          schema:
+            type: string
+        '500':
+          description: 服务端内部出错
+          schema:
+            $ref: '#/definitions/ErrorRsp'
+  /{project_id}/list-dnszone:
+    get:
+      tags:
+        - 其他资源管理
+      description: 获取DNS zone id
+      operationId: ListDnsZoneId
+      parameters:
+        - $ref: '#/parameters/projectId'
+      responses:
+        '200':
+          description: DNS zone 的列表
+          schema:
+            $ref: '#/definitions/ZoneIdList'
+        '500':
+          description: 服务端内部出错
+          schema:
+            $ref: '#/definitions/ErrorRsp'
 definitions:
   CreateFleetRequestBody:
     description: 创建应用进程队列请求体
@@ -4387,6 +4468,12 @@ definitions:
           type: string
         minItems: 0
         maxItems: 10
+      main_domain_name:
+        type: string
+        description: 使用域名访问fleet实例时使用的主域名，需要已注册并在华为云做接入备案的域名，否则影响使用
+        minLength: 0
+        maxLength: 1024
+        example: www.huawei.com
     required:
       - instance_type
       - name
@@ -4624,6 +4711,11 @@ definitions:
         type: string
         description: 应用进程队列所在的企业项目
         minLength: 1
+        maxLength: 1024
+      main_domain_name:
+        type: string
+        description: 主域名
+        minLength: 0
         maxLength: 1024
     type: object
   InstanceTag:
@@ -4893,13 +4985,11 @@ definitions:
   MonitorAppProcess:
     allOf:
       - $ref: '#/definitions/Process'
-    properties:
-      instance_id:
-        type: string
-        description: 实例的id
-        minLength: 1
-        maxLength: 64
-        example: 6066645a-b078-4a00-90d1-7f10aaf87a5b
+      - type: object
+        properties:
+          domain_name:
+            type: string
+            description: 进程所在实例的域名
   MonitorInstance:
     properties:
       instance_id:
@@ -4958,6 +5048,9 @@ definitions:
         minimum: 0
         maximum: 2500
         example: 1
+      domain_name:
+        type: string
+        description: 实例的域名
     type: object
   ListMonitorServerSessionResponceBody:
     properties:
@@ -4985,19 +5078,6 @@ definitions:
   MonitorServerSession:
     allOf:
       - $ref: '#/definitions/ServerSession'
-    properties:
-      instance_id:
-        type: string
-        description: 会话所在实例的id
-        minLength: 1
-        maxLength: 64
-        example: 77317ac6-acd8-11ec-a7e0-6805cab276a1
-      process_id:
-        type: string
-        description: 会话所在进程的id
-        minLength: 1
-        maxLength: 64
-        example: 77317ac6-acd8-11ec-a7e0-6805cab276a1
   ListFleetsResponseBody:
     properties:
       count:
@@ -5585,7 +5665,7 @@ definitions:
         example: 1
       state:
         type: string
-        description: |
+        description: |-
           服务器会话当前所属的状态 
           * ACTIVATING:  激活中 
           * ACTIVE:      活跃 
@@ -5619,7 +5699,7 @@ definitions:
         minimum: 1025
         maximum: 60000
       client_session_creation_policy:
-        description: |
+        description: |-
           新建客户端会话的策略  
           * ACCEPT_ALL: 接受所有新建客户端会话的请求  
           * DENY_ALL: 拒绝所有新建客户端会话的请求
@@ -5630,7 +5710,7 @@ definitions:
         example: ACCEPT_ALL
       server_session_protection_policy:
         type: string
-        description: |
+        description: >-
           服务服务器会话保护策: >-
             服务服务器会话保护策略
           * NO_PROTECTION: >-
@@ -5647,7 +5727,7 @@ definitions:
       server_session_protection_time_limit_minutes:
         type: integer
         format: int32
-        description: |
+        description: >-
           server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一: >-
             server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
         minimum: 5
@@ -5666,9 +5746,12 @@ definitions:
         minLength: 0
         maxLength: 2048
         example: '2020-06-28T00:00:00Z'
+      domain_name:
+        type: string
+        description: 会话所在实例的域名
     required:
-      - name
       - server_session_id
+      - name
       - creator_id
       - fleet_id
       - current_client_session_count
@@ -5678,6 +5761,7 @@ definitions:
       - client_session_creation_policy
       - creation_time
       - termination_time
+    type: object
   ListServerSessionResponseBody:
     properties:
       count:
@@ -6310,7 +6394,7 @@ definitions:
         type: string
         description: 更新/原描述
         minLength: 0
-        maxLength: 100
+        maxLength: 1024
       version:
         type: string
         description: 更新/原版本
@@ -6925,10 +7009,6 @@ definitions:
         type: string
         description: 用户id
         example: b3b22b1e***************03faa
-      username:
-        type: string
-        description: 要修改的用户名
-        example: user1
       email:
         type: string
         description: 邮箱
@@ -7629,7 +7709,7 @@ definitions:
       system_volume_type:
         type: string
         description: |-
-          VM类型系统盘卷的类型，支持超高IO， 高IO，通用型SSD， 普通IO；**内网只支持超高IO， 高IO**
+          VM类型系统盘卷的类型
           POD类型不支持配置该字段
       system_volume_size:
         type: integer
@@ -7640,7 +7720,7 @@ definitions:
       data_volume_type:
         type: string
         description: |-
-          可选，VM类型数据盘卷的类型，支持超高IO， 高IO，通用型SSD， 普通IO；**内网只支持超高IO， 高IO**
+          可选，VM类型数据盘卷的类型；
           POD类型不支持配置该字段
       data_volume_size:
         type: integer
@@ -7702,9 +7782,7 @@ definitions:
               type: string
             system_volume_type:
               type: string
-              description: |-
-                VM系统盘卷的类型，支持VM类型系统盘卷的类型，支持超高IO， 高IO，通用型SSD， 普通IO；
-                POD类型不支持该参数
+              description: VM系统盘卷的类型，POD类型不支持该参数
             system_volume_size:
               type: integer
               format: int32
@@ -7714,40 +7792,19 @@ definitions:
             data_volume_type:
               type: string
               description: |-
-                可选，VM数据盘卷的类型，支持VM类型系统盘卷的类型，支持超高IO， 高IO，通用型SSD， 普通IO；
+                可选，VM数据盘卷的类型
                 POD类型不支持该参数
             data_volume_size:
               type: integer
               format: int32
               description: |-
-                可选，VM数据盘卷的大小，最小值10，最大值32768
+                可选，VM数据盘卷的大小，最小值40，最大值1024
                 POD类型不支持该参数
             disks_type_and_size:
               type: string
               description: |-
                 磁盘类型拼接成字符串，方便前端显示。
-                如果是POD则显示 /
-            associated_fleets:
-              type: array
-              items:
-                properties:
-                  name:
-                    type: string
-                  fleet_id:
-                    type: string
-                  state:
-                    type: string
-                  instance_count:
-                    type: integer
-                    format: int32
-                  process_count:
-                    type: integer
-                    format: int32
-                  max_server_session_count:
-                    type: integer
-                    format: int32
-                  creation_time:
-                    type: string
+                如果是POD则显示 -
         description: 实例规格相关参数
         type: array
   UpdateResourceSpecificationRequest:
@@ -7805,7 +7862,7 @@ definitions:
       system_volume_type:
         type: string
         description: |-
-          VM系统盘卷的类型，支持超高IO， 高IO，通用型SSD， 普通IO；**内网测试只支持超高IO， 高IO**
+          VM系统盘卷的类型
           POD类型不支持该参数
       system_volume_size:
         type: integer
@@ -7816,7 +7873,7 @@ definitions:
       data_volume_type:
         type: string
         description: |-
-          可选，VM数据盘卷的类型，支持超高IO， 高IO，通用型SSD， 普通IO；**内网只支持超高IO， 高IO**
+          可选，VM数据盘卷的类型
           POD类型不支持该参数
       data_volume_size:
         type: integer
@@ -7885,6 +7942,27 @@ definitions:
           update_time:
             type: string
             description: 更新时间，形如2023-08-09T06:45:40Z
+          system_volume_type:
+            type: string
+            description: |-
+              VM支持系统卷的类型，具体类型参考华为云API：https://support.huaweicloud.com/api-ecs/zh-cn_topic_0020212668.html
+              POD不支持该参数
+          system_volume_size:
+            type: integer
+            format: int32
+            description: VM支持的磁盘大小，范围40~1024
+          data_volume_type:
+            type: string
+            description: |-
+              VM支持的数据卷的类型，具体类型参考华为云API：https://support.huaweicloud.com/api-ecs/zh-cn_topic_0020212668.html
+              POD不支持该参数
+          data_Volume_size:
+            type: integer
+            format: int32
+            description: VM支持的数据盘的大小，范围40~1024
+          disks_type_and_size:
+            type: string
+            description: 方便前端展示VM的磁盘类型，POD显示-
   buildbandwidth:
     type: object
     description: 应用包创建临时EIP参数--带宽大小与计费方式（按带宽/按流量）
@@ -8712,19 +8790,46 @@ definitions:
         example: 0
         description: 关联Fleet数量
       associated_fleets:
-        type: string
-        example: null
-        description: 关联Fleet详细信息
+        type: array
+        items:
+          properties:
+            name:
+              type: string
+              description: fleet名称
+            fleet_id:
+              type: string
+              description: fleet ID
+            state:
+              type: string
+              description: fleet状态
+            instance_count:
+              type: integer
+              format: int32
+              description: 该fleet下的实例数
+            process_count:
+              type: integer
+              format: int32
+              description: 该fleet下的进程数
+            max_server_session_count:
+              type: integer
+              format: int32
+              description: 最大服务会话数
+            creation_time:
+              type: string
+              description: 创建时间
+        description: 实例规格所关联的fleet
       system_volume_type:
         type: string
-        description: VM系统盘卷的类型，支持SSD SAS GPSSD ESSD
+        description: |-
+          VM系统盘卷的类型
+          POD不支持该参数
       system_volume_size:
         type: integer
         format: int32
         description: VM系统盘卷的大小，最小值40，最大值1024
       data_volume_type:
         type: string
-        description: 可选，VM数据盘卷的类型，支持SSD SAS GPSSD ESSD
+        description: 可选，VM数据盘卷的类型。POD不支持该参数
       data_volume_size:
         type: integer
         format: int32
@@ -8799,17 +8904,38 @@ definitions:
               type: number
               format: float
               example: 0.67
+              description: 聚合周期内指标数据的平均值。
+            max:
+              type: number
+              format: float
+              description: 聚合周期内指标数据的最大值。
+            min:
+              type: number
+              format: float
+              description: 聚合周期内指标数据的最小值。
+            sum:
+              type: number
+              format: float
+              description: 聚合周期内指标数据的求和值。
             timestamp:
               type: integer
-              format: int32
+              format: int64
               example: 1693205483000
+              description: 指标采集时间,UNIX时间戳,单位毫秒。
             unit:
               type: string
               example: '%'
+              description: 指标单位。
+            variance:
+              type: number
+              format: float
+              description: 聚合周期内指标数据的方差。
         type: array
+        description: 指标数据列表。由于查询数据时,云监控会根据所选择的聚合粒度向前取整from参数,所以datapoints中包含的数据点有可能会多于预期。
       metric_name:
         type: string
         example: cpu_util
+        description: 指标名称,例如弹性云服务器监控指标中的cpu_util。
   Indicator:
     type: object
     properties:
@@ -8825,3 +8951,82 @@ definitions:
       description:
         type: string
         example: 该指标为从物理机层面采集的CPU使用率，数据准确性低于从弹性云服务器内部采集的数据
+  EnterPrise:
+    type: object
+    description: 企业项目，由项目名称和Id组成
+    properties:
+      name:
+        type: string
+        description: 企业项目名称
+      enterprose_project_id:
+        type: string
+        description: 企业项目Id
+  EnterPriseList:
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 企业项目id数量
+      enterprise_project_list:
+        type: array
+        items:
+          $ref: '#/definitions/EnterPrise'
+        description: 企业项目列表
+  a:
+    type: array
+    items:
+      $ref: '#/definitions/associated_fleets'
+  AvailableDisks:
+    type: object
+    description: 传给前端展示可用的磁盘信息
+    properties:
+      front_end_name:
+        type: string
+      back_end_name:
+        type: string
+      available_zones:
+        type: array
+        items:
+          type: string
+    required:
+      - front_end_name
+      - back_end_name
+      - available_zones
+  ZoneIdList:
+    type: object
+    description: dns zone id列表
+    properties:
+      dns_zone:
+        type: array
+        items:
+          $ref: '#/definitions/DNSZone'
+  DNSZone:
+    type: object
+    properties:
+      name:
+        type: string
+      zone_id:
+        type: string
+  EnterpriseProjectList:
+    type: object
+    required:
+      - count
+      - enterprise_project_list
+    properties:
+      count:
+        type: string
+      enterprise_project_list:
+        type: array
+        items:
+          $ref: '#/definitions/EnterpriseProject'
+  EnterpriseProject:
+    type: object
+    required:
+      - name
+      - enterprise_project_id
+    properties:
+      name:
+        type: string
+      enterprise_project_id:
+        type: string

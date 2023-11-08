@@ -142,6 +142,15 @@
                 "apm:icmgr:list"
             ],
             "Effect": "Allow"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ces:metricData:list",
+                "ces:ecsInstanceStatistics:get",
+                "ces:namespacesDimensions:list",
+                "ces:metaData:list"
+            ]
         }
     ]
 }
