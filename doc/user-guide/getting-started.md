@@ -121,10 +121,10 @@
 
 + 在伸缩策略详情页，选择新建关联
 
-  ![绑定伸缩策略](../../img/auto-scaling/create_relation.jpg)
+  ![绑定伸缩策略](../../img/auto-scaling/create_relation.JPG)
 + 选择策略需要关联的fleet
 
-  ![选择fleet关联的策略](../../img/auto-scaling/create_relation_select_fleet.jpg)
+  ![选择fleet关联的策略](../../img/auto-scaling/create_relation_select_fleet.JPG)
 
 + 确认弹性伸缩策略是否创建成功
 ![弹性伸缩策略列表](../../img/auto-scaling/auto-scaling-list.jpg)
