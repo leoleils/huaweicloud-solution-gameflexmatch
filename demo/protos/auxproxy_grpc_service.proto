@@ -1,0 +1,131 @@
+// Copyright 2015 gRPC authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+syntax = "proto3";
+
+package auxproxyService;
+option go_package = "./;auxproxyservice";
+option objc_class_prefix = "auxproxyService";
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.auxproxyService";
+option java_outer_classname = "auxproxyServiceProto";
+
+
+service ScaseGrpcSdkService {
+
+  rpc ProcessReady (ProcessReadyRequest) returns (AuxProxyResponse) {}
+
+ 
+  rpc ActivateServerSession(ActivateServerSessionRequest) returns (AuxProxyResponse) {}
+
+
+  rpc AcceptClientSession(AcceptClientSessionRequest) returns (AuxProxyResponse) {}
+
+
+  rpc RemoveClientSession(RemoveClientSessionRequest) returns (AuxProxyResponse) {}
+
+
+  rpc DescribeClientSessions(DescribeClientSessionsRequest) returns (DescribeClientSessionsResponse) {}
+
+
+  rpc UpdateClientSessionCreationPolicy(UpdateClientSessionCreationPolicyRequest) returns (AuxProxyResponse) {}
+
+  
+  rpc TerminateServerSession(TerminateServerSessionRequest) returns (AuxProxyResponse) {}
+
+ 
+  rpc ProcessEnding(ProcessEndingRequest) returns (AuxProxyResponse) {}
+}
+
+message ProcessReadyRequest {
+  repeated string logPathsToUpload = 1; 
+  int32 clientPort = 2;
+  int32 grpcPort = 3;
+  int32 pid = 4;
+}
+
+
+message ActivateServerSessionRequest{
+  string serverSessionId = 1;
+  int32 maxClients = 2; 
+}
+
+
+message AcceptClientSessionRequest {
+  string serverSessionId = 1; // 服务器会话ID
+  string clientSessionId = 2; // 客户端会话ID
+}
+
+
+message RemoveClientSessionRequest {
+  string serverSessionId = 1; // 服务器会话ID
+  string clientSessionId = 2; // 客户端会话ID
+}
+
+
+message ClientSession {
+  string clientSessionId = 1; // 客户端会话ID
+  string clientId = 2; // 客户ID
+  string serverSessionId = 3; // 服务器会话ID
+  string fleetId = 4; // 队列ID
+  string ipAddress = 5; // 客户端会话的IP地址
+  string status = 6; // 客户端会话状态，客户端会话的状态有RESERVED、TIMEOUT、ACTIVE和COMPLETED
+  string creationTime = 7; // 客户端会话的创建时间，UTC时间
+  string terminationTime = 8; // 客户端会话的终止时间，UTC时间
+  int32 port = 9; // 客户端会话对外暴露的接口，供非SCASE服务使用
+  string clientData = 10; // 客户数据
+}
+
+
+message DescribeClientSessionsRequest {
+  string serverSessionId = 1; // 服务器会话ID
+  string clientId = 2; // 客户ID
+  string clientSessionId = 3; // 客户端会话ID
+  string clientSessionStatusFilter = 4; // 客户端会话状态过滤器
+  string nextToken = 5; // 客户端会话列表的起始位置
+  int32 limit = 6 ; // 客户端会话列表分页的页大小
+}
+
+
+message DescribeClientSessionsResponse {
+  string nextToken = 1; // 客户端会话列表的起始位置
+  repeated ClientSession clientSessions = 2; // 客户端会话信息
+  Error error = 3; // 查询客户端会话列表失败的错误码（选填）
+}
+
+
+message UpdateClientSessionCreationPolicyRequest {
+  string serverSessionId = 1; // 服务器会话ID
+  string newClientSessionCreationPolicy = 2; // 客户端会话创建策略
+}
+
+message TerminateServerSessionRequest {
+  string serverSessionId = 1; // 服务器会话ID
+}
+
+
+message ProcessEndingRequest {
+int32 pid = 1; // 进程运行时的PID
+}
+
+
+message Error {
+string errorCode = 1; // 错误码
+string errorMsg = 2; // 错误信息
+}
+
+
+message AuxProxyResponse {
+Error error = 1; // 错误码（选填）
+}
+

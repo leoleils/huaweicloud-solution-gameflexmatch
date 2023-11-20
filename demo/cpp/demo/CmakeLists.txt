@@ -1,0 +1,12 @@
+# cd build
+# cmake -G "Visual Studio 16 2019" ../ -DCMAKE_TOOLCHAIN_FILE=D:/grpc/vcpkg/scripts/buildsystems/vcpkg.cmake
+# cmake --build .
+
+cmake_minimum_required( VERSION 3.1 )
+project( grpc_example )
+find_package(gRPC CONFIG REQUIRED)
+find_package( Protobuf REQUIRED )
+add_executable( server src/server.cpp  proto/auxproxy_grpc_service.grpc.pb.cc  proto/auxproxy_grpc_service.pb.cc  proto/process_grpc_service.grpc.pb.cc proto/process_grpc_service.pb.cc )
+add_executable( client src/client.cpp  proto/auxproxy_grpc_service.grpc.pb.cc  proto/auxproxy_grpc_service.pb.cc  proto/process_grpc_service.grpc.pb.cc proto/process_grpc_service.pb.cc )
+target_link_libraries( server PRIVATE gRPC::grpc++ gRPC::grpc++_reflection gRPC::gpr gRPC::grpc gRPC::grpc++ protobuf::libprotoc protobuf::libprotobuf protobuf::libprotobuf-lite )
+target_link_libraries( client PRIVATE gRPC::grpc++ gRPC::grpc++_reflection gRPC::gpr gRPC::grpc gRPC::grpc++ protobuf::libprotoc protobuf::libprotobuf protobuf::libprotobuf-lite )

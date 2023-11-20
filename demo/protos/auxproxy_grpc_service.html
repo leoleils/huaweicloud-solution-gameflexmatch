@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Protocol Documentation</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic"/>
+    <style>
+      body {
+        width: 60em;
+        margin: 1em auto;
+        color: #222;
+        font-family: "Ubuntu", sans-serif;
+        padding-bottom: 4em;
+      }
+
+      h1 {
+        font-weight: normal;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+      }
+
+      h2 {
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+        margin: 1.5em 0;
+      }
+
+      h3 {
+        font-weight: normal;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+      }
+
+      a {
+        text-decoration: none;
+        color: #567e25;
+      }
+
+      table {
+        width: 100%;
+        font-size: 80%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        font-weight: 700;
+        background-color: #dcdcdc;
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #fbfbfb;
+      }
+
+      td {
+        border: 1px solid #ccc;
+        padding: 0.5ex 2ex;
+      }
+
+      td p {
+        text-indent: 1em;
+        margin: 0;
+      }
+
+      td p:nth-child(1) {
+        text-indent: 0;  
+      }
+
+       
+      .field-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .field-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .field-table td:nth-child(3) {  
+        width: 6em;
+      }
+      .field-table td:nth-child(4) {  
+        width: auto;
+      }
+
+       
+      .extension-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(3) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(4) {  
+        width: 5em;
+      }
+      .extension-table td:nth-child(5) {  
+        width: auto;
+      }
+
+       
+      .enum-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .enum-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .enum-table td:nth-child(3) {  
+        width: auto;
+      }
+
+       
+      .scalar-value-types-table tr {
+        height: 3em;
+      }
+
+       
+      #toc-container ul {
+        list-style-type: none;
+        padding-left: 1em;
+        line-height: 180%;
+        margin: 0;
+      }
+      #toc > li > a {
+        font-weight: bold;
+      }
+
+       
+      .file-heading {
+        width: 100%;
+        display: table;
+        border-bottom: 1px solid #aaa;
+        margin: 4em 0 1.5em 0;
+      }
+      .file-heading h2 {
+        border: none;
+        display: table-cell;
+      }
+      .file-heading a {
+        text-align: right;
+        display: table-cell;
+      }
+
+       
+      .badge {
+        width: 1.6em;
+        height: 1.6em;
+        display: inline-block;
+
+        line-height: 1.6em;
+        text-align: center;
+        font-weight: bold;
+        font-size: 60%;
+
+        color: #89ba48;
+        background-color: #dff0c8;
+
+        margin: 0.5ex 1em 0.5ex -1em;
+        border: 1px solid #fbfbfb;
+        border-radius: 1ex;
+      }
+    </style>
+
+    
+    <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+  </head>
+
+  <body>
+
+    <h1 id="title">Protocol Documentation</h1>
+
+    <h2>Table of Contents</h2>
+
+    <div id="toc-container">
+      <ul id="toc">
+        
+          
+          <li>
+            <a href="#auxproxy_grpc_service.proto">auxproxy_grpc_service.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#auxproxyService.AcceptClientSessionRequest"><span class="badge">M</span>AcceptClientSessionRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#auxproxyService.ActivateServerSessionRequest"><span class="badge">M</span>ActivateServerSessionRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#auxproxyService.AuxProxyResponse"><span class="badge">M</span>AuxProxyResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#auxproxyService.ClientSession"><span class="badge">M</span>ClientSession</a>
+                </li>
+              
+                <li>
+                  <a href="#auxproxyService.DescribeClientSessionsRequest"><span class="badge">M</span>DescribeClientSessionsRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#auxproxyService.DescribeClientSessionsResponse"><span class="badge">M</span>DescribeClientSessionsResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#auxproxyService.Error"><span class="badge">M</span>Error</a>
+                </li>
+              
+                <li>
+                  <a href="#auxproxyService.ProcessEndingRequest"><span class="badge">M</span>ProcessEndingRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#auxproxyService.ProcessReadyRequest"><span class="badge">M</span>ProcessReadyRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#auxproxyService.RemoveClientSessionRequest"><span class="badge">M</span>RemoveClientSessionRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#auxproxyService.TerminateServerSessionRequest"><span class="badge">M</span>TerminateServerSessionRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#auxproxyService.UpdateClientSessionCreationPolicyRequest"><span class="badge">M</span>UpdateClientSessionCreationPolicyRequest</a>
+                </li>
+              
+              
+              
+              
+                <li>
+                  <a href="#auxproxyService.ScaseGrpcSdkService"><span class="badge">S</span>ScaseGrpcSdkService</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+        <li><a href="#scalar-value-types">Scalar Value Types</a></li>
+      </ul>
+    </div>
+
+    
+      
+      <div class="file-heading">
+        <h2 id="auxproxy_grpc_service.proto">auxproxy_grpc_service.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="auxproxyService.AcceptClientSessionRequest">AcceptClientSessionRequest</h3>
+        <p>进程在客户端会话接入后调用</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>serverSessionId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>服务器会话ID </p></td>
+                </tr>
+              
+                <tr>
+                  <td>clientSessionId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户端会话ID </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="auxproxyService.ActivateServerSessionRequest">ActivateServerSessionRequest</h3>
+        <p>进程在收到SCASE的启动服务器会话后需要调用</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>serverSessionId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>服务器会话ID </p></td>
+                </tr>
+              
+                <tr>
+                  <td>maxClients</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>服务器会话可以承载的客户端会话数 </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="auxproxyService.AuxProxyResponse">AuxProxyResponse</h3>
+        <p>SCASE服务无返回内容的接口的返回体</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>error</td>
+                  <td><a href="#auxproxyService.Error">Error</a></td>
+                  <td></td>
+                  <td><p>错误码（选填） </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="auxproxyService.ClientSession">ClientSession</h3>
+        <p>客户端会话信息</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>clientSessionId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户端会话ID </p></td>
+                </tr>
+              
+                <tr>
+                  <td>clientId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户ID </p></td>
+                </tr>
+              
+                <tr>
+                  <td>serverSessionId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>服务器会话ID </p></td>
+                </tr>
+              
+                <tr>
+                  <td>fleetId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>队列ID </p></td>
+                </tr>
+              
+                <tr>
+                  <td>ipAddress</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户端会话的IP地址 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>status</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户端会话状态，客户端会话的状态有RESERVED、TIMEOUT、ACTIVE和COMPLETED </p></td>
+                </tr>
+              
+                <tr>
+                  <td>creationTime</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户端会话的创建时间，UTC时间 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>terminationTime</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户端会话的终止时间，UTC时间 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>port</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>客户端会话对外暴露的接口，供非SCASE服务使用 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>clientData</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户数据 </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="auxproxyService.DescribeClientSessionsRequest">DescribeClientSessionsRequest</h3>
+        <p>进程获取客户端会话信息的请求</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>serverSessionId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>服务器会话ID </p></td>
+                </tr>
+              
+                <tr>
+                  <td>clientId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户ID </p></td>
+                </tr>
+              
+                <tr>
+                  <td>clientSessionId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户端会话ID </p></td>
+                </tr>
+              
+                <tr>
+                  <td>clientSessionStatusFilter</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户端会话状态过滤器 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>nextToken</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户端会话列表的起始位置 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>limit</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>客户端会话列表分页的页大小 </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="auxproxyService.DescribeClientSessionsResponse">DescribeClientSessionsResponse</h3>
+        <p>进程获取客户端会话信息的返回体</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>nextToken</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户端会话列表的起始位置 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>clientSessions</td>
+                  <td><a href="#auxproxyService.ClientSession">ClientSession</a></td>
+                  <td>repeated</td>
+                  <td><p>客户端会话信息 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>error</td>
+                  <td><a href="#auxproxyService.Error">Error</a></td>
+                  <td></td>
+                  <td><p>查询客户端会话列表失败的错误码（选填） </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="auxproxyService.Error">Error</h3>
+        <p>返回结果，调用成功时，返回的error为空，返回体内容为空</p><p>调用失败时，返回的error为非空，具体的错误码在返回体内部</p><p>AuxProxy的业务错误码从SCASE.00020000开始</p><p>SCASE代表表示服务名</p><p>“."连接服务名与八位数字</p><p>八位数字表示具体的错误类型，其中前四位0002表示AuxProxy组件，后四位表示具体的错误</p><p>后四位划分：前两位表示资源类型，00表示系统类型的错误，01表示app process，02表示server session，03表示client session</p><p>综上所述</p><p>AuxProxy的app process的错误码占用范围为：SCASE.00020100到SCASE.00020199，共100位</p><p>AuxProxy的server session的错误码占用范围为：SCASE.00020200到SCASE.00020299，共100位</p><p>AuxProxy的client session的错误码占用范围为：SCASE.00020300到SCASE.00020399，共100位</p><p>app process错误码：</p><p>SCASE.00020100：上报进程就绪失败</p><p>SCASE.00020101：上报进程结束失败</p><p>server session错误码：</p><p>SCASE.00020200：上报服务器会话激活失败</p><p>SCASE.00020201：上报服务器会话结束失败</p><p>client session错误码：</p><p>SCASE.00020300：上报客户端会话接入失败</p><p>SCASE.00020301：上报客户端会话离开失败</p><p>SCASE.00020302：获取客户端会话信息失败</p><p>SCASE.00020303：更新客户端会话加入策略失败</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>errorCode</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>错误码 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>errorMsg</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>错误信息 </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="auxproxyService.ProcessEndingRequest">ProcessEndingRequest</h3>
+        <p>进程在退出时调用</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>pid</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>进程运行时的PID </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="auxproxyService.ProcessReadyRequest">ProcessReadyRequest</h3>
+        <p>进程准备就绪后调用</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>logPathsToUpload</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p>进程日志的存放路径 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>clientPort</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>进程对外开放的接口，供非SCASE服务使用 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>grpcPort</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>进程对外开放的接口，供SCASE服务使用 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>pid</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>进程运行时的PID </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="auxproxyService.RemoveClientSessionRequest">RemoveClientSessionRequest</h3>
+        <p>进程在客户端会话离开后调用</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>serverSessionId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>服务器会话ID </p></td>
+                </tr>
+              
+                <tr>
+                  <td>clientSessionId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户端会话ID </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="auxproxyService.TerminateServerSessionRequest">TerminateServerSessionRequest</h3>
+        <p>进程在结束服务器会话后调用</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>serverSessionId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>服务器会话ID </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="auxproxyService.UpdateClientSessionCreationPolicyRequest">UpdateClientSessionCreationPolicyRequest</h3>
+        <p>进程更新客户端会话加入策略</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>serverSessionId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>服务器会话ID </p></td>
+                </tr>
+              
+                <tr>
+                  <td>newClientSessionCreationPolicy</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>客户端会话创建策略 </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+        <h3 id="auxproxyService.ScaseGrpcSdkService">ScaseGrpcSdkService</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>ProcessReady</td>
+                <td><a href="#auxproxyService.ProcessReadyRequest">ProcessReadyRequest</a></td>
+                <td><a href="#auxproxyService.AuxProxyResponse">AuxProxyResponse</a></td>
+                <td><p>上报进程就绪</p></td>
+              </tr>
+            
+              <tr>
+                <td>ActivateServerSession</td>
+                <td><a href="#auxproxyService.ActivateServerSessionRequest">ActivateServerSessionRequest</a></td>
+                <td><a href="#auxproxyService.AuxProxyResponse">AuxProxyResponse</a></td>
+                <td><p>上报服务器会话激活</p></td>
+              </tr>
+            
+              <tr>
+                <td>AcceptClientSession</td>
+                <td><a href="#auxproxyService.AcceptClientSessionRequest">AcceptClientSessionRequest</a></td>
+                <td><a href="#auxproxyService.AuxProxyResponse">AuxProxyResponse</a></td>
+                <td><p>上报客户端会话接入</p></td>
+              </tr>
+            
+              <tr>
+                <td>RemoveClientSession</td>
+                <td><a href="#auxproxyService.RemoveClientSessionRequest">RemoveClientSessionRequest</a></td>
+                <td><a href="#auxproxyService.AuxProxyResponse">AuxProxyResponse</a></td>
+                <td><p>上报客户端会话离开</p></td>
+              </tr>
+            
+              <tr>
+                <td>DescribeClientSessions</td>
+                <td><a href="#auxproxyService.DescribeClientSessionsRequest">DescribeClientSessionsRequest</a></td>
+                <td><a href="#auxproxyService.DescribeClientSessionsResponse">DescribeClientSessionsResponse</a></td>
+                <td><p>获取客户端会话信息</p></td>
+              </tr>
+            
+              <tr>
+                <td>UpdateClientSessionCreationPolicy</td>
+                <td><a href="#auxproxyService.UpdateClientSessionCreationPolicyRequest">UpdateClientSessionCreationPolicyRequest</a></td>
+                <td><a href="#auxproxyService.AuxProxyResponse">AuxProxyResponse</a></td>
+                <td><p>更新客户端会话加入策略</p></td>
+              </tr>
+            
+              <tr>
+                <td>TerminateServerSession</td>
+                <td><a href="#auxproxyService.TerminateServerSessionRequest">TerminateServerSessionRequest</a></td>
+                <td><a href="#auxproxyService.AuxProxyResponse">AuxProxyResponse</a></td>
+                <td><p>上报服务器会话结束</p></td>
+              </tr>
+            
+              <tr>
+                <td>ProcessEnding</td>
+                <td><a href="#auxproxyService.ProcessEndingRequest">ProcessEndingRequest</a></td>
+                <td><a href="#auxproxyService.AuxProxyResponse">AuxProxyResponse</a></td>
+                <td><p>上报进程结束</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+
+        
+    
+
+    <h2 id="scalar-value-types">Scalar Value Types</h2>
+    <table class="scalar-value-types-table">
+      <thead>
+        <tr><td>.proto Type</td><td>Notes</td><td>C++</td><td>Java</td><td>Python</td><td>Go</td><td>C#</td><td>PHP</td><td>Ruby</td></tr>
+      </thead>
+      <tbody>
+        
+          <tr id="double">
+            <td>double</td>
+            <td></td>
+            <td>double</td>
+            <td>double</td>
+            <td>float</td>
+            <td>float64</td>
+            <td>double</td>
+            <td>float</td>
+            <td>Float</td>
+          </tr>
+        
+          <tr id="float">
+            <td>float</td>
+            <td></td>
+            <td>float</td>
+            <td>float</td>
+            <td>float</td>
+            <td>float32</td>
+            <td>float</td>
+            <td>float</td>
+            <td>Float</td>
+          </tr>
+        
+          <tr id="int32">
+            <td>int32</td>
+            <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="int64">
+            <td>int64</td>
+            <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="uint32">
+            <td>uint32</td>
+            <td>Uses variable-length encoding.</td>
+            <td>uint32</td>
+            <td>int</td>
+            <td>int/long</td>
+            <td>uint32</td>
+            <td>uint</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="uint64">
+            <td>uint64</td>
+            <td>Uses variable-length encoding.</td>
+            <td>uint64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>uint64</td>
+            <td>ulong</td>
+            <td>integer/string</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sint32">
+            <td>sint32</td>
+            <td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sint64">
+            <td>sint64</td>
+            <td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="fixed32">
+            <td>fixed32</td>
+            <td>Always four bytes. More efficient than uint32 if values are often greater than 2^28.</td>
+            <td>uint32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>uint32</td>
+            <td>uint</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="fixed64">
+            <td>fixed64</td>
+            <td>Always eight bytes. More efficient than uint64 if values are often greater than 2^56.</td>
+            <td>uint64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>uint64</td>
+            <td>ulong</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="sfixed32">
+            <td>sfixed32</td>
+            <td>Always four bytes.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sfixed64">
+            <td>sfixed64</td>
+            <td>Always eight bytes.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="bool">
+            <td>bool</td>
+            <td></td>
+            <td>bool</td>
+            <td>boolean</td>
+            <td>boolean</td>
+            <td>bool</td>
+            <td>bool</td>
+            <td>boolean</td>
+            <td>TrueClass/FalseClass</td>
+          </tr>
+        
+          <tr id="string">
+            <td>string</td>
+            <td>A string must always contain UTF-8 encoded or 7-bit ASCII text.</td>
+            <td>string</td>
+            <td>String</td>
+            <td>str/unicode</td>
+            <td>string</td>
+            <td>string</td>
+            <td>string</td>
+            <td>String (UTF-8)</td>
+          </tr>
+        
+          <tr id="bytes">
+            <td>bytes</td>
+            <td>May contain any arbitrary sequence of bytes.</td>
+            <td>string</td>
+            <td>ByteString</td>
+            <td>str</td>
+            <td>[]byte</td>
+            <td>ByteString</td>
+            <td>string</td>
+            <td>String (ASCII-8BIT)</td>
+          </tr>
+        
+      </tbody>
+    </table>
+  </body>
+</html>
+
