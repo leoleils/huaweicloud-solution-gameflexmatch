@@ -22,11 +22,11 @@ GameFlexMatch平台提供服务端会话分配的功能，在服务端应用就�
 
 ![image-20231121172907816](../../../img/server_session/create_session.jpg)
 
-1. 创建成功后，获得server_session_id，调用API查询会话的激活状态
+3. 创建成功后，获得server_session_id，调用API查询会话的激活状态
 
 ![image-20231121173625558](../../../img/server_session/session_active.jpg)
 
-1. 当会话状态为ACTIVE，则说明当前会话状态已可用，响应体中返回该服务端会话所在ECS的IP地址，监听的端口；若创建fleet添加了域名，响应体中还会返回访问ECS的域名，域名格式为 **{随机字符串}.{主域名}**。
+4. 当会话状态为ACTIVE，则说明当前会话状态已可用，响应体中返回该服务端会话所在ECS的IP地址，监听的端口；若创建fleet添加了域名，响应体中还会返回访问ECS的域名，域名格式为 **{随机字符串}.{主域名}**。
 
 - 通过IP地址访问服务，格式为 **"{ip_address}:{port}"**
 
