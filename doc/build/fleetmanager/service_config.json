@@ -33,6 +33,12 @@
         "ces_service": {
             "{region}": "https://ces.{region}.{endpoint}"
         },
+        "dns_service": {
+            "{region}": "https://dns.{region}.{endpoint}"
+          },
+          "eps_service": {
+            "{region}": "https://eps.myhuaweicloud.com"
+          },
         "internal_iam_endpoint": ""
     },
     "fleet_cidr": {
