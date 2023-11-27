@@ -1,5 +1,7 @@
 # huaweicloud-solution-GameFlexMatch
 
+Language: **中文** | [English](/README_EN.md)
+
 # 简介
 
 `GameFlexMatch`是一个服务托管解决方案，包含四个服务组件(`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`)，可以实现应用的托管、托管应用所需资源的弹性伸缩、应用进程的资源调度管理、应用的灰度发布，多`region`部署时可以实现用户的就近接入，减少时延，以及服务资源的跨地域容灾。可以帮助开发者快速构建稳定、低延时的多人游戏的部署环境，并节省大量的运维成本，支持`Unreal`、`Unity`引擎，`C#`、`C++`以及`gRPC`支持的任何语言的`server`框架部署和运行。
@@ -21,18 +23,17 @@ GameFlexMatch平台由五个服务组件组成：
 ## 部署指南
    + 方案基于华为云服务运行，涉及资源包括弹性云服务器(ECS)，镜像服务(IMS)，对象存储服务(OBS)，虚拟私有云(VPC)，云监控服务(CES)等，数据库使用MySql，Redis和InfluxDB 
    + 前后端部署指导详见 [doc/deployment/deployment-guide-CN.md](doc/deployment/deployment-guide-CN.md)
+   + 部署过程中必要的参数注解详见 [doc/build/param-annotation.md](/doc/build/param-annotation.md)
 
 ## 使用指南
    + console平台的用户指南详见[/doc/user-guide/gameflexmatch-user-guide](doc/user-guide/gameflexmatch-user-guide.md)
-   + 应用镜像制作详见 [doc/build/make-image-guide.md](/doc/build/make-image-guide.md)
-   + 部署过程中必要的参数注解详见 [doc/build/param-annotation.md](/doc/build/param-annotation.md)
 
-## 应用接入指南
+## 开发指南
    + 支持GRPC的方式将应用托管到GameFlexMatch，相关接口与接入流程参考[doc/developer/developer_guide.md](doc/developer/developer_guide.md)
    + 应用托管接入示例可参考`/demo`目录
 
 ## Reference
-   + API参考文档 [doc/api/FleetManager.yaml](doc/api/FleetManager.yaml)
+   + 管理面API参考文档 [doc/api/FleetManager.yaml](doc/api/FleetManager.yaml)
   
 ## 其他信息
    + 版本更新记录详见`doc/version/`
