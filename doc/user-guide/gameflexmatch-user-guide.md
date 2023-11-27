@@ -117,7 +117,7 @@
 
 2.  进入"应用包管理"模块，进入"创建应用包"，开始制作应用
 
-> ![](images/media/image4.jpg)
+![](images/media/image4.jpg)
 
 3.  填写制作镜像相关信息，点击创建
 
@@ -127,11 +127,11 @@
 
 1.  应用包管理，找到创建的应用包
 
-> ![](images/media/image6.jpg)
+![](images/media/image6.jpg)
 
 2.  用名称查看应用详情，确认应用状态是否为"活跃"
 
-> ![](images/media/image7.jpg)
+![](images/media/image7.jpg)
 
 3.  状态为就绪时，可以使用该应用创建fleet
 
@@ -149,11 +149,11 @@
 
 2.  进入"配置"-"实例规格组"模块，创建实例规格组；
 
-> ![](images/media/image8.jpg)
+![](images/media/image8.jpg)
 
 3.  创建实例规格，以vm类型的2u4g规格为例，填写实例规格组名称，选择使用的实例规格，点击确定。
 
-> ![](images/media/image9.png){
+![](images/media/image9.png){
 
 ## 创建Fleet流程
 
@@ -171,11 +171,11 @@
 
 2.  进入创建fleet界面；
 
-> ![](images/media/image10.jpg)
+![](images/media/image10.jpg)
 
 3.  填写创建fleet的相关信息，支持json格式的文件导入，参数详情参考**应用进程队列管理章节**；
 
-> ![](images/media/image11.jpg)
+![](images/media/image11.jpg)
 
 4.  点击创建，开始创建fleet。
 
@@ -184,11 +184,11 @@
 
 1.  进入fleet列表，找到刚刚创建的fleet；
 
-> ![](images/media/image12.jpg)
+![](images/media/image12.jpg)
 
 2.  点击详情，查看fleet信息；
 
-> ![](images/media/image13.jpg)
+![](images/media/image13.jpg)
 
 3.  fleet状态由"创建中"转为"活跃"，则创建成功，转为"异常"，则创建失败，在详情页状态原因可初步定位出现异常的步骤，更详细排查原因需管理员查看FleetManager服务日志定位，常见错误见错误信息。
 
@@ -204,33 +204,33 @@
 
 1.  找到弹性伸缩策略创建入口；
 
-> ![](images/media/image14.jpg)
+![](images/media/image14.jpg)
 
 2.  选择弹性伸缩策略，填写参数，点击创建；
 
 > 注：可用会话比=（最大会话数-已用会话数）/最大会话数
 >
-> ![](images/media/image15.JPG)
+![](images/media/image15.JPG)
 
 3.  在伸缩策略详情页，选择新建关联；
 
-> ![](images/media/image16.JPG)
+![](images/media/image16.JPG)
 
 4.  选择策略需要关联的fleet；
 
-> ![](images/media/image17.jpeg)
+![](images/media/image17.jpeg)
 
 5.  确认弹性伸缩策略是否创建成功；
 
-> ![](images/media/image18.jpeg)
+![](images/media/image18.jpeg)
 
 6.  进入弹性伸缩策略所绑定的fleet的详情；
 
-> ![](images/media/image19.JPG)
+![](images/media/image19.JPG)
 
 7.  修改 基本信息-\>是否开启弹性伸缩 字段，开启弹性伸缩能力；
 
-> ![](images/media/image20.jpeg)
+![](images/media/image20.jpeg)
 
 8.  现在GameFlexMatch可以根据负载情况弹性扩缩容计算资源了；
 
@@ -246,11 +246,11 @@
 
 1.  进入创建别名界面；
 
-> ![](images/media/image21.jpeg)
+![](images/media/image21.jpg)
 
 2.  填写别名创建相关信息；
 
-> ![](images/media/image22.jpeg)
+![](images/media/image22.jpeg)
 
 3.  点击创建，完成alias的创建，现在可以使用这个alias创建会话了
 
@@ -268,15 +268,15 @@
 
 1.  进入日志管理界面，点击新建日志；
 
-> ![](images/media/image23.png)
+![](images/media/image23.png)
 
 2.  填写日志接入相关信息，日志接入需要选择一个日志组，若无日志组，则选择日志组的新建；
 
-> ![](images/media/image24.png)
+![](images/media/image24.png)
 
 3.  创建成功后可配置日志自动转储到OBS中，也可选择"否"跳过此步骤，可在日志详情页随时创建；
 
-> ![](images/media/image25.png)
+![](images/media/image25.png)
 
 4.  若选择创建转储，填写创建日志转储参数，点击创建；
 
@@ -362,19 +362,19 @@ GameFlexMatch的用户管理模式为使用GameFlexMatch用户关联管理华为
 
 3.  新增普通用户，以NewUser为例
 
-> ![](images/media/image32.jpg)
+![](images/media/image32.jpg)
 
 4.  管理员为NewUser关联资源租户
 
-> ![](images/media/image33.png)
+![](images/media/image33.png)
 
 5.  查看用户NewUser详情
 
-> ![](images/media/image34.jpg){
+![](images/media/image34.jpg){
 
 6.  查看NewUser关联的资源租户信息
 
-![](images/media/image35.jpeg){
+![](images/media/image35.jpeg)
 
 ### 修改用户
 
@@ -412,7 +412,7 @@ GameFlexMatch的用户管理模式为使用GameFlexMatch用户关联管理华为
 
 1.  在配置-\>用户管理，为目标用户新增租户
 
-![](images/media/image38.png){
+![](images/media/image38.png)
 
 2.  新建租户参数如下：
 
@@ -456,7 +456,7 @@ GameFlexMatch的用户管理模式为使用GameFlexMatch用户关联管理华为
 
 2.  通过配置-\>用户管理，选择指定用户；
 
-> ![](images/media/image39.png)
+![](images/media/image39.png)
 
 3.  点击资源租户信息的详情，即可查看；
 
@@ -579,7 +579,7 @@ GameFlexMatch的用户管理模式为使用GameFlexMatch用户关联管理华为
 
 3.  在应用包列表中，需删除的应用包所在行中，单击"删除"。
 
-> ![](images/media/image46.png)
+![](images/media/image46.png)
 
 4.  在弹出的对话框中，单击"确定"。
 
@@ -597,7 +597,7 @@ GameFlexMatch平台支持预先创建实例规格组模板，在创建fleet提�
 
 1.  选择配置-\>实例规格组，单击"新建实例规格组"；
 
-> ![](images/media/image8.jpg)
+![](images/media/image8.jpg)
 
 2.  选择VM类型实例，输入组名称，按顺序选择需要的实例规格，点击"确定"。
 
@@ -631,7 +631,7 @@ GameFlexMatch平台提供应用进程的全局化动态部署及管理，您可�
 
 2.  选择"Fleet管理 \> 我的Fleet \> 新建Fleet"。
 
-> ![](images/media/image49.png)
+![](images/media/image49.png)
 
 3.  配置基本信息、资源信息等参数，您也可以通过json文件直接导入参数，或通过已填参数导出json文件。重点配置参数说明如下表所示
 
@@ -666,11 +666,11 @@ GameFlexMatch平台提供应用进程的全局化动态部署及管理，您可�
 
 3.  在Fleet列表中，需修改的Fleet所在行中，单击"详情"。
 
-> ![](images/media/image50.png)
+![](images/media/image50.png)
 
 4.  单击参数栏后的"修改"，在侧弹窗中输入需修改的内容。
 
-> ![](images/media/image51.png)
+![](images/media/image51.png)
 
 5.  单击"保存"完成修改。
 
@@ -692,7 +692,7 @@ GameFlexMatch平台提供应用进程的全局化动态部署及管理，您可�
 
 3.  在Fleet列表中，需删除的Fleet所在行中，单击"删除"。
 
-> ![](images/media/image52.png)
+![](images/media/image52.png)
 
 4.  在弹出的对话框中，单击"确定"。
 
@@ -710,7 +710,7 @@ GameFlexMatch平台提供应用进程的全局化动态部署及管理，您可�
 
 2.  选择"Fleet管理 \> 伸缩策略管理 \> 新建伸缩策略"。
 
-> ![](images/media/image53.png)
+![](images/media/image53.png)
 
 3.  配置名称，策略类型和指标等参数，重点配置参数说明如下表所示
 
@@ -738,7 +738,7 @@ GameFlexMatch平台提供应用进程的全局化动态部署及管理，您可�
 
 3.  在弹性伸缩策略列表中，需修改的弹性伸缩策略所在行中，单击" 详情"。
 
-> ![](images/media/image54.png)
+![](images/media/image54.png)
 
 4.  在详情页中单击参数后的"修改"，输入修改后的内容，并单击"保存"完成修改。
 
@@ -758,7 +758,7 @@ GameFlexMatch平台提供应用进程的全局化动态部署及管理，您可�
 
 3.  在弹性伸缩策略列表中，需删除的弹性伸缩策略所在行中，单击" 删除"。
 
-> ![](images/media/image56.png)
+![](images/media/image56.png)
 
 4.  在弹出的对话框中单击"确认"完成删除。
 
@@ -823,7 +823,7 @@ GameFlexMatch平台提供应用进程的全局化动态部署及管理，您可�
 
 3.  点击搜索框，出现按照fleet_id进行搜索、按照别名名称进行搜索、按照别名类型进行搜索，按照实际情况选择。
 
-> ![](images/media/image57.png)
+![](images/media/image57.png)
 
 ## 删除别名
 
@@ -959,20 +959,20 @@ Match的事件，包括网络，实例，会话和应用包等类型，事件分
 
 1.  选择事件审计\>消息管理，先为事件添加主题，选择需要发送通知的事件等级：
 
-> ![](images/media/image65.png)
+![](images/media/image65.png)
 
 ![](images/media/image66.png){width="3.4232699037620296in"
 height="1.852176290463692in"}
 
 2.  创建主题后，添加订阅者，支持邮箱和短信两种通知方式。
 
-> ![](images/media/image67.png)
+![](images/media/image67.png)
 
 3.  创建成功后，SMN会发送确认订阅邮件，点击邮件中的链接即可确认该订阅信息。
 
 4.  删除消息通知可点击"取消订阅"。
 
-> ![](images/media/image68.png)
+![](images/media/image68.png)
 
 # API调用
 
