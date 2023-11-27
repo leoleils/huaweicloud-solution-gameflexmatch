@@ -2,8 +2,7 @@
 
 本服务共有四大组件：FleetManager、AppGateway、AASS和AuxProxy。其中FleetManager是全局组件，AppGateway组件和AASS组件为Region级组件，AuxProxy为VM级别组件。整体架构图如下：
 
-![](images\media\image1.png){width="5.768055555555556in"
-height="3.484027777777778in"}
+![](images/media/image1.png)
 
 ## 组件功能
 
@@ -58,13 +57,11 @@ height="3.484027777777778in"}
 
 1.  使用管理员账号密码登录控制台，若管理员首次登录控制台，需修改密码后重新登录；
 
-![](images\media\image2.png){width="1.6452263779527558in"
-height="1.881155949256343in"}
+![](images\media\image2.png)
 
 2.  管理员首次进入若未关联资源租户，需先关联资源租户
 
-![](images\media\image3.png){width="2.0215824584426945in"
-height="0.6528849518810149in"}
+![](images\media\image3.png)
 
 3.  **填写相关关联的资源租户相关信息**，简介如下:
 
@@ -120,25 +117,21 @@ height="0.6528849518810149in"}
 
 2.  进入"应用包管理"模块，进入"创建应用包"，开始制作应用
 
-> ![](images\media\image4.jpeg){width="6.506814304461942in"
-> height="1.3005785214348207in"}
+> ![](images\media\image4.jpeg)
 
 3.  填写制作镜像相关信息，点击创建server-application
 
-![](images\media\image5.jpeg){width="6.459051837270342in"
-height="2.53125in"}
+![](images\media\image5.jpeg)
 
 ### 查看应用包详情，确认应用状态
 
 1.  应用包管理，找到server-application
 
-> ![](images\media\image6.jpeg){width="5.760416666666667in"
-> height="1.1513888888888888in"}
+> ![](images\media\image6.jpeg)
 
 2.  用名称查看应用详情，确认应用状态是否为"活跃"
 
-> ![](images\media\image7.jpeg){width="5.7659722222222225in"
-> height="1.90625in"}
+> ![](images\media\image7.jpeg)
 
 3.  状态为就绪时，可以使用该应用创建fleet
 
@@ -156,8 +149,7 @@ height="2.53125in"}
 
 2.  进入"配置"-"实例规格组"模块，创建实例规格组；
 
-> ![](images\media\image8.jpeg){width="5.760416666666667in"
-> height="1.6305555555555555in"}
+> ![](images\media\image8.jpeg)
 
 3.  创建实例规格，以vm类型的2u4g规格为例，填写实例规格组名称，选择使用的实例规格，点击确定。
 
@@ -185,8 +177,7 @@ height="2.53125in"}
 
 3.  填写创建fleet的相关信息，支持json格式的文件导入，参数详情参考**应用进程队列管理章节**；
 
-> ![](images\media\image11.jpeg){width="5.760416666666667in"
-> height="2.8493055555555555in"}
+> ![](images\media\image11.jpeg)
 
 4.  点击创建，开始创建fleet。
 
@@ -197,13 +188,11 @@ height="2.53125in"}
 
 1.  进入fleet列表，找到刚刚创建的fleet；
 
-> ![](images\media\image12.jpeg){width="5.7659722222222225in"
-> height="1.5416666666666667in"}
+> ![](images\media\image12.jpeg)
 
 2.  点击详情，查看fleet信息；
 
-> ![](images\media\image13.jpeg){width="5.760416666666667in"
-> height="2.8854166666666665in"}
+> ![](images\media\image13.jpeg)
 
 3.  fleet状态由"创建中"转为"活跃"，则创建成功，转为"异常"，则创建失败，在详情页状态原因可初步定位出现异常的步骤，更详细排查原因需管理员查看FleetManager服务日志定位，常见错误见错误信息。
 
@@ -219,40 +208,33 @@ height="2.53125in"}
 
 1.  找到弹性伸缩策略创建入口；
 
-> ![](images\media\image14.jpeg){width="5.760416666666667in"
-> height="1.2451388888888888in"}
+> ![](images\media\image14.jpeg)
 
 2.  选择弹性伸缩策略，填写参数，点击创建；
 
 > 注：可用会话比=（最大会话数-已用会话数）/最大会话数
 >
-> ![](images\media\image15.jpeg){width="5.7659722222222225in"
-> height="1.0993055555555555in"}
+> ![](images\media\image15.jpeg)
 
 3.  在伸缩策略详情页，选择新建关联；
 
-> ![](images\media\image16.jpeg){width="5.7659722222222225in"
-> height="1.125in"}
+> ![](images\media\image16.jpeg)
 
 4.  选择策略需要关联的fleet；
 
-> ![](images\media\image17.jpeg){width="3.1927088801399823in"
-> height="1.6662904636920386in"}
+> ![](images\media\image17.jpeg)
 
 5.  确认弹性伸缩策略是否创建成功；
 
-> ![](images\media\image18.jpeg){width="5.7555555555555555in"
-> height="1.1770833333333333in"}
+> ![](images\media\image18.jpeg)
 
 6.  进入弹性伸缩策略所绑定的fleet的详情；
 
-> ![](images\media\image19.jpeg){width="5.7659722222222225in"
-> height="1.53125in"}
+> ![](images\media\image19.jpeg)
 
 7.  修改 基本信息-\>是否开启弹性伸缩 字段，开启弹性伸缩能力；
 
-> ![](images\media\image20.jpeg){width="5.7659722222222225in"
-> height="2.84375in"}
+> ![](images\media\image20.jpeg)
 
 8.  现在GameFlexMatch可以根据负载情况弹性扩缩容计算资源了；
 
@@ -268,13 +250,11 @@ height="2.53125in"}
 
 1.  进入创建别名界面；
 
-> ![](images\media\image21.jpeg){width="5.7555555555555555in"
-> height="1.3284722222222223in"}
+> ![](images\media\image21.jpeg)
 
 2.  填写别名创建相关信息；
 
-> ![](images\media\image22.jpeg){width="5.760416666666667in"
-> height="2.734722222222222in"}
+> ![](images\media\image22.jpeg)
 
 3.  点击创建，完成alias的创建，现在可以使用这个alias创建会话了
 
@@ -292,27 +272,21 @@ height="2.53125in"}
 
 1.  进入日志管理界面，点击新建日志；
 
-> ![](images\media\image23.png){width="5.7555555555555555in"
-> height="1.09375in"}
+> ![](images\media\image23.png)
 
 2.  填写日志接入相关信息，日志接入需要选择一个日志组，若无日志组，则选择日志组的新建；
 
-> ![](images\media\image24.png){width="5.7659722222222225in"
-> height="1.2972222222222223in"}
+> ![](images\media\image24.png)
 
 3.  创建成功后可配置日志自动转储到OBS中，也可选择"否"跳过此步骤，可在日志详情页随时创建；
 
-> ![](images\media\image25.png){width="3.3593744531933507in"
-> height="1.5986111111111112in"}
+> ![](images\media\image25.png)
 
 4.  若选择创建转储，填写创建日志转储参数，点击创建；
 
-![](images\media\image26.png){width="5.7555555555555555in"
-height="1.25in"}
+![](images\media\image26.png)
 
-5.  创建成功后日志管理页面则会新增一条记录，可直接点击日志流或者OBS转储路径跳转至对应华为云服务控制台；![](images\media\image27.png){width="5.7659722222222225in"
-    height="1.0625in"}
-
+5.  创建成功后日志管理页面则会新增一条记录，可直接点击日志流或者OBS转储路径跳转至对应华为云服务控制台；![](images\media\image27.png)
 # 首页
 
 ## 简介
