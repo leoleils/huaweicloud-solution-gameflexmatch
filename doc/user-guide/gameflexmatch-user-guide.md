@@ -226,7 +226,7 @@
 
 6.  进入弹性伸缩策略所绑定的fleet的详情；
 
-> ![](images/media/image19.jpeg)
+> ![](images/media/image19.JPG)
 
 7.  修改 基本信息-\>是否开启弹性伸缩 字段，开启弹性伸缩能力；
 
