@@ -23,7 +23,7 @@ The GameFlexMatch platform consists of five service components:
 
  *  The solution runs on Huawei cloud services. Resources involved include ECS, IMS, OBS, VPC, and CES. MySQL
     ，Redis and InfluxDB are used. 
- *  For details about front-end and back-end deployment, see.[doc/deployment/deployment-guide-CN.md](doc/deployment/deployment-guide-EN.md)
+ *  For details about front-end and back-end deployment, see.[doc/deployment/deployment-guide-EN.md](doc/deployment/deployment-guide-EN.md)
  *  For details about the parameters required during the deployment, see.[doc/build/param-annotation.md](/doc/build/param-annotation-EN.md)
 
 ## Usage Guide ##
