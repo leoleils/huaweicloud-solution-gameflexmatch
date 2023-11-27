@@ -9,8 +9,7 @@ AASS, and AuxProxy. FleetManager is a global component, AppGateway and
 AASS are region-level components, and AuxProxy is a VM-level component.
 The following figure shows the overall architecture.
 
-![](images-en\media\image1.png){width="5.768055555555556in"
-height="3.428472222222222in"}
+![](images-en/media/image1.png)
 
 ## Component Function
 
@@ -83,21 +82,18 @@ resources.
     If the administrator logs in to the console for the first time,
     change the password and log in again.
 
-![](images-en\media\image2.png){width="4.305971128608924in"
-height="2.7721128608923884in"}
+![](images-en/media/image2.png)
 
 2.  If no resource tenant is associated at the first login, the
     administrator needs to associate the resource tenant first.
 
-![](images-en\media\image3.png){width="2.4840004374453195in"
-height="0.9619411636045494in"}
+![](images-en/media/image3.png)
 
 3.  **Enter information about associated resource tenants.**
 
 Use tenant information:
 
-![](images-en\media\image4.png){width="6.125904418197726in"
-height="2.014925634295713in"}
+![](images-en/media/image4.png)
 
 -   **Tenant name: name of the tenant on the GameFlexMatch platform**
 
@@ -165,27 +161,23 @@ For details, see the application package part in the guide.
 2.  Go to the Application Package Management page and click "Create App
     Package" to create an application.
 
-> ![](images-en\media\image5.png){width="4.271492782152231in"
-> height="1.621994750656168in"}
+> ![](images-en/media/image5.png)
 
 3.  Enter the image creation information and click Create
     Server-Application.
 
-![](images-en\media\image6.png){width="5.768055555555556in"
-height="2.7805555555555554in"}
+![](images-en/media/image6.png)
 
 ### View the application package details and check the application status.
 
 1.  On the application package management page, find fake-server.
 
-> ![](images-en\media\image7.png){width="5.768055555555556in"
-> height="2.1368055555555556in"}
+> ![](images-en/media/image7.png)
 
 2.  Click to view details and check whether the application status is
     READY.
 
-> ![](images-en\media\image8.png){width="4.726087051618547in"
-> height="1.9374343832020997in"}
+> ![](images-en/media/image8.png)
 
 3.  When the status is Ready, you can use the application to create a
     fleet.
@@ -207,16 +199,14 @@ height="2.7805555555555554in"}
 2.  Choose Configuration \> Instance Flavor Group and create a new
     flavor group.
 
-> ![](images-en\media\image9.png){width="4.739129483814523in"
-> height="1.687166447944007in"}
+> ![](images-en/media/image9.png)
 
 3.  Create an instance specification. For example, the 2U4G instance
     specification of the VM type is used. Enter the instance
     specification group name, select the instance specification, and
     click OK.
 
-> ![](images-en\media\image10.png){width="2.291304680664917in"
-> height="2.3097878390201223in"}
+> ![](images-en/media/image10.png)
 
 ## Process for creating a fleet
 
@@ -237,8 +227,7 @@ height="2.7805555555555554in"}
 
 2.  The page for creating a fleet is displayed.
 
-> ![](images-en\media\image11.png){width="5.768055555555556in"
-> height="1.320138888888889in"}
+> ![](images-en/media/image11.png)
 
 3.  Enter the fleet creation information. JSON files can be imported.
     For details about the parameters, see the application process queue
@@ -246,20 +235,17 @@ height="2.7805555555555554in"}
 
 4.  Click Create to create a fleet.
 
-> ![](images-en\media\image12.png){width="5.768055555555556in"
-> height="3.6243055555555554in"}
+> ![](images-en/media/image12.png)
 
 ### Check whether the Fleet is successfully created.
 
 1.  Go to the fleet list and find the newly created fleet.
 
-> ![](images-en\media\image13.png){width="5.768055555555556in"
-> height="1.2805555555555554in"}
+> ![](images-en/media/image13.png)
 
 2.  Click Details to view the fleet information.
 
-> ![](images-en\media\image14.png){width="5.768055555555556in"
-> height="2.4520833333333334in"}
+> ![](images-en/media/image14.png)
 
 3.  If the fleet status changes from Creating to Active, the creation is
     successful. If the fleet status changes from Creating to Abnormal,
@@ -283,43 +269,36 @@ height="2.7805555555555554in"}
 
 1.  Find the entry for creating an Scaling policy.
 
-> ![](images-en\media\image15.png){width="5.768055555555556in"
-> height="2.0104166666666665in"}
+> ![](images-en/media/image15.png)
 
 2.  Select an Scaling policy, set parameters, and click Create.
 
 > Note: Rate of available sessions = (Maximum number of sessions -
 > Number of used sessions)/Maximum number of sessions
 >
-> ![](images-en\media\image16.png){width="5.768055555555556in"
-> height="1.8770833333333334in"}
+> ![](images-en/media/image16.png)
 
 3.  On the Scaling policy details page, click Create Association.
 
-> ![](images-en\media\image17.png){width="5.768055555555556in"
-> height="2.046527777777778in"}
+> ![](images-en/media/image17.png)
 
 4.  Select the fleet to be associated with the policy.
 
-> ![](images-en\media\image18.png){width="2.194633639545057in"
-> height="1.2608705161854767in"}
+> ![](images-en/media/image18.png)
 
 5.  Check whether the Scaling policy is successfully created.
 
-> ![](images-en\media\image19.png){width="5.768055555555556in"
-> height="2.011111111111111in"}
+> ![](images-en/media/image19.png)
 
 6.  The details about the fleet bound to the Scaling policy are
     displayed.
 
-> ![](images-en\media\image20.png){width="5.768055555555556in"
-> height="2.9034722222222222in"}
+> ![](images-en/media/image20.png)
 
 7.  Modify Basic Information \> Enable Auto Scaling to enable the auto
     scaling capability.
 
-> ![](images-en\media\image21.png){width="5.768055555555556in"
-> height="3.279166666666667in"}
+> ![](images-en/media/image21.png)
 
 8.  Now, GameFlexMatch can flexibly scale computing resources based on
     the load.
@@ -340,13 +319,11 @@ height="2.7805555555555554in"}
 
 1.  The page for creating an alias is displayed.
 
-> ![](images-en\media\image22.png){width="5.768055555555556in"
-> height="2.0722222222222224in"}
+> ![](images-en/media/image22.png)
 
 2.  Enter the alias creation information.
 
-> ![](images-en\media\image23.png){width="4.315999562554681in"
-> height="2.49003937007874in"}
+> ![](images-en/media/image23.png)
 
 3.  Click Create to create an alias. Now you can use the alias to create
     a session.
@@ -370,33 +347,28 @@ height="2.7805555555555554in"}
 
 1.  On the Log Management page, click New Log.
 
-> ![](images-en\media\image24.png){width="5.768055555555556in"
-> height="1.2027777777777777in"}
+> ![](images-en/media/image24.png)
 
 2.  Enter information about log access. You need to select a log group
     for log access. If there is no log group, create a log group.
 
-> ![](images-en\media\image25.png){width="5.768055555555556in"
-> height="0.8986111111111111in"}
+> ![](images-en/media/image25.png)
 
 3.  After the creation is successful, you can configure the automatic
     transfer of logs to OBS. You can also select No to skip this step
     and create a log at any time on the log details page.
 
-> ![](images-en\media\image26.png){width="2.08in"
-> height="0.7628357392825896in"}
+> ![](images-en/media/image26.png)
 
 4.  If you select Create log transfer, set the parameters for creating
     log transfer and click Create.
 
-![](images-en\media\image27.png){width="5.768055555555556in"
-height="0.7736111111111111in"}
+![](images-en/media/image27.png)
 
 5.  After the creation is successful, a new record is displayed on the
     Log Management page. You can click the log stream or OBS path to go
     to the corresponding HUAWEI CLOUD service console.
-    ![](images-en\media\image28.png){width="5.768055555555556in"
-    height="1.2569444444444444in"}
+    ![](images-en/media/image28.png)
 
 # Home Page
 
@@ -416,8 +388,7 @@ height="0.7736111111111111in"}
 
 · Click the homepage to view the overall running status.
 
-![](images-en\media\image29.png){width="5.768055555555556in"
-height="1.3104166666666666in"}
+![](images-en/media/image29.png)
 
 · To view the running status of several Fleets, choose Home \> Fleet
 Running Status. You can select multiple Fleets.
@@ -429,8 +400,7 @@ Users can be associated with tenants to manage HUAWEI CLOUD resources.
 Multiple users can be associated with one tenant, and a user can be
 associated with multiple tenants. Instant switchover is supported.
 
-![](images-en\media\image30.png){width="2.1840004374453192in"
-height="1.8655763342082239in"}
+![](images-en/media/image30.png)
 
 ## Initial Login Operation
 
@@ -497,28 +467,23 @@ resources on the platform.
 
 2.  Find the entry for adding a user.
 
-> ![](images-en\media\image31.png){width="5.768055555555556in"
-> height="2.1868055555555554in"}
+> ![](images-en/media/image31.png)
 
 3.  Add a common user. NewUser is used as an example.
 
-> ![](images-en\media\image32.png){width="5.768055555555556in"
-> height="1.25625in"}
+> ![](images-en/media/image32.png)
 
 4.  The administrator associates the resource tenant with the new user.
 
-> ![](images-en\media\image33.png){width="5.768055555555556in"
-> height="2.2888888888888888in"}
+> ![](images-en/media/image33.png)
 
 5.  Viewing user Details
 
-> ![](images-en\media\image34.png){width="5.768055555555556in"
-> height="2.1638888888888888in"}
+> ![](images-en/media/image34.png)
 
 6.  Viewing Resource Tenant Information Associated with current user.
 
-![](images-en\media\image35.png){width="5.768055555555556in"
-height="2.7006944444444443in"}
+![](images-en/media/image35.png)
 
 ### Modify a User
 
@@ -531,8 +496,7 @@ activation status, and user type of a user, and reset the password.
 2\. Choose Configuration \> User Management, select the user to be
 modified, and click Modify or Reset Password.
 
-![](images-en\media\image36.png){width="5.768055555555556in"
-height="2.345138888888889in"}
+![](images-en/media/image36.png)
 
 ### Delete user
 
@@ -541,8 +505,7 @@ height="2.345138888888889in"}
 2.  Choose Configuration \> User Management, select the user to be
     deleted, and click Delete.
 
-![](images-en\media\image37.png){width="5.768055555555556in"
-height="2.2895833333333333in"}
+![](images-en/media/image37.png)
 
 ## Tenant management
 
@@ -565,8 +528,7 @@ To add a tenant, perform the following steps:
 1.  Choose Configuration \> User Management and add a tenant for the
     target user.
 
-![](images-en\media\image38.png){width="5.768055555555556in"
-height="2.192361111111111in"}
+![](images-en/media/image38.png)
 
 2.  Parameters for creating a tenant are as follows:
 
@@ -621,16 +583,14 @@ blank, the default parameter is used.)
 
 3.  Click the resource tenant details to view the details.
 
-![](images-en\media\image39.png){width="5.768055555555556in"
-height="1.8923611111111112in"}
+![](images-en/media/image39.png)
 
 ### Binding a Tenant
 
 The administrator binds an existing tenant to the user so that the
 tenant information can be reused.
 
-![](images-en\media\image40.png){width="5.768055555555556in"
-height="2.1819444444444445in"}
+![](images-en/media/image40.png)
 
 ### Switch a Tenant
 
@@ -639,8 +599,7 @@ height="2.1819444444444445in"}
 2.  Click in the upper right corner to switch to the associated resource
     tenant.
 
-![](images-en\media\image41.png){width="3.297658573928259in"
-height="2.6898545494313213in"}
+![](images-en/media/image41.png)
 
 ### Delete a Tenant
 
@@ -649,8 +608,7 @@ height="2.6898545494313213in"}
 2.  On the User Management page, select a user and select the tenant to
     be deleted in the Account Information area.
 
-![](images-en\media\image42.png){width="5.768055555555556in"
-height="2.372916666666667in"}
+![](images-en/media/image42.png)
 
 # Application package management
 
@@ -743,14 +701,12 @@ name, version number, and description of an application package.
 3.  In the application package list, locate the row that contains the
     target application package, and click Details.
 
-![](images-en\media\image43.png){width="5.768055555555556in"
-height="1.5909722222222222in"}
+![](images-en/media/image43.png)
 
 4.  Click Modify next to the parameter and enter the content to be
     modified in the text box.
 
-![](images-en\media\image44.png){width="5.768055555555556in"
-height="1.757638888888889in"}
+![](images-en/media/image44.png)
 
 5.  Click OK.
 
@@ -775,8 +731,7 @@ If yes, the application package cannot be deleted.
 3.  In the application package list, locate the row that contains the
     target application package, and click Delete.
 
-> ![](images-en\media\image45.png){width="5.768055555555556in"
-> height="1.7305555555555556in"}
+> ![](images-en/media/image45.png)
 
 4.  In the displayed dialog box, click OK.
 
@@ -799,14 +754,12 @@ created based on the selected flavor priorities.
 1.  Choose Configuration \> Instance Specification Group and click
     Create Instance Flavor Group.
 
-> ![](images-en\media\image46.png){width="5.768055555555556in"
-> height="2.1979166666666665in"}
+> ![](images-en/media/image46.png)
 
 2.  Select the VM type instance, enter the group name, select the
     required instance specifications in sequence, and click OK.
 
-![](images-en\media\image47.png){width="3.068646106736658in"
-height="3.751388888888889in"}
+![](images-en/media/image47.png)
 
 ## Creating a Pod Instance Flavor Group
 
@@ -823,8 +776,7 @@ VM type, and select the CPU and memory size of the pod instance.
 2.  Select the VM type instance, enter the group name, select the
     required instance specifications in sequence, and click OK.
 
-![](images-en\media\image48.png){width="3.676114391951006in"
-height="2.6780839895013124in"}
+![](images-en/media/image48.png)
 
 # Process Queue Management
 
@@ -843,8 +795,7 @@ external systems. VM or POD instances can be created.
 
 2.  Choose Fleet Management \> My Fleet \> Create Fleet.
 
-> ![](images-en\media\image49.png){width="5.768055555555556in"
-> height="2.4472222222222224in"}
+> ![](images-en/media/image49.png)
 
 3.  Configure parameters such as basic information and resource
     information. You can import parameters in a JSON file or export a
@@ -885,14 +836,12 @@ information about the application process queues as required.
 3.  In the Fleet list, locate the row that contains the target Fleet,
     and click Details.
 
-> ![](images-en\media\image50.png){width="5.768055555555556in"
-> height="2.079861111111111in"}
+> ![](images-en/media/image50.png)
 
 4.  Click "Edit" and enter the content to be modified in the dialog box
     that is displayed.
 
-> ![](images-en\media\image51.png){width="5.768055555555556in"
-> height="3.4027777777777777in"}
+> ![](images-en/media/image51.png)
 
 5.  Click Save.
 
@@ -916,8 +865,7 @@ alias. If yes, the Fleet cannot be deleted.
 3.  In the Fleet list, locate the row that contains the target Fleet,
     and click Delete.
 
-> ![](images-en\media\image52.png){width="5.768055555555556in"
-> height="1.9534722222222223in"}
+> ![](images-en/media/image52.png)
 
 4.  In the displayed dialog box, click OK.
 
@@ -938,8 +886,7 @@ queue.
 2.  Choose Fleet Management \> Scaling Policy \> Create new scaling
     policy.
 
-> ![](images-en\media\image53.png){width="5.768055555555556in"
-> height="1.988888888888889in"}
+> ![](images-en/media/image53.png)
 
 3.  Set parameters such as Name, Policy Type, and Indicator. The
     following table describes the key parameters.
@@ -952,8 +899,7 @@ queue.
 | Maximum Target  Available Session Ratio | This parameter  specifies the threshold for reducing the number of application process  queues. | 60                       |
 | Minimum target  available session ratio | This parameter  determines the capacity expansion threshold of the application process queue. | 30                       |
 
-![](images-en\media\image54.png){width="5.768055555555556in"
-height="1.5638888888888889in"}
+![](images-en/media/image54.png)
 
 4\. After the parameters are set, click Create.
 
@@ -977,8 +923,7 @@ modified include the name, measure name, and target value.
 4.  On the details page, click Modify next to the parameter, enter the
     modified content, and click Save.
 
-![](images-en\media\image55.png){width="5.768055555555556in"
-height="1.3409722222222222in"}
+![](images-en/media/image55.png)
 
 ## Deleting an Scaling Policy
 
@@ -995,8 +940,7 @@ You can delete an Scaling policy that is no longer required.
 3.  In the Scaling policy list, locate the row that contains the target
     Scaling policy, and click Delete.
 
-> ![](images-en\media\image56.png){width="5.768055555555556in"
-> height="1.3131944444444446in"}
+> ![](images-en/media/image56.png)
 
 4.  In the displayed dialog box, click OK.
 
@@ -1024,8 +968,7 @@ ranging from 0 to 100.
 
 2.  Choose Fleet Management \> Alias Management \> Create Alias.
 
-> ![](images-en\media\image57.png){width="5.768055555555556in"
-> height="1.5006944444444446in"}
+> ![](images-en/media/image57.png)
 
 3. Set the required parameters.
 
@@ -1077,8 +1020,7 @@ Filter aliases by alias name, type, and associated fleet.
 3.  Click the search box. Search by fleet id, alias name, or alias type
     is displayed. Select a value based on the site requirements.
 
-> ![](images-en\media\image58.png){width="5.768055555555556in"
-> height="3.0416666666666665in"}
+> ![](images-en/media/image58.png)
 
 ## Delete Alias
 
@@ -1095,8 +1037,7 @@ If an alias is no longer used, you need to delete it.
 
 3.  In the displayed Confirm dialog box, click OK.
 
-![](images-en\media\image59.png){width="5.768055555555556in"
-height="1.5173611111111112in"}
+![](images-en/media/image59.png)
 
 # Log management
 
@@ -1114,14 +1055,12 @@ create a log access to record and analyze the logs of all instances.
 
 2.  Choose Log Management \> Create Log.
 
-![](images-en\media\image24.png){width="5.768055555555556in"
-height="1.2027777777777777in"}
+![](images-en/media/image24.png)
 
 3.  Set log access parameters. If no log group exists, click Create next
     to Log Group Name.
 
-![](images-en\media\image25.png){width="5.768055555555556in"
-height="0.8986111111111111in"}
+![](images-en/media/image25.png)
 
 4.  The following table lists the parameters for creating a log access.
 
@@ -1135,8 +1074,7 @@ height="0.8986111111111111in"}
 
 The parameters for creating a log group are as follows:
 
-![](images-en\media\image60.png){width="2.56707239720035in"
-height="1.2093613298337709in"}
+![](images-en/media/image60.png)
 
 | **Parameters**               | **Explained**                                                | **Example Value** |
 | ---------------------------- | ------------------------------------------------------------ | ----------------- |
@@ -1148,8 +1086,7 @@ height="1.2093613298337709in"}
     page. If you click No, you will skip the creation. You can create a
     log dump at any time on the log access details page.
 
-![](images-en\media\image26.png){width="2.08in"
-height="0.7628357392825896in"}
+![](images-en/media/image26.png)
 
 6.  Note that one log access corresponds to only one log dump.
 
@@ -1170,14 +1107,11 @@ automatically dumped based on parameters.
 
 2.  Choose Log Management \> Log Details \> Configure Log Dump.
 
-![](images-en\media\image61.png){width="5.768055555555556in"
-height="1.2534722222222223in"}
+![](images-en/media/image61.png)
 
 3.  Enter the configuration information for creating log dump.
 
-![](images-en\media\image62.png){width="5.768055555555556in"
-height="0.775in"}
-
+![](images-en/media/image62.png)
 4.  Set the parameters as follows:
 
 | **Parameters**   | **Explained**                                                | **Example Value** |
@@ -1202,14 +1136,12 @@ Delete the configured log access and log dump.
     dump first.). On the log access list page, locate the log access
     item to be deleted and click Delete.
 
-![](images-en\media\image63.png){width="5.768055555555556in"
-height="1.2666666666666666in"}
+![](images-en/media/image63.png)
 
 2.  To delete a log dump, click Delete Log Dump in the upper right
     corner of the Log Access page.
 
-![](images-en\media\image64.png){width="5.768055555555556in"
-height="1.7659722222222223in"}
+![](images-en/media/image64.png)
 
 # Event Audit
 
@@ -1226,8 +1158,7 @@ accident. You can configure notifications for event levels.
 Choose Event Audit \> Event List to view events. You can filter events
 by resource type and severity.
 
-![](images-en\media\image65.png){width="5.768055555555556in"
-height="2.446527777777778in"}
+![](images-en/media/image65.png)
 
 ## 11.2 Message Management
 
@@ -1241,17 +1172,14 @@ notifications to subscribers through SMN.
 1\. Choose Event Audit \> Message, add a topic for the event, and select
 the event level for which notifications need to be sent.
 
-![](images-en\media\image66.png){width="5.768055555555556in"
-height="1.5743055555555556in"}
+![](images-en/media/image66.png)
 
-![](images-en\media\image67.png){width="3.225216535433071in"
-height="1.7131780402449694in"}
+![](images-en/media/image67.png)
 
 2\. After a topic is created, add subscribers. The email or SMS
 notification mode is supported.
 
-![](images-en\media\image68.png){width="3.293839676290464in"
-height="1.7750087489063866in"}
+![](images-en/media/image68.png)
 
 3\. After the subscription is successfully created, SMN will send a
 confirmation email. Click the link in the email to confirm the
@@ -1259,8 +1187,7 @@ subscription.
 
 4\. To delete a notification, click Unsubscribe.
 
-![](images-en\media\image69.png){width="6.1252471566054245in"
-height="1.777250656167979in"}
+![](images-en/media/image69.png)
 
 # API invoking
 
