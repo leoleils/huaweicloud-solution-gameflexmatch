@@ -2,11 +2,12 @@
 
 # Brief Introduction #
 
-`GameFlexMatch`is a service hosting solution that consists of four service components (`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`), which can implement application hosting, elastic scaling of resources required by hosting applications, resource scheduling and management of application processes, and gray release of applications.`region`During deployment, users can access the nearest network, reducing latency and cross-region DR of service resources. It helps developers quickly build a stable and low-latency multiplayer game deployment environment and saves a lot of O&M costs.`Unreal`,`Unity`The engine,`C#`,`C++`And also the`gRPC`any language supported`server`Deploy and run the framework.
+`GameFlexMatch`is a service hosting solution that consists of four service components (`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`), which can implement application hosting, elastic scaling of resources required by hosting applications, resource scheduling and management of application processes, and gray release of applications.`region`During deployment, users can access the nearest network, reducing latency and cross-region DR of service resources. 
+It helps developers quickly build a stable and low-latency multiplayer game deployment environment and saves a lot of O&M costs.`Unreal Engine`,`Unity`,`C#`,`C++`And also the`gRPC`any language supported`server`Deploy and run the framework.
 
 # Logical Architecture #
 
-![Image](img/architecture.jpg)	
+![Image](img/architecture-EN.jpg)	
 
 The GameFlexMatch platform consists of five service components:
 
@@ -20,18 +21,17 @@ The GameFlexMatch platform consists of five service components:
 
  *  The solution runs on Huawei cloud services. Resources involved include ECS, IMS, OBS, VPC, and CES. MySQL
     ，Redis and InfluxDB are used. 
- *  For details about front-end and back-end deployment, see.doc/deployment/deployment-guide-CN.md
+ *  For details about front-end and back-end deployment, see.[doc/deployment/deployment-guide-CN.md](doc/deployment/deployment-guide-EN.md)
+ *  For details about the parameters required during the deployment, see.[doc/build/param-annotation.md](/doc/build/param-annotation-EN.md)
 
 ## Usage Guide ##
 
- *  For details about the console user guide, see.[/doc/user-guide/gameflexmatch-user-guide-en](doc/user-guide/gameflexmatch-user-guide-EN.md)	
- *  For details about how to create an application image, see.[doc/build/make-image-guide.md](/doc/build/make-image-guide.md)	
- *  For details about the parameters required during the deployment, see.[doc/build/param-annotation.md](/doc/build/param-annotation-EN.md)	
+ *  For details about the console user guide, see [/doc/user-guide/gameflexmatch-user-guide-EN.md](doc/user-guide/gameflexmatch-user-guide-EN.md)
 
 ## Application Access Guide ##
 
  *  Apps can be hosted on GameFlexMatch in gRPC mode. For details about the interface and access process, see [doc/developer/developer_guide_EN.md](doc/developer/developer_guide_EN.md)
- *  For details about the example of application hosting access, see.`/demo`The Table of Contents
+ *  For details about the example of application hosting access, see.`/demo`
 
 ## Reference ##
 
