@@ -363,14 +363,13 @@ height="2.209722222222222in"}
 
 1.  管理员登录
 
-2.  找到新增用户入口
+2. 找到新增用户入口
 
-> ![](images/media/image31.jpeg){width="5.7659722222222225in"
-> height="1.3076388888888888in"}
+>  ![image-20231127102203057](images/media/image31.jpg)
 
 3.  新增普通用户，以NewUser为例
 
-> ![](images/media/image32.jpeg){width="5.7659722222222225in"
+> ![](images/media/image32.jpg){width="5.7659722222222225in"
 > height="0.9951388888888889in"}
 
 4.  管理员为NewUser关联资源租户
@@ -380,7 +379,7 @@ height="2.209722222222222in"}
 
 5.  查看用户NewUser详情
 
-> ![](images/media/image34.jpeg){width="5.7555555555555555in"
+> ![](images/media/image34.jpg){width="5.7555555555555555in"
 > height="1.4222222222222223in"}
 
 6.  查看NewUser关联的资源租户信息
@@ -532,7 +531,7 @@ height="1.4201388888888888in"}
 
 > 环境构建脚本的OBS路径：
 >
-> export DEFAULT_AUXPROXY_PATH=桶名/auxproxy.zip
+> #### export DEFAULT_AUXPROXY_PATH=桶名/auxproxy.zip
 >
 > Auxproxy服务组件压缩包OBS路径
 >
@@ -620,7 +619,7 @@ GameFlexMatch平台支持预先创建实例规格组模板，在创建fleet提�
 
 1.  选择配置-\>实例规格组，单击"新建实例规格组"；
 
-> ![](images/media/image8.jpeg){width="5.760416666666667in"
+> ![](images/media/image8.jpg){width="5.760416666666667in"
 > height="1.6305555555555555in"}
 
 2.  选择VM类型实例，输入组名称，按顺序选择需要的实例规格，点击"确定"。
