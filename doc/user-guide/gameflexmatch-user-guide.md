@@ -117,21 +117,21 @@
 
 2.  进入"应用包管理"模块，进入"创建应用包"，开始制作应用
 
-> ![](images/media/image4.jpeg)
+> ![](images/media/image4.jpg)
 
-3.  填写制作镜像相关信息，点击创建server-application
+3.  填写制作镜像相关信息，点击创建
 
-![](images/media/image5.jpeg)
+![](images/media/image5.jpg)
 
 ### 查看应用包详情，确认应用状态
 
-1.  应用包管理，找到server-application
+1.  应用包管理，找到创建的应用包
 
-> ![](images/media/image6.jpeg)
+> ![](images/media/image6.jpg)
 
 2.  用名称查看应用详情，确认应用状态是否为"活跃"
 
-> ![](images/media/image7.jpeg)
+> ![](images/media/image7.jpg)
 
 3.  状态为就绪时，可以使用该应用创建fleet
 
@@ -149,7 +149,7 @@
 
 2.  进入"配置"-"实例规格组"模块，创建实例规格组；
 
-> ![](images/media/image8.jpeg)
+> ![](images/media/image8.jpg)
 
 3.  创建实例规格，以vm类型的2u4g规格为例，填写实例规格组名称，选择使用的实例规格，点击确定。
 
@@ -172,8 +172,7 @@
 
 2.  进入创建fleet界面；
 
-> ![](images/media/image10.jpeg){width="5.760416666666667in"
-> height="2.0680555555555555in"}
+> ![](images/media/image10.jpeg)
 
 3.  填写创建fleet的相关信息，支持json格式的文件导入，参数详情参考**应用进程队列管理章节**；
 
@@ -181,8 +180,8 @@
 
 4.  点击创建，开始创建fleet。
 
-> ![](images/media/image11.jpeg){width="5.760416666666667in"
-> height="2.8493055555555555in"}
+> ![](images/media/image11.jpeg){
+> 
 
 ### 检查Fleet是否创建成功
 
@@ -301,19 +300,16 @@
 
 • 点击首页查看总体运行情况
 
-![](images/media/image28.jpeg){width="5.763888888888889in"
-height="2.7805555555555554in"}
+![](images/media/image28.jpeg)
 
 •
-若需查看某几条Fleet的运行状态，可在首页-\>Fleet运行状态一览中选择想要查看的Fleet，支持多选![](images/media/image29.jpeg){width="5.758333333333334in"
-height="0.8625in"}
+若需查看某几条Fleet的运行状态，可在首页-\>Fleet运行状态一览中选择想要查看的Fleet，支持多选![](images/media/image29.jpeg)
 
 # 用户管理
 
 GameFlexMatch的用户管理模式为使用GameFlexMatch用户关联管理华为云租户的模式，通过关联租户对华为云资源进行管理，多个用户可关联至一个租户，一个用户也可以关联多个租户，并支持即时切换。
 
-![](images/media/image30.png){width="2.7863899825021874in"
-height="2.209722222222222in"}
+![](images/media/image30.png){
 
 ## 首次登录操作
 
@@ -369,23 +365,19 @@ height="2.209722222222222in"}
 
 3.  新增普通用户，以NewUser为例
 
-> ![](images/media/image32.jpg){width="5.7659722222222225in"
-> height="0.9951388888888889in"}
+> ![](images/media/image32.jpg)
 
 4.  管理员为NewUser关联资源租户
 
-> ![](images/media/image33.png){width="5.768055555555556in"
-> height="1.5145833333333334in"}
+> ![](images/media/image33.png)
 
 5.  查看用户NewUser详情
 
-> ![](images/media/image34.jpg){width="5.7555555555555555in"
-> height="1.4222222222222223in"}
+> ![](images/media/image34.jpg){
 
 6.  查看NewUser关联的资源租户信息
 
-![](images/media/image35.jpeg){width="5.760416666666667in"
-height="1.7555555555555555in"}
+![](images/media/image35.jpeg){
 
 ### 修改用户
 
@@ -395,8 +387,7 @@ height="1.7555555555555555in"}
 
 2\. 选择 配置-\>用户管理，选择需要修改的用户，点击"修改"或"重置密码"；
 
-![](images/media/image36.png){width="5.768055555555556in"
-height="1.5298611111111111in"}
+![](images/media/image36.png)
 
 ### 删除用户
 
@@ -404,8 +395,7 @@ height="1.5298611111111111in"}
 
 2.  选择 配置-\>用户管理，选择需要删除的用户，点击"删除"
 
-![](images/media/image37.png){width="5.768055555555556in"
-height="1.542361111111111in"}
+![](images/media/image37.png)
 
 ## 租户管理
 
@@ -425,8 +415,7 @@ height="1.542361111111111in"}
 
 1.  在配置-\>用户管理，为目标用户新增租户
 
-![](images/media/image38.png){width="5.768055555555556in"
-height="1.5618055555555554in"}
+![](images/media/image38.png){
 
 2.  新建租户参数如下：
 
@@ -470,20 +459,17 @@ height="1.5618055555555554in"}
 
 2.  通过配置-\>用户管理，选择指定用户；
 
-> ![](images/media/image39.png){width="5.768055555555556in"
-> height="1.5305555555555554in"}
+> ![](images/media/image39.png)
 
 3.  点击资源租户信息的详情，即可查看；
 
-![](images/media/image40.png){width="5.768055555555556in"
-height="1.4354166666666666in"}
+![](images/media/image40.png)
 
 ### 绑定租户
 
 管理员为用户绑定已有租户，实现租户信息的复用。
 
-![](images/media/image41.png){width="5.768055555555556in"
-height="1.5256944444444445in"}
+![](images/media/image41.png)
 
 ### 切换租户
 
@@ -491,8 +477,7 @@ height="1.5256944444444445in"}
 
 2.  点击右上角切换至所关联的资源租户上
 
-![](images/media/image42.jpeg){width="1.9916666666666667in"
-height="1.8883256780402449in"}
+![](images/media/image42.jpeg)
 
 ### 删除租户
 
@@ -500,8 +485,7 @@ height="1.8883256780402449in"}
 
 2.  在用户管理中， 选择一个用户的详情，在账号信息中选择要删除的租户删除
 
-![](images/media/image43.png){width="5.768055555555556in"
-height="1.4201388888888888in"}
+![](images/media/image43.png)
 
 # 应用包管理
 
@@ -572,13 +556,11 @@ height="1.4201388888888888in"}
 
 3.  在应用包列表中，需修改的应用包所在行中，单击"详情"。
 
-![](images/media/image44.png){width="5.7555555555555555in"
-height="1.6770833333333333in"}
+![](images/media/image44.png)
 
 4.  单击参数后的"修改"，在输入框后输入需修改的内容。
 
-![](images/media/image45.png){width="5.760416666666667in"
-height="1.4895833333333333in"}
+![](images/media/image45.png)
 
 5.  单击"确定"完成修改。
 
@@ -600,8 +582,7 @@ height="1.4895833333333333in"}
 
 3.  在应用包列表中，需删除的应用包所在行中，单击"删除"。
 
-> ![](images/media/image46.png){width="5.7659722222222225in"
-> height="1.6458333333333333in"}
+> ![](images/media/image46.png)
 
 4.  在弹出的对话框中，单击"确定"。
 
@@ -619,13 +600,11 @@ GameFlexMatch平台支持预先创建实例规格组模板，在创建fleet提�
 
 1.  选择配置-\>实例规格组，单击"新建实例规格组"；
 
-> ![](images/media/image8.jpg){width="5.760416666666667in"
-> height="1.6305555555555555in"}
+> ![](images/media/image8.jpg)
 
 2.  选择VM类型实例，输入组名称，按顺序选择需要的实例规格，点击"确定"。
 
-![](images/media/image47.jpeg){width="3.212413604549431in"
-height="3.9378477690288713in"}
+![](images/media/image47.jpeg)
 
 ## 创建Pod实例规格组
 
@@ -639,8 +618,7 @@ height="3.9378477690288713in"}
 
 2.  选择VM类型实例，输入组名称，按顺序选择需要的实例规格，点击"确定"。
 
-![](images/media/image48.jpeg){width="2.8854166666666665in"
-height="1.8637226596675416in"}
+![](images/media/image48.jpeg)
 
 # 应用进程队列管理
 
@@ -656,8 +634,7 @@ GameFlexMatch平台提供应用进程的全局化动态部署及管理，您可�
 
 2.  选择"Fleet管理 \> 我的Fleet \> 新建Fleet"。
 
-> ![](images/media/image49.png){width="5.763888888888889in"
-> height="1.1263888888888889in"}
+> ![](images/media/image49.png)
 
 3.  配置基本信息、资源信息等参数，您也可以通过json文件直接导入参数，或通过已填参数导出json文件。重点配置参数说明如下表所示
 
@@ -692,13 +669,11 @@ GameFlexMatch平台提供应用进程的全局化动态部署及管理，您可�
 
 3.  在Fleet列表中，需修改的Fleet所在行中，单击"详情"。
 
-> ![](images/media/image50.png){width="5.758333333333334in"
-> height="1.4395833333333334in"}
+> ![](images/media/image50.png)
 
 4.  单击参数栏后的"修改"，在侧弹窗中输入需修改的内容。
 
-> ![](images/media/image51.png){width="5.758333333333334in"
-> height="3.0055555555555555in"}
+> ![](images/media/image51.png)
 
 5.  单击"保存"完成修改。
 
@@ -720,8 +695,7 @@ GameFlexMatch平台提供应用进程的全局化动态部署及管理，您可�
 
 3.  在Fleet列表中，需删除的Fleet所在行中，单击"删除"。
 
-> ![](images/media/image52.png){width="5.763888888888889in"
-> height="1.4722222222222223in"}
+> ![](images/media/image52.png)
 
 4.  在弹出的对话框中，单击"确定"。
 
@@ -739,8 +713,7 @@ GameFlexMatch平台提供应用进程的全局化动态部署及管理，您可�
 
 2.  选择"Fleet管理 \> 伸缩策略管理 \> 新建伸缩策略"。
 
-> ![](images/media/image53.png){width="5.763888888888889in"
-> height="1.1541666666666666in"}
+> ![](images/media/image53.png)
 
 3.  配置名称，策略类型和指标等参数，重点配置参数说明如下表所示
 
@@ -768,13 +741,11 @@ GameFlexMatch平台提供应用进程的全局化动态部署及管理，您可�
 
 3.  在弹性伸缩策略列表中，需修改的弹性伸缩策略所在行中，单击" 详情"。
 
-> ![](images/media/image54.png){width="5.758333333333334in"
-> height="1.1756944444444444in"}
+> ![](images/media/image54.png)
 
 4.  在详情页中单击参数后的"修改"，输入修改后的内容，并单击"保存"完成修改。
 
-![](images/media/image55.jpeg){width="5.758333333333334in"
-height="0.68125in"}
+![](images/media/image55.jpeg)
 
 ## 删除弹性伸缩策略
 
@@ -790,8 +761,7 @@ height="0.68125in"}
 
 3.  在弹性伸缩策略列表中，需删除的弹性伸缩策略所在行中，单击" 删除"。
 
-> ![](images/media/image56.png){width="5.758333333333334in"
-> height="1.1541666666666666in"}
+> ![](images/media/image56.png)
 
 4.  在弹出的对话框中单击"确认"完成删除。
 
@@ -856,8 +826,7 @@ height="0.68125in"}
 
 3.  点击搜索框，出现按照fleet_id进行搜索、按照别名名称进行搜索、按照别名类型进行搜索，按照实际情况选择。
 
-> ![](images/media/image57.png){width="5.768055555555556in"
-> height="1.4354166666666666in"}
+> ![](images/media/image57.png)
 
 ## 删除别名
 
@@ -873,8 +842,7 @@ height="0.68125in"}
 
 3.  在弹出的确认对话框中，点击确定即可完成删除操作
 
-![](images/media/image58.png){width="5.768055555555556in"
-height="1.4208333333333334in"}
+![](images/media/image58.png)
 
 # 日志管理
 
@@ -890,13 +858,11 @@ GameFlexMatch平台提供对应用进程队列中的实例接入日志自动化�
 
 2.  选择"日志管理 \> 新建日志"；
 
-![](images/media/image23.png){width="5.758333333333334in"
-height="1.09375in"}
+![](images/media/image23.png)
 
 3.  填写日志接入参数，若无日志组，可点击"日志组名称"旁的"新建"；
 
-![](images/media/image24.png){width="5.769444444444445in"
-height="1.2965277777777777in"}
+![](images/media/image24.png)
 
 4.  新建日志接入参数详情如下：
 
@@ -912,8 +878,7 @@ height="1.2965277777777777in"}
 
 创建日志组参数详情如下：
 
-![](images/media/image59.png){width="2.7816819772528434in"
-height="1.708584864391951in"}
+![](images/media/image59.png)
 
 | **参数**           | **解释**                                      | **取值样例** |
 | ------------------ | --------------------------------------------- | ------------ |
@@ -922,8 +887,7 @@ height="1.708584864391951in"}
 
 5.  新建成功后会提示创建日志转储，选择"是"则跳转创建，选择"否"则跳过创建，进入日志接入详情页可以随时创建；
 
-![](images/media/image25.png){width="3.186246719160105in"
-height="1.445054680664917in"}
+![](images/media/image25.png)
 
 6.  注意，一个日志接入只能对应一个日志转储。
 
@@ -941,13 +905,11 @@ height="1.445054680664917in"}
 
 2.  选择"日志管理 \> 日志详情 \> 配置日志转储"；
 
-![](images/media/image60.png){width="5.758333333333334in"
-height="1.2694444444444444in"}
+![](images/media/image60.png)
 
 3.  填写创建日志转储的配置信息
 
-![](images/media/image61.png){width="5.758333333333334in"
-height="1.2472222222222222in"}
+![](images/media/image61.png)
 
 4.  配置参数信息如下：
 
@@ -969,13 +931,11 @@ height="1.2472222222222222in"}
 
 1.  删除日志接入（若已配置日志转储，则需要先删除日志转储），在日志接入的列表页，找到需要删除的日志接入项的删除按钮，点击即可删除
 
-![](images/media/image62.png){width="5.758333333333334in"
-height="1.1590277777777778in"}
+![](images/media/image62.png)
 
 2.  删除日志转储，在日志接入的详情页面中，点击右上角"删除日志转储"即可删除。
 
-![](images/media/image63.png){width="5.758333333333334in"
-height="1.5166666666666666in"}
+![](images/media/image63.png)
 
 # 事件审计
 
@@ -990,8 +950,7 @@ Match的事件，包括网络，实例，会话和应用包等类型，事件分
 
 选择事件审计\>事件列表来查看事件，可以通过事件的资源类型，事件级别来进行筛选：
 
-![](images/media/image64.png){width="5.768055555555556in"
-height="2.436111111111111in"}
+![](images/media/image64.png)
 
 ## 消息管理
 
@@ -1003,23 +962,20 @@ height="2.436111111111111in"}
 
 1.  选择事件审计\>消息管理，先为事件添加主题，选择需要发送通知的事件等级：
 
-> ![](images/media/image65.png){width="5.768055555555556in"
-> height="1.4409722222222223in"}
+> ![](images/media/image65.png)
 
 ![](images/media/image66.png){width="3.4232699037620296in"
 height="1.852176290463692in"}
 
 2.  创建主题后，添加订阅者，支持邮箱和短信两种通知方式。
 
-> ![](images/media/image67.png){width="3.4887904636920384in"
-> height="1.8695647419072616in"}
+> ![](images/media/image67.png)
 
 3.  创建成功后，SMN会发送确认订阅邮件，点击邮件中的链接即可确认该订阅信息。
 
 4.  删除消息通知可点击"取消订阅"。
 
-> ![](images/media/image68.png){width="5.768055555555556in"
-> height="1.6701388888888888in"}
+> ![](images/media/image68.png)
 
 # API调用
 
