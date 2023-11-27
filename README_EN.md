@@ -4,7 +4,7 @@ Language: [中文](/README.md) | **ENGLISH**
 
 # Brief Introduction #
 
-`GameFlexMatch`is a service hosting solution that consists of four service components (`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`), which can implement application hosting, elastic scaling of resources required by hosting applications, resource scheduling and management of application processes, and gray release of applications.`region`During deployment, users can access the nearest network, reducing latency and cross-region DR of service resources. 
+`GameFlexMatch`is a service hosting solution that consists of four service components (`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`), which can implement application hosting, elastic scaling of resources required by hosting applications, resource scheduling and management of application processes, and gray release of applications. Multi-region deployment enables users to access the nearest network, reducing latency and cross-region DR of service resources. 
 It helps developers quickly build a stable and low-latency multiplayer game deployment environment and saves a lot of O&M costs.`Unreal Engine`,`Unity`,`C#`,`C++`And also the`gRPC`any language supported`server`Deploy and run the framework.
 
 # Logical Architecture #
