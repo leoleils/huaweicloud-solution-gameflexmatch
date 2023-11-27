@@ -153,8 +153,7 @@
 
 3.  创建实例规格，以vm类型的2u4g规格为例，填写实例规格组名称，选择使用的实例规格，点击确定。
 
-> ![](images/media/image9.png){width="3.667014435695538in"
-> height="3.1129451006124236in"}
+> ![](images/media/image9.png){
 
 ## 创建Fleet流程
 
@@ -172,26 +171,24 @@
 
 2.  进入创建fleet界面；
 
-> ![](images/media/image10.jpeg)
+> ![](images/media/image10.jpg)
 
 3.  填写创建fleet的相关信息，支持json格式的文件导入，参数详情参考**应用进程队列管理章节**；
 
-> ![](images/media/image11.jpeg)
+> ![](images/media/image11.jpg)
 
 4.  点击创建，开始创建fleet。
 
-> ![](images/media/image11.jpeg){
-> 
 
 ### 检查Fleet是否创建成功
 
 1.  进入fleet列表，找到刚刚创建的fleet；
 
-> ![](images/media/image12.jpeg)
+> ![](images/media/image12.jpg)
 
 2.  点击详情，查看fleet信息；
 
-> ![](images/media/image13.jpeg)
+> ![](images/media/image13.jpg)
 
 3.  fleet状态由"创建中"转为"活跃"，则创建成功，转为"异常"，则创建失败，在详情页状态原因可初步定位出现异常的步骤，更详细排查原因需管理员查看FleetManager服务日志定位，常见错误见错误信息。
 
@@ -207,17 +204,17 @@
 
 1.  找到弹性伸缩策略创建入口；
 
-> ![](images/media/image14.jpeg)
+> ![](images/media/image14.jpg)
 
 2.  选择弹性伸缩策略，填写参数，点击创建；
 
 > 注：可用会话比=（最大会话数-已用会话数）/最大会话数
 >
-> ![](images/media/image15.jpeg)
+> ![](images/media/image15.JPG)
 
 3.  在伸缩策略详情页，选择新建关联；
 
-> ![](images/media/image16.jpeg)
+> ![](images/media/image16.JPG)
 
 4.  选择策略需要关联的fleet；
 
