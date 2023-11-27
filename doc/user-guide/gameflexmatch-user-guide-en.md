@@ -972,15 +972,15 @@ ranging from 0 to 100.
 
 3. Set the required parameters.
 
-   | Parameters           | Description                                                  | Type   |
-   | -------------------- | ------------------------------------------------------------ | ------ |
-   | **aliases**          | The alias name contains 1 to 1024 characters.  It starts with a letter and consists of letters, digits, underscores (_), and  hyphens (-). | string |
-   | **Description**      | Description of the alias (1 to 1024  characters)             | string |
-   | **Type**             | Alias type (activated/deactivated). Alias of  the activated type can be used to create sessions. | enum   |
-   | **Message**          | Alias message, which is returned when a  session is created with an alias of the disabled type (1 - 1024 characters) | string |
-   | **Associated Fleet** | Select the fleet to be associated with the  alias and set the weight of the fleet. A maximum of 10 fleets can be  associated. | array  |
-   | **Fleet ID**         | Specifies the ID of the associated fleet. The  value is a 32-bit UUID. | string |
-   | **Weight**           | The value ranges from 0 to 100.                              | int    |
+| Parameters           | Description                                                  | Type   |
+| -------------------- | ------------------------------------------------------------ | ------ |
+| **aliases**          | The alias name contains 1 to 1024 characters.  It starts with a letter and consists of letters, digits, underscores (_), and  hyphens (-). | string |
+| **Description**      | Description of the alias (1 to 1024  characters)             | string |
+| **Type**             | Alias type (activated/deactivated). Alias of  the activated type can be used to create sessions. | enum   |
+| **Message**          | Alias message, which is returned when a  session is created with an alias of the disabled type (1 - 1024 characters) | string |
+| **Associated Fleet** | Select the fleet to be associated with the  alias and set the weight of the fleet. A maximum of 10 fleets can be  associated. | array  |
+| **Fleet ID**         | Specifies the ID of the associated fleet. The  value is a 32-bit UUID. | string |
+| **Weight**           | The value ranges from 0 to 100.                              | int    |
 
 4.  After the parameters are set, click Create.
 
@@ -1291,12 +1291,10 @@ access the GameFlexMatch interface.
 
 1.  Session creation failures are classified into the following types:
 
-```{=html}
-<!-- -->
-```
-a)  **error for timeout:**
 
--   Check whether the 60001 port is enabled for the appgateway address.
+-   **error for timeout:**
+
+    Check whether the 60001 port is enabled for the appgateway address.
     If the 60001 port is enabled for the appgateway address in the
     security group corresponding to the appgateway address. If the 60001
     port is not enabled, You can manually modify the ports and addresses
@@ -1308,11 +1306,11 @@ a)  **error for timeout:**
     caused by configuration problems, the network is faulty. Contact
     HUAWEI CLOUD for emergency workarounds.
 
-> If the problem occurs occasionally, view the
-> /home/appgateway/log/run/run.log log of AppGateway and the run.log log
-> of AuxProxy in /etc/auxproxy/log/, trace the session life process, and
-> determine whether the problem is caused by the GameFlexMatch or the
-> game service.
+     If the problem occurs occasionally, view the
+     /home/appgateway/log/run/run.log log of AppGateway and the run.log log
+     of AuxProxy in /etc/auxproxy/log/, trace the session life process, and
+     determine whether the problem is caused by the GameFlexMatch or the
+     game service.
 
 -   Error cause: Redis or MySQL: The MySQL or Redis specifications are
     low and need to be expanded in a timely manner.
@@ -1363,15 +1361,15 @@ update methods are available:
 
 ### Full traffic diversion
 
-6.  Create a fleet with the same configuration as the fleet of the old
+1.  Create a fleet with the same configuration as the fleet of the old
     version. Set the minimum number of instances of the new version
     fleet to the number of instances of the old version fleet.
 
-7.  Enable auto scaling and associate the new version fleet with the
+2.  Enable auto scaling and associate the new version fleet with the
     alias of the old version fleet. Disassociate the fleet of the old
     version from the alias.
 
-8.  After all sessions on the fleet of the old version are complete,
+3.  After all sessions on the fleet of the old version are complete,
     change the minimum number of instances of the fleet of the new
     version to the minimum number of instances set by the fleet of the
     old version. Then, reclaim the resources of the fleet of the old
@@ -1382,14 +1380,14 @@ completed quickly and securely during peak hours.
 
 ### Other questions
 
-9.  Is the CPU or memory abnormal on the uniform machine?
+1.  Is the CPU or memory abnormal on the uniform machine?
 
 > Log in to the uniformed machine and check whether the number of game
 > processes is abnormal. If yes, check whether a single game process
 > occupies a large number of CPU or memory resources and adjust the
 > number of processes started on a single machine.
 
-10. Is the resource monitoring exception of GameFlexMatch?
+2. Is the resource monitoring exception of GameFlexMatch?
 
 > Check the current service traffic information. If the traffic
 > increases sharply compared with the previous period, expand the
