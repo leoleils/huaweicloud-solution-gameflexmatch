@@ -1,5 +1,7 @@
 # huaweicloud-solution-GameFlexMatch #
 
+Language: [中文](/README.md) | **ENGLISH**
+
 # Brief Introduction #
 
 `GameFlexMatch`is a service hosting solution that consists of four service components (`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`), which can implement application hosting, elastic scaling of resources required by hosting applications, resource scheduling and management of application processes, and gray release of applications.`region`During deployment, users can access the nearest network, reducing latency and cross-region DR of service resources. 
