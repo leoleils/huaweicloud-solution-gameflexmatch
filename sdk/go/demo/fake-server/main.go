@@ -15,11 +15,11 @@
 package main
 
 import (
+	"fake-server/api"
+	"fake-server/config"
+	"fake-server/gsemanager"
+	"fake-server/logger"
 	"flag"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/api"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/config"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/gsemanager"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/logger"
 	"os"
 	"os/signal"
 	"syscall"

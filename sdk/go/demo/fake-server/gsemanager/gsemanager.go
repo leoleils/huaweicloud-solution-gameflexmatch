@@ -2,9 +2,9 @@ package gsemanager
 
 import (
 	"context"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/config"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/grpcsdk"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/logger"
+	"fake-server/config"
+	"fake-server/grpcsdk"
+	"fake-server/logger"
 	"fmt"
 	"os"
 	"strconv"

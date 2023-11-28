@@ -2,10 +2,10 @@ package api
 
 import (
 	"context"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/config"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/grpcsdk"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/gsemanager"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/logger"
+	"fake-server/config"
+	"fake-server/grpcsdk"
+	"fake-server/gsemanager"
+	"fake-server/logger"
 	"fmt"
 	"math/rand"
 	"net"

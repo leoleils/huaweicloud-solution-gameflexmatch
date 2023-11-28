@@ -3,9 +3,9 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/config"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/gsemanager"
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/logger"
+	"fake-server/config"
+	"fake-server/gsemanager"
+	"fake-server/logger"
 	"fmt"
 	"math/rand"
 	"net"

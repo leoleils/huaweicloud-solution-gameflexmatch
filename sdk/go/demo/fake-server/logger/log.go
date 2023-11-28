@@ -1,10 +1,11 @@
 package logger
 
 import (
-	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/config"
+	"fake-server/config"
 	"fmt"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
 )
 
