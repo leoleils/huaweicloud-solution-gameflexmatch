@@ -503,10 +503,10 @@ ps -aux | grep fleetmanager
 
 ## **其他说明**
 
-   + 前端部署指导详见 [doc/build/console.md](/doc/build/console.md)
-   + 应用镜像制作详见 [doc/build/make-image-guide.md](/doc/build/make-image-guide.md)
-   + 部署过程中必要的参数注解详见 [doc/build/param-annotation.md](/doc/build/param-annotation.md)
-   + 平台用户管理模块使用详见 [doc/build/user-management.md](/doc/build/user-management.md)
+   + 前端部署指导详见 [doc/build/console.md](/build/console.md)
+   + 应用镜像制作详见 [doc/build/make-image-guide.md](/build/make-image-guide.md)
+   + 部署过程中必要的参数注解详见 [doc/build/param-annotation.md](/build/param-annotation.md)
+   + 平台用户管理模块使用详见 [doc/build/user-management.md](/build/user-management.md)
    + console平台的用户指南详见`/doc/user-guide`
    + 版本更新记录详见`doc/version/`
 

@@ -472,10 +472,10 @@ ps -aux | grep fleetmanager
 
 ## **Other instructions** ##
 
- *  For details about PU deployment, see.[doc/build/console.md](/doc/build/console.md)	
- *  For details about how to create an application image, see.[doc/build/make-image-guide.md](/doc/build/make-image-guide.md)	
- *  For details about the parameters required during deployment, see.[doc/build/param-annotation.md](/doc/build/param-annotation.md)	
- *  For details about how to use the platform user management module, see.[doc/build/user-management.md](/doc/build/user-management.md)	
+ *  For details about PU deployment, see.[doc/build/console.md](/build/console.md)	
+ *  For details about how to create an application image, see.[doc/build/make-image-guide.md](/build/make-image-guide.md)	
+ *  For details about the parameters required during deployment, see.[doc/build/param-annotation.md](/build/param-annotation.md)	
+ *  For details about how to use the platform user management module, see.[doc/build/user-management.md](/build/user-management.md)	
  *  For details about the console user guide, see.`/doc/user-guide`
  *  For details about the version update history, see.`doc/version/`
 

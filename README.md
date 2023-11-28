@@ -23,7 +23,7 @@ GameFlexMatch平台由五个服务组件组成：
 ## 部署指南
    + 方案基于华为云服务运行，涉及资源包括弹性云服务器(ECS)，镜像服务(IMS)，对象存储服务(OBS)，虚拟私有云(VPC)，云监控服务(CES)等，数据库使用MySql，Redis和InfluxDB 
    + 前后端部署指导详见 [doc/deployment/deployment-guide-CN.md](doc/deployment/deployment-guide-CN.md)
-   + 部署过程中必要的参数注解详见 [doc/build/param-annotation.md](/doc/build/param-annotation.md)
+   + 部署过程中必要的参数注解详见 [doc/build/param-annotation.md](/build/param-annotation.md)
 
 ## 使用指南
    + console平台的用户指南详见[/doc/user-guide/gameflexmatch-user-guide](doc/user-guide/gameflexmatch-user-guide.md)
