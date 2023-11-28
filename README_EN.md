@@ -19,6 +19,20 @@ The GameFlexMatch platform consists of five service components:
  *  [AuxProxy](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-auxproxy): Automatically starts the instance after capacity expansion, which creates application processes, reports process status, and communicates with application processes.
  *  [Console](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-console): O&M platform, used for monitoring`GameFlexMatch`Running status and O&M management of the`GameFlexMatch`of the`fleet`2. Application packages and user information
 
+## Content
+```
+build                   # Project build directory
+doc                     # Document directory
+    |-- api             # Management plane API document
+    |-- deployment      # Solution deployment operation document
+    |-- developer       # Application access development document
+    |-- user-guide      # User operation guide
+    |-- version         # Version update records
+sdk                     #App access SDK and demo
+src                     #Source code directory of the project component
+tools                   #Auxiliary tools for application deployment and usage
+```
+
 ## Deployment Guide ##
 
  *  The solution runs on Huawei cloud services. Resources involved include ECS, IMS, OBS, VPC, and CES. MySQL

@@ -18,7 +18,19 @@ GameFlexMatch平台由五个服务组件组成：
 + [AuxProxy](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-auxproxy): 在扩容出的实例中自动拉起，负责应用进程的创建、进程状态的上报以及应用进程的通信
 + [Console](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-console): 运维平台，用于监控`GameFlexMatch`的运行状态，以及运维管理`GameFlexMatch`的`fleet`、应用包与用户信息等
 
-
+## 仓库目录
+```
+build             # 项目构建目录
+doc               # 文档目录
+  |-- api         # 管理面API文档
+  |-- deployment  # 方案部署操作文档
+  |-- developer   # 应用接入开发文档
+  |-- user-guide  # 用户操作指南
+  |-- version     # 版本更新记录
+sdk               # 应用接入sdk和demo
+src               # 项目组件源码目录
+tools             # 应用部署/使用辅助工具
+```
 
 ## 部署指南
    + 方案基于华为云服务运行，涉及资源包括弹性云服务器(ECS)，镜像服务(IMS)，对象存储服务(OBS)，虚拟私有云(VPC)，云监控服务(CES)等，数据库使用MySql，Redis和InfluxDB 
