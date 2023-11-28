@@ -1,22 +1,21 @@
 package logger
 
 import (
+	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/config"
+	"fmt"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
-	"fake-server/config"
-	"fmt"
 	"os"
 )
 
 var Logger *FMLogger
 
 const (
-	DefaultLogRotateSize = 100
+	DefaultLogRotateSize  = 100
 	DefaultLogBackupCount = 100
-	DefaultLogMaxAge = 100
-
+	DefaultLogMaxAge      = 100
 )
+
 type FMLogger struct {
 	logger *zap.SugaredLogger
 }
@@ -63,13 +62,13 @@ func Init(fields ...zap.Field) (*FMLogger, error) {
 	pid := os.Getpid()
 	filePath := config.GlobalConfig.LogPath + fmt.Sprintf("/run_%d.log", pid)
 	// 创建日志输出Core
-	fmt.Printf("Init logger setting: MaxSize: %d, MaxAge: %d, MaxBackups: %d, logPath: %s\n", 
-			DefaultLogRotateSize, DefaultLogMaxAge, DefaultLogBackupCount, filePath)
+	fmt.Printf("Init logger setting: MaxSize: %d, MaxAge: %d, MaxBackups: %d, logPath: %s\n",
+		DefaultLogRotateSize, DefaultLogMaxAge, DefaultLogBackupCount, filePath)
 	fileWriter := zapcore.AddSync(&lumberjack.Logger{
 		Filename:   filePath,
-		MaxSize:    DefaultLogRotateSize, 	// megabytes
-		MaxAge: 	DefaultLogBackupCount, 		// backup log files 7 Days
-		MaxBackups: 	DefaultLogMaxAge,	// backup log files 100
+		MaxSize:    DefaultLogRotateSize,  // megabytes
+		MaxAge:     DefaultLogBackupCount, // backup log files 7 Days
+		MaxBackups: DefaultLogMaxAge,      // backup log files 100
 		Compress:   true,
 	})
 	fileCore := zapcore.NewCore(

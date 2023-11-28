@@ -2,9 +2,9 @@ package gsemanager
 
 import (
 	"context"
-	"fake-server/config"
-	"fake-server/grpcsdk"
-	"fake-server/logger"
+	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/config"
+	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/grpcsdk"
+	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/logger"
 	"fmt"
 	"os"
 	"strconv"
@@ -29,14 +29,14 @@ const (
 )
 
 type gsemanager struct {
-	pid                 string
+	pid            string
 	gameSessionMux sync.Mutex
 	gameSessions   map[string]*grpcsdk.ServerSession
 
-	playSessionMux		sync.Mutex
-	playerSessions		map[string][]string
-	terminationTime     int64
-	rpcClient           grpcsdk.ScaseGrpcSdkServiceClient
+	playSessionMux  sync.Mutex
+	playerSessions  map[string][]string
+	terminationTime int64
+	rpcClient       grpcsdk.ScaseGrpcSdkServiceClient
 }
 
 func GetGseManagerByPid(pid int) *gsemanager {
@@ -61,9 +61,9 @@ func GetGseManagerByPid(pid int) *gsemanager {
 func GetGseManager() *gsemanager {
 	once.Do(func() {
 		gseManagerIns = &gsemanager{
-			pid:                 strconv.Itoa(os.Getpid()),
+			pid:            strconv.Itoa(os.Getpid()),
 			playerSessions: make(map[string][]string, 0),
-			gameSessions: make(map[string]*grpcsdk.ServerSession, 0),
+			gameSessions:   make(map[string]*grpcsdk.ServerSession, 0),
 		}
 
 		url := fmt.Sprintf("%s:%d", localhost, agentPort)
@@ -84,7 +84,7 @@ func (g *gsemanager) SetGameServerSession(gameserversession *grpcsdk.ServerSessi
 	g.gameSessionMux.Lock()
 	defer g.gameSessionMux.Unlock()
 	if len(g.gameSessions) > config.GlobalConfig.MaxGameSessionCount {
-		return fmt.Errorf("set game session %s err because game session count cant lagger than %d, now: %d", 
+		return fmt.Errorf("set game session %s err because game session count cant lagger than %d, now: %d",
 			gameserversession.ServerSessionId, config.GlobalConfig.MaxGameSessionCount, len(g.gameSessions))
 	}
 	g.gameSessions[gameserversession.ServerSessionId] = gameserversession
@@ -327,7 +327,7 @@ func (g *gsemanager) HandingTerminatingProcess(terminationTime int64) {
 		g.gameSessionMux.Lock()
 		if len(g.gameSessions) > 0 {
 			keys := make([]string, 0, len(g.gameSessions))
-			for key := range g.gameSessions{
+			for key := range g.gameSessions {
 				keys = append(keys, key)
 			}
 			logger.Logger.Infof("[clean game session] the process still exist game session: %d, game session ids: %+v", len(g.gameSessions), keys)

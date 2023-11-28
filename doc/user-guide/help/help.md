@@ -16,8 +16,8 @@
    应用包创建过程涉及“创建ECS”、“拉取应用包”、“创建镜像”过程，需登录`FleetManager`日志查看具体报错原因后，进行排查
 ## 会话创建
 **查看会话错误原因**
-![首页](../../../img/help/homepage.jpg)
-![错误会话原因](../../../img/help/err-session.jpg)
+![首页](../../img/help/homepage.jpg)
+![错误会话原因](../../img/help/err-session.jpg)
 1. 会话创建失败分为多种情况：
    + **error for timeout**: 
      + 首先确定是否大量出现，若大量出现，则为对战服与appgateway的网络连接出现问题，首先排查对战服机器对应的安全组是否对appgateway地址开放60001端口，若未开放，可手动修改该安全组对appgateway开放端口与地址(对该`fleet`生效)，同时修改`fleetmanager`的`/home/fleetmanager/configmap/service_config.json`文件的`internal_inbound_permissions`，修改后对新fleet生效，该种情况一般在新部署时出现；若不为配置问题，则初步判断为网络问题，需联系华为云进行紧急规避

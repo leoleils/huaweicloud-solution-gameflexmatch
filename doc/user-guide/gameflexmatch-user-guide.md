@@ -871,7 +871,6 @@ GameFlexMatch平台提供对应用进程队列中的实例接入日志自动化�
 | 路径         | 日志所在的路径或文件，支持多个接入路径， | /root/log或/root/log.txt |
 | 描述         | 该日志接入的描述信息                     |                          |
 
-​             
 
 创建日志组参数详情如下：
 
@@ -980,8 +979,7 @@ height="1.852176290463692in"}
 
 在调用所有的接口前，需要进行认证校验
 
-1\.
-构造登录请求，其中密码为RSA加密后的密文，加密的公钥需与fleetmanager部署的后端私钥保持一致，加密脚本可参考/tools/cipher文件
+1. 构造登录请求，其中密码为RSA加密后的密文，加密的公钥需与fleetmanager部署的后端私钥保持一致，加密脚本可参考/tools/cipher文件
 
 POST URL: /v1/user/login
 
@@ -1007,7 +1005,47 @@ Response Body:
 }
 ```
 
-2\. 将\`Response\`中的\`Auth-Token\`字段以及字段值加入到请求体header里，即可正常访问GameFlexMatch接口业务
+2. 将\`Response\`中的\`Auth-Token\`字段以及字段值加入到请求体header里，即可正常访问GameFlexMatch接口业务
+
+
+# 会话管理
+
+## 创建服务端会话
+
+### 操作场景
+
+GameFlexMatch平台提供服务端会话分配的功能，在服务端应用就绪后，可向服务端程序创建服务端会话
+
+### 创建会话
+
+创建会话需使用API调用Fleetmanager接口，以下示范通过接口调用工具postman演示
+
+1. 登录Fleetmanager，获取Auth-Token
+
+![image-20231121170618905](images/media/login.jpg)
+
+2. 选择一个fleet，使用该fleet_id创建一个server_session，在Header里粘贴Auth-Token，请求体中填写数据（详见API文档）
+
+![image-20231121171036847](images/media/create_session_add_header.jpg)
+
+创建会话成功
+
+![image-20231121172907816](images/media/create_session.jpg)
+
+3. 创建成功后，获得server_session_id，调用API查询会话的激活状态
+
+![image-20231121173625558](images/media/session_active.jpg)
+
+4. 当会话状态为ACTIVE，则说明当前会话状态已可用，响应体中返回该服务端会话所在ECS的IP地址，监听的端口；若创建fleet添加了域名，响应体中还会返回访问ECS的域名，域名格式为 **{随机字符串}.{主域名}**。
+
+- 通过IP地址访问服务，格式为 **"{ip_address}:{port}"**
+
+![image-20231121173156926](images/media/get_ip_port.jpg)
+
+- 通过域名访问服务，该域名指向fleet中的一台ECS，格式为 **"{domain_name}:{port}"**
+
+![image-20231121174427611](images/media/get_domain_port.jpg)
+
 
 # 常见问题FAQ
 

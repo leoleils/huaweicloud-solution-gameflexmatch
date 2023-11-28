@@ -2,10 +2,10 @@ package api
 
 import (
 	"context"
-	"fake-server/config"
-	"fake-server/grpcsdk"
-	"fake-server/gsemanager"
-	"fake-server/logger"
+	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/config"
+	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/grpcsdk"
+	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/gsemanager"
+	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/logger"
 	"fmt"
 	"math/rand"
 	"net"
@@ -113,8 +113,8 @@ func (s *rpcService) OnProcessTerminate(ctx context.Context, req *grpcsdk.Proces
 }
 
 func (s *rpcService) HandleReadyProcess() {
-	processRunMinute := config.GlobalConfig.ProcessRunMinute 
-	runSeconds := processRunMinute * 60 + rand.Intn(100) - 50
+	processRunMinute := config.GlobalConfig.ProcessRunMinute
+	runSeconds := processRunMinute*60 + rand.Intn(100) - 50
 	logger.Logger.Infof("process will run %d seconds", runSeconds)
 	timechannel := time.After(time.Duration(runSeconds) * time.Second)
 	select {

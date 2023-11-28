@@ -9,7 +9,7 @@ It helps developers quickly build a stable and low-latency multiplayer game depl
 
 # Logical Architecture #
 
-![Image](img/architecture-EN.jpg)	
+![Image](doc/img/architecture-EN.jpg)	
 
 The GameFlexMatch platform consists of five service components:
 

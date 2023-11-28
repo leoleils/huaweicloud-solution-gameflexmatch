@@ -8,7 +8,7 @@ Language: **中文** | [English](/README_EN.md)
 
 
 # 逻辑架构
-<img src="img/architecture.jpg" width="80%">
+<img src="doc/img/architecture.jpg" width="80%">
 
 GameFlexMatch平台由五个服务组件组成：
 
@@ -29,7 +29,7 @@ GameFlexMatch平台由五个服务组件组成：
    + console平台的用户指南详见[/doc/user-guide/gameflexmatch-user-guide](doc/user-guide/gameflexmatch-user-guide.md)
 
 ## 开发指南
-   + 支持GRPC的方式将应用托管到GameFlexMatch，相关接口与接入流程参考[doc/developer/developer_guide.md](doc/developer/developer_guide.md)
+   + 支持GRPC的方式将应用托管到GameFlexMatch，相关接口与接入流程参考[doc/developer/developer_guide.md](doc/developer/developer_guide_CN.md)
    + 应用托管接入示例可参考`/demo`目录
 
 ## Reference

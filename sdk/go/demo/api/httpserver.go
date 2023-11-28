@@ -3,9 +3,9 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"fake-server/config"
-	"fake-server/gsemanager"
-	"fake-server/logger"
+	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/config"
+	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/gsemanager"
+	"fleetmanager_build/gfm1125/huaweicloud-solution-metaspace/sdk/go/demo/logger"
 	"fmt"
 	"math/rand"
 	"net"
@@ -21,8 +21,8 @@ import (
 )
 
 const (
-	SUCCESS    = 0
-	SUCCESSMSG = "success"
+	SUCCESS      = 0
+	SUCCESSMSG   = "success"
 	DelaySeconds = 5
 )
 
@@ -107,7 +107,7 @@ func (h *httpProcess) Login(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "%s", resp)
 		return
 	}
-	
+
 	if gameSessionId == "" {
 		resp, _ := h.writeResp(http.StatusBadRequest, "gameSessionId cant be empty", nil)
 		fmt.Fprintf(w, "%s", resp)
@@ -202,7 +202,7 @@ func (h *httpProcess) EndProcess(w http.ResponseWriter, req *http.Request) {
 	}
 
 	successMsg, _ := h.writeResp(SUCCESS, SUCCESSMSG, nil)
-	fmt.Fprintf(w, "%s", successMsg)	
+	fmt.Fprintf(w, "%s", successMsg)
 	logger.Logger.Infof("process will end delay %d seconds", DelaySeconds)
 	h.EndingProcessDelaySeconds()
 }
@@ -317,10 +317,10 @@ func (h *httpProcess) HelloWorld(w http.ResponseWriter, req *http.Request) {
 
 func (h *httpProcess) GenerateHttpRandomPort(startPort int, endPort int) int {
 	rand.Seed(time.Now().UnixNano())
-	return rand.Intn(endPort - startPort) + startPort
+	return rand.Intn(endPort-startPort) + startPort
 }
 
-func (h *httpProcess)EndingProcessDelaySeconds() {
+func (h *httpProcess) EndingProcessDelaySeconds() {
 	wg := sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
