@@ -4,28 +4,45 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
 **其中：表中红色的参数需要根据实际情况修改，其他可以保持默认**
 
 ## 参数介绍
-```html
+
 <style type="text/css">
 
 .tg  {border-collapse:collapse;border-color:#ccc;border-spacing:0;}
+
 .tg td{background-color:#fff;border-color:#ccc;border-style:solid;border-width:1px;color:#333;
   font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}
+
 .tg th{background-color:#f0f0f0;border-color:#ccc;border-style:solid;border-width:1px;color:#333;
   font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+
 .tg .tg-cly1{text-align:left;vertical-align:middle}
+
 .tg .tg-x3ds{background-color:#f9f9f9;color:#00F;text-align:left;text-decoration:underline;vertical-align:middle}
+
 .tg .tg-m64s{background-color:#F2F2F2;font-weight:bold;text-align:center;vertical-align:middle}
+
 .tg .tg-ym56{background-color:#f9f9f9;color:#F00;text-align:left;vertical-align:middle}
+
 .tg .tg-6vn3{background-color:#F2F2F2;color:#F00;text-align:left;vertical-align:middle}
+
 .tg .tg-fapl{color:#F00;text-align:left;vertical-align:middle}
+
 .tg .tg-8v0r{background-color:#F2F2F2;color:#00F;text-align:left;text-decoration:underline;vertical-align:top}
+
 .tg .tg-61g0{background-color:#F2F2F2;text-align:left;vertical-align:middle}
+
 .tg .tg-ukly{background-color:#D9D9D9;font-weight:bold;text-align:center;vertical-align:middle}
+
 .tg .tg-ogp5{background-color:#f9f9f9;font-weight:bold;text-align:center;vertical-align:middle}
+
 .tg .tg-yjjc{background-color:#f9f9f9;text-align:left;vertical-align:middle}
+
 .tg .tg-wu5t{background-color:#F2F2F2;font-weight:bold;text-align:center;vertical-align:middle}
+
 .tg .tg-poke{background-color:#F2F2F2;color:#F00;text-align:left;vertical-align:middle}
+
 .tg .tg-5fx9{background-color:#F2F2F2;text-align:left;vertical-align:middle}
+
 .tg .tg-l010{background-color:#F2F2F2;color:#00F;text-align:left;text-decoration:underline;vertical-align:middle}
 
 </style>
@@ -928,4 +945,3 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
   </tr>
 </tbody>
 </table>
-```
