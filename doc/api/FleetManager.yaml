@@ -1975,7 +1975,7 @@ paths:
     get:
       tags:
         - 用户管理
-      operationId: ListOSupportRegions
+      operationId: ListSupportRegions
       summary: 查询支持的region
       description: 查询支持的region
       x-is-registered: 'Y'
@@ -1993,10 +1993,32 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-        '400':
-          description: 参数错误
+        '500':
+          description: 服务器内部错误
           schema:
             $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /user/support-eip-types:
+    get:
+      tags:
+        - 用户管理
+      operationId: ListSupportEipType
+      summary: 查询支的EIP类型列表
+      description: 查询支的EIP类型列表
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 查询应用进程队列详情响应
+          schema:
+            $ref: '#/definitions/ListSupportEipTypes'
           headers:
             X-Request-Id:
               type: string
@@ -5213,7 +5235,7 @@ definitions:
         minLength: 0
         maxLength: 2048
         example: '2020-06-28T00:00:00Z'
-
+        
   ListFleetsResponseBody:
     properties:
       count:
@@ -7006,6 +7028,40 @@ definitions:
         maximum: 2147483647
       regions:
         description: 支持的region数组
+        minItems: 0
+        maxItems: 100
+        items:
+          type: string
+        type: array
+  ListSupportEipTypes:
+    type: object
+    description: 后台支持的EIP类型
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 支持的region数量
+        example: 1
+        minimum: 1
+        maximum: 2147483647
+      eip_types:
+        description: 支持的所有region的EIP类型
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/EipType'
+        type: array
+  EipType:
+    type: object
+    description: 某个region的EIP类型
+    properties:
+      region:
+        description: 支持的region
+        minItems: 0
+        maxItems: 100
+        type: string
+      eip_type:
+        description: 支持EIP类型列表
         minItems: 0
         maxItems: 100
         items:
