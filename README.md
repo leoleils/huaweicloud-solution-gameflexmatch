@@ -4,7 +4,7 @@
 
   <img src="doc/img/logo.jpg" height="40" />
 
-语言: **zh** | [en](README_EN.md)
+   语言: **zh** | [en](README_EN.md)
 
 </div>
 
