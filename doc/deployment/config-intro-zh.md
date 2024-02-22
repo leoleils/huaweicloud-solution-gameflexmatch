@@ -33,7 +33,9 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
 
 .tg .tg-ukly{background-color:#D9D9D9;font-weight:bold;text-align:center;vertical-align:middle}
 
-.tg .tg-ogp5{background-color:#f9f9f9;font-weight:bold;text-align:center;vertical-align:middle}
+.tg .tg-ogp5 {
+    background-color:#f9f9f9;font-weight:bold;text-align:center;vertical-align:middle
+  }
 
 .tg .tg-yjjc{background-color:#f9f9f9;text-align:left;vertical-align:middle}
 
