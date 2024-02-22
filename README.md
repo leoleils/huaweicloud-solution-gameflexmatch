@@ -126,7 +126,7 @@ game-flex-match_release
    + 进入目录：`cd game-flex-match_release`
 2. 修改配置文件
    + 在安装部署时，你可以先了解先各个配置文件的各个参数说明，并根据实际情况进行修改,可以参考：[ZH](./doc/deployment/config-intro-zh.md)|[EN](./doc/deployment/config-intro-en.md)
-   + 配置文件在二进制应用包中可以找到: `./conf/init.yaml`，你可以根据实际情况修改
+   + 配置文件在二进制应用包中可以找到: `./conf/init.yaml`，你可以根据实际情况修改,你也可以在[init.yaml](release/conf/init.yaml)中查看
 3. 安装服务组件
    + **FleetManager**: 
    初始化安装：`./sac-gfm install --service fleetmanager`,该步骤将会自动生成`fleetmanager-start.sh`启动脚本
