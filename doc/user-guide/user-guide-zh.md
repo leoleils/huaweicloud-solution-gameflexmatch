@@ -2,7 +2,7 @@
 
 本服务共有四大组件：FleetManager、AppGateway、AASS和AuxProxy。其中FleetManager是全局组件，AppGateway组件和AASS组件为Region级组件，AuxProxy为VM级别组件。整体架构图如下：
 
-![111](images/media/image1.png)
+![](images/media/image1.png)
 
 ## 组件功能
 

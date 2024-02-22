@@ -4,7 +4,8 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
 **其中：表中红色的参数需要根据实际情况修改，其他可以保持默认**
 
 ## 参数介绍
-<div>
+<!DOCTYPE html>
+<html lang="en">
 <style type="text/css">
 .tg  {border-collapse:collapse;border-color:#ccc;border-spacing:0;}
 .tg td{background-color:#fff;border-color:#ccc;border-style:solid;border-width:1px;color:#333;
@@ -925,4 +926,3 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
   </tr>
 </tbody>
 </table>
-</div>
