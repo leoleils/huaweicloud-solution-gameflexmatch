@@ -5,7 +5,7 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
 
 ## 参数介绍
 
-<style type="text/css">
+<style >
 
 .tg  {border-collapse:collapse;border-color:#ccc;border-spacing:0;}
 
@@ -32,11 +32,13 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
 .tg .tg-61g0{background-color:#F2F2F2;text-align:left;vertical-align:middle}
 
 .tg .tg-ukly{background-color:#D9D9D9;font-weight:bold;text-align:center;vertical-align:middle}
+</style >
 
-.tg .tg-ogp5 {
-    background-color:#f9f9f9;font-weight:bold;text-align:center;vertical-align:middle
-  }
+<style >
+.tg .tg-ogp5{background-color:#f9f9f9;font-weight:bold;text-align:center;vertical-align:middle}
+</style>
 
+<style>
 .tg .tg-yjjc{background-color:#f9f9f9;text-align:left;vertical-align:middle}
 
 .tg .tg-wu5t{background-color:#F2F2F2;font-weight:bold;text-align:center;vertical-align:middle}
@@ -46,7 +48,6 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
 .tg .tg-5fx9{background-color:#F2F2F2;text-align:left;vertical-align:middle}
 
 .tg .tg-l010{background-color:#F2F2F2;color:#00F;text-align:left;text-decoration:underline;vertical-align:middle}
-
 </style>
 
 <table class="tg">
