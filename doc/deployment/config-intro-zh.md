@@ -5,7 +5,9 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
 
 ## 参数介绍
 <html>
+
 <style type="text/css">
+
 .tg  {border-collapse:collapse;border-color:#ccc;border-spacing:0;}
 .tg td{background-color:#fff;border-color:#ccc;border-style:solid;border-width:1px;color:#333;
   font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}
@@ -26,7 +28,9 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
 .tg .tg-poke{background-color:#F2F2F2;color:#F00;text-align:left;vertical-align:middle}
 .tg .tg-5fx9{background-color:#F2F2F2;text-align:left;vertical-align:middle}
 .tg .tg-l010{background-color:#F2F2F2;color:#00F;text-align:left;text-decoration:underline;vertical-align:middle}
+
 </style>
+
 <table class="tg">
 <thead>
   <tr>

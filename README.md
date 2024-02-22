@@ -1,7 +1,7 @@
 # huaweicloud-solution-gameflexmatch
 
 <div align="center">
-  
+
   <img src="doc/img/logo.jpg" height="40" />
 
 语言: **zh** | [en](README_EN.md)
@@ -40,13 +40,14 @@ huaweicloud-solution-gameflexmatch
 ```
 ## 资源规划
 + **部署资源**
+  
 |          资源类型           | 单机部署 | 分布式集群部署 |                       说明                       |
 | :-------------------------: | :------: | :------------: | :----------------------------------------------: |
 |         云服务器ECS         |    1     |       6        |              用于部署GFM前后端服务               |
 |    云数据库RDS for Mysql    |    1     |       1        |              用于存储必要的运行数据              |
 | 云数据库GaussDB(for Influx) |    1     |       1        | 用于存储战斗服集群的实时运行数据，以进行弹性伸缩 |
 |  分布式缓存服务DCS(Redis)   |    1     |       1        |                 用于存储缓存数据                 |
-|       弹性负载均衡ELB       |    0     |       1        |        集群部署时需要，实现流量的智能分发        |
+|       弹性负载均衡ELB       |    0     |       3        |        集群部署时需要，实现流量的智能分发        |
 
 + **云账号资源**
 需要提前准备一个云账号资源，并服务该账号以下权限：
@@ -182,3 +183,6 @@ game-flex-match_release
 ## Reference
 + 管理面API参考文档 [doc/api/FleetManager.yaml](doc/api/FleetManager.yaml)
 + 你可以使用[swagger](https://editor.swagger.io/)进行打开，在菜单栏中选择`File->Import URL`导入API文档进行查看
+
+## 联系我们
+若你有任何疑问，请联系：hwcloudsolution@163.com
