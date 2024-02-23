@@ -1,3 +1,6 @@
+# Content
+
+- [Content](#content)
 - [1. huaweicloud-solution-GameFlexMatch](#1-huaweicloud-solution-gameflexmatch)
 - [2. Brief Introduction](#2-brief-introduction)
 - [3. Logical Architecture](#3-logical-architecture)
@@ -15,7 +18,7 @@
 
 # 1. huaweicloud-solution-GameFlexMatch #
 
-Language: [ZH](README.md) | `EN`
+Language: [ZH](README.md) | **`EN`**
 
 # 2. Brief Introduction #
 

@@ -1,3 +1,5 @@
+# 目录
+- [目录](#目录)
 - [1. huaweicloud-solution-gameflexmatch](#1-huaweicloud-solution-gameflexmatch)
 - [2. 简介](#2-简介)
 - [3. 逻辑架构](#3-逻辑架构)
@@ -28,6 +30,7 @@
 
 # 3. 逻辑架构
 <img src="doc/img/architecture.jpg" width="80%">- [1. huaweicloud-solution-gameflexmatch](#1-huaweicloud-solution-gameflexmatch)
+- [目录](#目录)
 - [1. huaweicloud-solution-gameflexmatch](#1-huaweicloud-solution-gameflexmatch)
 - [2. 简介](#2-简介)
 - [3. 逻辑架构](#3-逻辑架构)
