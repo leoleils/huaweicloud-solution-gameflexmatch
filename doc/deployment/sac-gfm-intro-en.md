@@ -1,6 +1,10 @@
-# Introduction of the sac-gfm Script
+- [1. Introduction of the sac-gfm Script](#1-introduction-of-the-sac-gfm-script)
+  - [1.1. Function Introduction](#11-function-introduction)
+  - [1.2. Command and Parameter Introduction](#12-command-and-parameter-introduction)
 
-## Function Introduction
+# 1. Introduction of the sac-gfm Script
+
+## 1.1. Function Introduction
 
 `sac-gfm` is a binary file that helps you deploy and manage the GFM. Its main functions are as follows:
 
@@ -8,7 +12,7 @@
 - [X] Analyze and process the configuration files, generate the corresponding configuration files for each service component, generate the startup script, and enabling automatic startup
 - [X] Manages the GFM and supports starting, stopping, and restarting service components.
 
-## Command and Parameter Introduction
+## 1.2. Command and Parameter Introduction
 
 The usage of it is as follows: `sac-gfm [global options] command [command options] [arguments...]`
 

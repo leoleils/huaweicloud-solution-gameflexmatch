@@ -1,4 +1,5 @@
 cipher:
+  # A default key has been provided for use. If you use it in a production environment, you are advised to generate a new key to avoid unnecessary loss.
   # 24 characters used for encrypting and decrypting sensitive data such as passwords
   GCMKey: Fi1xOkgXvevHlTR5SIHHXAb2
   # 16 characters used for encrypting and decrypting sensitive data such as passwords

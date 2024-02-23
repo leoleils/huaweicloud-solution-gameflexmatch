@@ -1,6 +1,16 @@
-# Game Flex Match Developer Interconnection Guide #
+- [1. Game Flex Match Developer Interconnection Guide](#1-game-flex-match-developer-interconnection-guide)
+  - [1.1. Terminology:](#11-terminology)
+  - [1.2. Interface interaction](#12-interface-interaction)
+  - [1.3. Interface authentication](#13-interface-authentication)
+  - [1.4. Management layer interface](#14-management-layer-interface)
+    - [1.4.1. Description of the interface between the tenant management surface and the GameFlexMatch service.](#141-description-of-the-interface-between-the-tenant-management-surface-and-the-gameflexmatch-service)
+  - [1.5. Application Layer Interface](#15-application-layer-interface)
+    - [1.5.1. Description of the API for tenant-hosted applications to interact with the GameFlexMatch service](#151-description-of-the-api-for-tenant-hosted-applications-to-interact-with-the-gameflexmatch-service)
+  - [1.6. Hosted Application Integration SDK Tutorial](#16-hosted-application-integration-sdk-tutorial)
 
-## Terminology: ##
+# 1. Game Flex Match Developer Interconnection Guide #
+
+## 1.1. Terminology: ##
 
 1.  Tenant: indicates the enterprise user who uses Huawei cloud services.
 2.  User: indicates the user of the tenant application.
@@ -9,14 +19,14 @@
 5.  Tenant-hosted application, denotes an application, such as a gaming application, that is hosted by a tenant on the Game Flex Match service platform.
 <font color=red>Note: All interfaces involved in the client session process in this document are reserved interfaces.</font>
 
-## Interface interaction ##
+## 1.2. Interface interaction ##
 
 Interface interactions are categorized into management layer interfaces and application layer interfaces.
 
 1.  Management interface: Interaction between the tenant management plane and the Game Flex Match service through RESTful APIs.
 2.  Application interface: The overall flow of the tenant hosted application interacting with the GameFlexMatch service (via the integration SDK) is as follows.	
 
-## Interface authentication ##
+## 1.3. Interface authentication ##
 
 Authentication checks are required before calling all interfaces.
 
@@ -46,9 +56,9 @@ Authentication checks are required before calling all interfaces.
 
 2.  Add the `Auth-Token` field in the `Response` and its value to the `header` of the request body to access the `Game Flex Match` interface service normally.
 
-## Management layer interface ##
+## 1.4. Management layer interface ##
 
-### Description of the interface between the tenant management surface and the GameFlexMatch service. ###
+### 1.4.1. Description of the interface between the tenant management surface and the GameFlexMatch service. ###
 
 See the `API` interface documentation for detailed interface information, and some description of the interface below:
 
@@ -72,9 +82,9 @@ You can create a `client session` for a specified `Server Session` by `CreateCli
 9. **DeleteFleet**  
 When finished, this interface is provided for the user to do a final cleanup, which cleans up all resources for all specified `fleet`
 
-## Application Layer Interface ##
+## 1.5. Application Layer Interface ##
 
-### Description of the API for tenant-hosted applications to interact with the GameFlexMatch service ###
+### 1.5.1. Description of the API for tenant-hosted applications to interact with the GameFlexMatch service ###
 
 1.  The following table lists the callback APIs of hosted applications (interfaces invoked by the GameFlexMatch service). The three API hosting services need to be implemented based on their own service logic.
 
@@ -97,7 +107,7 @@ When finished, this interface is provided for the user to do a final cleanup, wh
 |        TermianteGameServerSession         | The server session ends, terminating the responding server session.                                                                               |
 |              PrcocessEnding               | Process recycling is complete and the process can be shut down normally.                                                                                |
 
-## Hosted Application Integration SDK Tutorial ##
+## 1.6. Hosted Application Integration SDK Tutorial ##
 
 Prerequisites: tutorials on installing dependencies (grpc, protobuf versions, etc.) to be added.
 

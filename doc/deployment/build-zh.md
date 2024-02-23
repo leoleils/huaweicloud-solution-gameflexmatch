@@ -1,4 +1,11 @@
-# Game Flex Match 编译指导
+- [1. Game Flex Match 编译指导](#1-game-flex-match-编译指导)
+  - [1.1. FleetManager](#11-fleetmanager)
+  - [1.2. AppGateway](#12-appgateway)
+  - [1.3. AASS](#13-aass)
+  - [1.4. Auxproxy](#14-auxproxy)
+  - [1.5. Console](#15-console)
+
+# 1. Game Flex Match 编译指导
 若你需要从源码进行编译安装，或者在本地进行自定义开发后再进行使用，可以参考该文档：
 在安装部署之前，你需要先准备一些环境信息，以下操作基于`Centos`操作系统：
 + 后端编译所需环境：
@@ -16,7 +23,7 @@
     go env -w GOPROXY=https://repo.huaweicloud.com/repository/goproxy/
     go env -w GONOSUMDB=*
     ```
-## FleetManager
+## 1.1. FleetManager
 + 编译
 ```shell
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-fleetmanager.git
@@ -25,7 +32,7 @@ go mod tidy
 go build -o fleetmanager ./main.go
 ```
 + 将编译后的二进制包，移动至`./game-flex-match_release/bin`目录下
-## AppGateway
+## 1.2. AppGateway
 + 编译
 ```shell
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-appgateway.git
@@ -34,7 +41,7 @@ go mod tidy
 go build -o appgateway ./cmd/application_gateway.go
 ```
 + 将编译后的二进制包，移动至`./game-flex-match_release/bin`目录下
-## AASS
+## 1.3. AASS
 + 编译
 ```shell
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-aass.git
@@ -43,7 +50,7 @@ go mod tidy
 go build -o aass ./cmd/application-auto-scaling-service/application_auto_scaling_service.go
 ```
 + 将编译后的二进制包，移动至`./game-flex-match_release/bin`目录下
-## Auxproxy
+## 1.4. Auxproxy
 + 编译
 ```shell
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-auxproxy.git
@@ -56,7 +63,7 @@ go build -o auxproxy ./cmd/auxproxy.go
     `zip -r -o ../auxproxy.zip ./*`
 + 将压缩后的`auxproxy.zip`上传至`OBS`桶中
 
-## Console
+## 1.5. Console
 + 编译
 ```sh
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-console.git

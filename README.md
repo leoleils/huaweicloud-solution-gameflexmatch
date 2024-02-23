@@ -1,4 +1,19 @@
-# huaweicloud-solution-gameflexmatch
+- [1. huaweicloud-solution-gameflexmatch](#1-huaweicloud-solution-gameflexmatch)
+- [2. 简介](#2-简介)
+- [3. 逻辑架构](#3-逻辑架构)
+  - [3.1. 仓库目录](#31-仓库目录)
+  - [3.2. 资源规划](#32-资源规划)
+  - [3.3. 云账号资源](#33-云账号资源)
+  - [3.4. 涉及云服务](#34-涉及云服务)
+  - [3.5. 部署指南](#35-部署指南)
+    - [3.5.1. 基于发布的应用包进行部署](#351-基于发布的应用包进行部署)
+  - [3.6. 使用指南](#36-使用指南)
+  - [3.7. 开发指南](#37-开发指南)
+  - [3.8. Reference](#38-reference)
+  - [3.9. 联系我们](#39-联系我们)
+
+
+# 1. huaweicloud-solution-gameflexmatch
 
 <div align="center">
 
@@ -6,13 +21,27 @@
 
 </div>
 
-# 简介
+# 2. 简介
 
 `GameFlexMatch`是一个服务托管解决方案，包含五个服务组件(`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`/`Console`)，可以实现应用的托管、托管应用所需资源的弹性伸缩、应用进程的资源调度管理、应用的灰度发布，多`region`部署时可以实现用户的就近接入，减少时延，以及服务资源的跨地域容灾。可以帮助开发者快速构建稳定、低延时的多人游戏的部署环境，并节省大量的运维成本，支持`Unreal`、`Unity`引擎，`C#`、`C++`以及`gRPC`支持的任何语言的`server`框架部署和运行，可以帮助你快速构建与管理游戏战斗服集群。
 
 
-# 逻辑架构
-<img src="doc/img/architecture.jpg" width="80%">
+# 3. 逻辑架构
+<img src="doc/img/architecture.jpg" width="80%">- [1. huaweicloud-solution-gameflexmatch](#1-huaweicloud-solution-gameflexmatch)
+- [1. huaweicloud-solution-gameflexmatch](#1-huaweicloud-solution-gameflexmatch)
+- [2. 简介](#2-简介)
+- [3. 逻辑架构](#3-逻辑架构)
+  - [3.1. 仓库目录](#31-仓库目录)
+  - [3.2. 资源规划](#32-资源规划)
+  - [3.3. 云账号资源](#33-云账号资源)
+  - [3.4. 涉及云服务](#34-涉及云服务)
+  - [3.5. 部署指南](#35-部署指南)
+    - [3.5.1. 基于发布的应用包进行部署](#351-基于发布的应用包进行部署)
+  - [3.6. 使用指南](#36-使用指南)
+  - [3.7. 开发指南](#37-开发指南)
+  - [3.8. Reference](#38-reference)
+  - [3.9. 联系我们](#39-联系我们)
+
 
 `GameFlexMatch`平台由五个服务组件组成：
 
@@ -22,7 +51,7 @@
 + [AuxProxy](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-auxproxy): 在扩容出的实例中自动拉起，负责应用进程的创建、进程状态的上报以及应用进程的通信
 + [Console](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-console): 运维平台，用于监控`GameFlexMatch`的运行状态，以及运维管理`GameFlexMatch`的`fleet`、应用包与用户信息等
 
-## 仓库目录
+## 3.1. 仓库目录
 ```lua
 huaweicloud-solution-gameflexmatch
    doc               -- 文档目录
@@ -36,7 +65,7 @@ huaweicloud-solution-gameflexmatch
    sdk               -- 应用接入sdk和demo
    tools             -- 脚本工具目录
 ```
-## 资源规划
+## 3.2. 资源规划
 + **部署资源**
   
 |          资源类型           | 单机部署 | 分布式集群部署 |                       说明                       |
@@ -47,7 +76,8 @@ huaweicloud-solution-gameflexmatch
 |  分布式缓存服务DCS(Redis)   |    1     |       1        |                 用于存储缓存数据                 |
 |       弹性负载均衡ELB       |    0     |       3        |        集群部署时需要，实现流量的智能分发        |
 
-## **云账号资源**
+## 3.3. 云账号资源
+
 需要提前准备一个云账号资源，并服务该账号以下权限：
   1. 弹性云服务器所有权限：`ECS FullAccess`
   2. 云容器实例所有权限：`CCI FullAccess`
@@ -63,7 +93,7 @@ huaweicloud-solution-gameflexmatch
   12. EIP服务所有权限：`EIP FullAccess`
   13. 消息通知服务的所有权限：`SMN FullAccess`
   14. 云日志服务所有权限：`LTS FullAccess`
-## 涉及云服务
+## 3.4. 涉及云服务
 该解决方案与华为云深度耦合，在运行过程中涉及到的云服务与用途如下，为保证可以正常使用该解决方案，请保证使用租户包含下列云服务的[必要权限](./README.md#云账号资源)：
 
 |    云服务名称    | 简称  |                      用途                      |
@@ -84,8 +114,8 @@ huaweicloud-solution-gameflexmatch
 |    云日志服务    |  LTS  |              采集战斗服的日志信息              |
 |   弹性伸缩服务   |  AS   |         用于弹性伸缩能力实现（已弃用）         |
 
-## 部署指南
-### 基于发布的应用包进行部署
+## 3.5. 部署指南
+### 3.5.1. 基于发布的应用包进行部署
 **应用包目录介绍**
 ```lua
 game-flex-match_release
@@ -173,16 +203,17 @@ game-flex-match_release
 **更新步骤**
 如果你想从源码进行编译，可以参考以下步骤: [ZH](./doc/deployment/build-zh.md)|[`EN`](./doc/deployment/build-en.md)
 
-## 使用指南
+## 3.6. 使用指南
++ `console`平台的快速入门详见: [`ZH`](doc/user-guide/quick-start-zh.md)|[`EN`](doc/user-guide/quick-start-en.md)
 + `console`平台的用户指南详见: [`ZH`](doc/user-guide/user-guide-zh.md)|[`EN`](doc/user-guide/user-guide-en.md)
 
-## 开发指南
+## 3.7. 开发指南
 + 支持`GRPC`的方式将应用托管到`GameFlexMatch`，相关接口与接入流程参考[`ZH`](doc/dev/developer-zh.md)|[`EN`](doc/dev/developer-en.md)
 + 应用托管接入示例可参考`sdk`目录
 
-## Reference
+## 3.8. Reference
 + 管理面`API`参考文档 [doc/api/FleetManager.yaml](doc/api/FleetManager.yaml)
 + 你可以使用[swagger](https://editor.swagger.io/)进行打开，在菜单栏中选择`File->Import URL`导入API文档进行查看
 
-## 联系我们
+## 3.9. 联系我们
 若你有任何疑问，请联系：hwcloudsolution@163.com

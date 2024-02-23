@@ -1,13 +1,28 @@
-# huaweicloud-solution-GameFlexMatch #
+- [1. huaweicloud-solution-GameFlexMatch](#1-huaweicloud-solution-gameflexmatch)
+- [2. Brief Introduction](#2-brief-introduction)
+- [3. Logical Architecture](#3-logical-architecture)
+  - [3.1. Content](#31-content)
+  - [3.2. Resource Planning](#32-resource-planning)
+  - [3.3. Cloud Account Resources](#33-cloud-account-resources)
+  - [3.4. Involved cloud services](#34-involved-cloud-services)
+  - [3.5. Deployment Guide](#35-deployment-guide)
+    - [3.5.1. Deploying an Application Based on the Released Application Package](#351-deploying-an-application-based-on-the-released-application-package)
+  - [3.6. Usage Guide](#36-usage-guide)
+  - [3.7. Development Guide](#37-development-guide)
+  - [3.8. Reference](#38-reference)
+  - [3.9. Contact Us](#39-contact-us)
+
+
+# 1. huaweicloud-solution-GameFlexMatch #
 
 Language: [ZH](README.md) | `EN`
 
-# Brief Introduction #
+# 2. Brief Introduction #
 
 `GameFlexMatch`is a service hosting solution that consists of four service components (`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`/`Console`), which can implement application hosting, elastic scaling of resources required by hosting applications, resource scheduling and management of application processes, and gray release of applications. Multi-region deployment enables users to access the nearest network, reducing latency and cross-region DR of service resources. 
 It helps developers quickly build a stable and low-latency multiplayer game deployment environment and saves a lot of O&M costs.`Unreal Engine`,`Unity`,`C#`,`C++`And also the`gRPC`any language supported`server`Deploy and run the framework. It can help you quickly build and manage game battle suit clusters.
 
-# Logical Architecture #
+# 3. Logical Architecture #
 
 ![Image](doc/img/architecture-EN.jpg)	
 
@@ -19,7 +34,7 @@ It helps developers quickly build a stable and low-latency multiplayer game depl
  *  [AuxProxy](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-auxproxy): Automatically starts the instance after capacity expansion, which creates application processes, reports process status, and communicates with application processes.
  *  [Console](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-console): O&M platform, used for monitoring`GameFlexMatch`Running status and O&M management of the`GameFlexMatch`of the`fleet`2. Application packages and user information
 
-## Content
+## 3.1. Content
 ```lua
 huaweicloud-solution-gameflexmatch
    doc               -- Document Directory
@@ -33,7 +48,7 @@ huaweicloud-solution-gameflexmatch
    sdk               -- Application access SDK and demo
    tools             -- Script tool directory
 ```
-## Resource Planning
+## 3.2. Resource Planning
 
 
 |              Resource Type              | Single-Node System | Distributed Cluster |                                  Description                                  |
@@ -44,7 +59,7 @@ huaweicloud-solution-gameflexmatch
 | Distributed Cache Service (DCS) (Redis) |         1          |          1          |                              Stores cached data.                              |
 |        Elastic Load Balance(ELB)        |         0          |          3          | Required in cluster deployment to implement intelligent traffic distribution. |
 
-## **Cloud Account Resources**
+## 3.3. Cloud Account Resources
 You need to prepare a HuaweiCloud account in advance and grant the following permissions to the account:
   1.  All permissions on the ECS:`ECS FullAccess`
   2.  All permissions of CCI:`CCI FullAccess`
@@ -61,7 +76,7 @@ You need to prepare a HuaweiCloud account in advance and grant the following per
   13.  All permissions for SMN: `SMN FullAccess`
   14.  All permissions of LTS: `LTS FullAccess`
 
-## Involved cloud services
+## 3.4. Involved cloud services
 This solution is deeply coupled with HUAWEI CLOUD. The following cloud services and functions are involved during the running of this solution. To ensure that the tenant can use this solution properly, ensure that the tenant has the necessary [permissions](./README_EN.md#cloud-account-resources) for the following cloud services:
 
 |          Cloud Service Name          |                Abbreviation                 |                                                 Usage                                                 |
@@ -82,8 +97,8 @@ This solution is deeply coupled with HUAWEI CLOUD. The following cloud services 
 |           Log Log Service            |                     LTS                     |                                    Collecting Logs of Battle Suit                                     |
 |             Auto Scaling             |                     AS                      |                       Used to implement auto scaling capabilities (deprecated)                        |
 
-## Deployment Guide
-### Deploying an Application Based on the Released Application Package
+## 3.5. Deployment Guide
+### 3.5.1. Deploying an Application Based on the Released Application Package
 
 **Introduction to Released the application package directory**
 
@@ -173,17 +188,18 @@ game-flex-match_release
 **Update Steps**
 If you want to compile from source, follow these steps: ['ZH'](./doc/deployment/build-zh.md)||[`EN`](./doc/deployment/build-en.md)
 
-## Usage Guide
+## 3.6. Usage Guide
++ `console` platform quick start is available at: [`ZH`](doc/user-guide/quick-start-zh.md)|[`EN`](doc/user-guide/quick-start-en.md)
 + `console` platform user guide is available at: [`ZH`](doc/user-guide/user-guide-zh.md)|[`EN`](doc/user-guide/user-guide-en.md)
 
-## Development Guide
+## 3.7. Development Guide
 + Hosting applications to `GameFlexMatch` in `GRPC` mode. For details about the API and access process, see [`ZH`](doc/dev/developer-zh.md)|[`EN`](doc/dev/developer-en.md).
 + For details about the application hosting access example, see the `sdk` directory.
 
-## Reference
+## 3.8. Reference
 + Management Plane `API` Reference Document [doc/api/FleetManager.yaml](doc/api/FleetManager.yaml)
 + You can use [swagger](https://editor.swagger.io/) to open, in the menu bar select `File->Import URL` import API document to view
 
-## Contact Us
+## 3.9. Contact Us
 If you have any questions, please contact: hwcloudsolution@163.com
 

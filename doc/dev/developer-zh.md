@@ -1,6 +1,16 @@
-# GameFlexMatch开发者对接指南
+- [1. GameFlexMatch开发者对接指南](#1-gameflexmatch开发者对接指南)
+  - [1.1. 术语：](#11-术语)
+  - [1.2. 接口对接](#12-接口对接)
+  - [1.3. 接口认证](#13-接口认证)
+  - [1.4. 管理层接口](#14-管理层接口)
+    - [1.4.1. 租户管理面与GameFlexMatch服务的交互接口说明](#141-租户管理面与gameflexmatch服务的交互接口说明)
+  - [1.5. 应用层接口](#15-应用层接口)
+    - [1.5.1. 租户托管应用与GameFlexMatch服务的交互API说明](#151-租户托管应用与gameflexmatch服务的交互api说明)
+  - [1.6. 托管应用集成SDK教程](#16-托管应用集成sdk教程)
 
-## 术语：
+# 1. GameFlexMatch开发者对接指南
+
+## 1.1. 术语：
 
 1. 租户: 表示使用华为云服务的企业用户
 2. 用户: 表示租户应用的使用者
@@ -9,13 +19,13 @@
 5. 租户托管应用: 表示租户托管在`GFM`服务平台上的应用，比如游戏应用
 <font color=red>注意：本文关于客户端会话(client session)的流程中所涉及到的接口都是保留接口。</font>
 
-## 接口对接
+## 1.2. 接口对接
 接口对接分为管理层接口和应用层接口:
 1. 管理层接口：租户管理面与GFM服务的交互（通过RESTful API交互）。
 
 2. 应用层接口：租户托管应用与GameFlexMatch服务的交互（通过集成SDK交互）整体流程如下：
 
-## 接口认证
+## 1.3. 接口认证
 在调用所有的接口前，需要进行认证校验
 1. 构造登录请求，其中密码为`RSA`加密后的密文，加密的公钥需与`fleetmanager`部署的后端私钥保持一致，加密脚本可参考`/tools/cipher`，你可以执行：`./sac-gfm cipher --mode encode --method rsa --text {登录密码}`
 
@@ -39,8 +49,8 @@
 }
 ```
 2. 将`Response`中的`Auth-Token`字段以及字段值加入到请求体的`header`里，即可正常访问`GameFlexMatch`接口业务
-## 管理层接口
-### 租户管理面与GameFlexMatch服务的交互接口说明
+## 1.4. 管理层接口
+### 1.4.1. 租户管理面与GameFlexMatch服务的交互接口说明
 详细接口信息看`API`[接口文档](../api/FleetManager.yaml)，下面对接口做一些说明：
 1. **CreateFleet**
 创建`fleet`，这里可以通过"`process_configuration`"指定开机之后的启动路径和参数（这些参数是这个`fleet`每个虚拟机都可以拿到的参数）
@@ -71,8 +81,8 @@
 9. **DeleteFleet**
 结束后，该接口是提供给用户做最后清理的，该接口可以清理所有指定`fleet`的所有资源
 
-## 应用层接口
-### 租户托管应用与GameFlexMatch服务的交互API说明
+## 1.5. 应用层接口
+### 1.5.1. 租户托管应用与GameFlexMatch服务的交互API说明
 1. 托管应用的回调API（GameFlexMatch服务会调用的接口）列表如下，三个接口托管服务中需要根据自己的业务逻辑进行实现
 
 |       API Name       | API Description                                                              |
@@ -94,7 +104,7 @@
 |       TermianteGameServerSession        | server session结束，终止响应的server session                                     |
 |             PrcocessEnding              | 进程回收工作完成，可以正常关闭进程                                                  |
 
-## 托管应用集成SDK教程
+## 1.6. 托管应用集成SDK教程
 前置条件：安装依赖的教程(grpc, protobuf的版本等)
 1. grpc生成sdk代码
    当前提供了c#、go、c++语言的demo(详见：`demo/go`、`demo/csharp`、`demo/cpp`)

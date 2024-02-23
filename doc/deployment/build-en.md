@@ -1,4 +1,11 @@
-# Game Flex Match Build Instructions
+- [1. Game Flex Match Build Instructions](#1-game-flex-match-build-instructions)
+  - [1.1. FleetManager](#11-fleetmanager)
+  - [1.2. AppGateway](#12-appgateway)
+  - [1.3. AASS](#13-aass)
+  - [1.4. Auxproxy](#14-auxproxy)
+  - [1.5. Console](#15-console)
+
+# 1. Game Flex Match Build Instructions
 If you need to compile and install from the source code, or use it after local custom development, you can refer to this document:
 Before the installation and deployment, you need to prepare some environment information. The following operations are based on the `Centos` operating system:
 + Environment required for backend compilation:
@@ -16,7 +23,7 @@ Before the installation and deployment, you need to prepare some environment inf
     go env -w GOPROXY=https://repo.huaweicloud.com/repository/goproxy/
     go env -w GONOSUMDB=*
     ```
-## FleetManager
+## 1.1. FleetManager
 + Compile
 ```Shell
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-fleetmanager.git
@@ -25,7 +32,7 @@ go mod neat
 go build -o fleetmanager. /main.go
 ```
 + Move the compiled binary package to: `./game-flex-match_release/bin`
-## AppGateway
+## 1.2. AppGateway
 + Compile
 ```shell
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-appgateway.git
@@ -34,7 +41,7 @@ go mod tidy
 go build -o appgateway ./cmd/application_gateway.go
 ```
 + Move the compiled binary package to: `./game-flex-match_release/bin`
-## AASS
+## 1.3. AASS
 + Compile
 ```shell
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-aass.git
@@ -43,7 +50,7 @@ go mod tidy
 go build -o aass ./cmd/application-auto-scaling-service/application_auto_scaling_service.go
 ```
 + Move the compiled binary package to: `./game-flex-match_release/bin`
-## Auxproxy
+## 1.4. Auxproxy
 + Compile
 ```shell
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-auxproxy.git
@@ -56,7 +63,7 @@ go build -o auxproxy ./cmd/auxproxy.go
     `zip -r -o ../auxproxy.zip  ./*`
 + Upload the compressed `auxproxy.zip` to the `OBS` bucket.
 
-## Console
+## 1.5. Console
 + Compile
 ```sh
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-console.git
