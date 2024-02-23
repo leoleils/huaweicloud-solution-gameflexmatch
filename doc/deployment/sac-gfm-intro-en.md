@@ -10,11 +10,11 @@
 
 ## Command and Parameter Introduction
 
-The usage of the is as follows: `sac-gfm [global options] command [command options] [arguments...]`
+The usage of it is as follows: `sac-gfm [global options] command [command options] [arguments...]`
 
 You can also just run `sac-gfm` or the `sac-gfm -h` to view the command help information.
 
-```
+```sh
 $ cd ./gfm
 $ ./sac-gfm -h
 
@@ -41,7 +41,7 @@ GLOBAL OPTIONS:
    --version, -v  print the version
 ```
 
-| commanded | Description                                                                                                                                                                                 |
+| Commanded | Description                                                                                                                                                                                 |
 | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 |  cipher   | Generates encryption and decryption keys, and can help you encrypt or decrypt sensitive information.                                                                                        |
 |  install  | Based on the configured configuration file, the system automatically generates configuration files for each service component and generates startup scripts to configure automatic startup. |
@@ -52,18 +52,19 @@ GLOBAL OPTIONS:
 
 **The usage and example of each command are as follows:**
 
-+ cipher command: `./sac-gfm cipher [command options] [arguments...]`, the following commands are supported:
++ `cipher` command: `./sac-gfm cipher [command options] [arguments...]`, the following commands are supported:
 
-|  commanded  |              Parameters               |  Default value   | Description                                                                                                                                                                                                                                                                                                                                                                      |
-| :---------: | :-----------------------------------: | :--------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|   --mode    |   string: oneof \[decode, encode\]    |      encode      | Encrypts or decrypts sensitive information.                                                                                                                                                                                                                                                                                                                                      |
-|  --method   |      string: oneof \[gcm, rsa\]       |       gcm        | Methods for encrypting or decrypting sensitive information                                                                                                                                                                                                                                                                                                                       |
-|   --text    |                string                 |                  | Characters used for encryption or decryption                                                                                                                                                                                                                                                                                                                                     |
-| --init-conf |                 path                  | ./conf/init.yaml | Path of the configuration file. When the key information needs to be generated, the generated information is automatically synchronized to the configuration file.                                                                                                                                                                                                               |
+|  Commanded  |             Parameters              |  Default value   | Description                                                                                                                                                                                                                                                                                                                                                                                |
+| :---------: | :---------------------------------: | :--------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   --mode    |   string: oneof [decode, encode]    |      encode      | Encrypts or decrypts sensitive information.                                                                                                                                                                                                                                                                                                                                                |
+|  --method   |      string: oneof [gcm, rsa]       |       gcm        | Methods for encrypting or decrypting sensitive information                                                                                                                                                                                                                                                                                                                                 |
+|   --text    |               string                |                  | Characters used for encryption or decryption                                                                                                                                                                                                                                                                                                                                               |
+| --init-conf |                path                 | ./conf/init.yaml | Path of the configuration file. When the key information needs to be generated, the generated information is automatically synchronized to the configuration file.                                                                                                                                                                                                                         |
 |  --create   | string: one of [gcm, rsa, tls, jwt] |                  | If the parameter is set to `gcm` or `jwt`, the generated sensitive information is synchronized to the configuration file corresponding to `--init-conf`. If the parameter is set to `rsa` or `tls`, A configuration file is generated in the directory where the configuration file corresponding to `--init-conf` is located and is synchronized to the corresponding configuration file. |
-| --help, -h  |                                       |                  | Generate Help Information                                                                                                                                                                                                                                                                                                                                                        |
+| --help, -h  |                                     |                  | Generate Help Information                                                                                                                                                                                                                                                                                                                                                                  |
 
 The following help information can be generated:
+
 ```sh
 $ ./sac-gfm cipher -h
 
@@ -83,9 +84,9 @@ OPTIONS:
 --help, -h         show help
 ```
 
-+ install command:`sac-gfm install [command options] [arguments...]`
++ `install` command: `sac-gfm install [command options] [arguments...]`
 
-|    命令     |                      参数                      |        默认值         | 说明                                                                       |
+|  Commanded  |                   Parameters                   |     Default value     | Description                                                                |
 | :---------: | :--------------------------------------------: | :-------------------: | :------------------------------------------------------------------------- |
 |  --service  | string: oneof [fleetmanager, appgateway, aass] |                       | The command service component needs to be installed.                       |
 | --init-conf |                      path                      |   ./conf/init.yaml    | Configuration file path, which is used for installation and configuration. |
@@ -93,7 +94,7 @@ OPTIONS:
 | --help, -h  |                                                |                       | Generating help information                                                |
 
 
-   The following help information can be generated:
+The following help information can be generated:
    ```sh
    $ ./sac-gfm install -h
    the work dir is: /home/gfm
@@ -110,21 +111,21 @@ OPTIONS:
    --help, -h         show help
    ```
 
-+ start, stop, restart command: Use the start command as an example. You can run the following command to start the FleetManager service component: ./sac-gfm start --service fleetmaanger
++ `start`, `stop`, `restart` command: Use the start command as an example. You can run the following command to start the FleetManager service component: `./sac-gfm start --service fleetmanager`
     
-   The following help information can be generated:
-    
-    ```
-    $ ./sac-gfm start -h
-    the work dir is: /home/gfm
-    NAME:
-    sac-gfm start - start a service, support: [fleetmanager, appgateway, aass]
-    
-    USAGE:
-    sac-gfm start [command options] [arguments...]
-    
-    OPTIONS:
-    --service value  service name, Options: [fleetmanager, appgateway, aass]
-    --help, -h       show help
-    ```
+The following help information can be generated:
+   
+```sh
+$ ./sac-gfm start -h
+the work dir is: /home/gfm
+NAME:
+sac-gfm start - start a service, support: [fleetmanager, appgateway, aass]
+
+USAGE:
+sac-gfm start [command options] [arguments...]
+
+OPTIONS:
+--service value  service name, Options: [fleetmanager, appgateway, aass]
+--help, -h       show help
+```
 

@@ -95,10 +95,10 @@
 
 应用包信息（可选，为空时使用默认参数）
 
--   **Auxproxy路径**: Auxproxy文件在OBS的存放路径，请保证已将**auxproxy.zip**上传至O你将要配置的OBS路径中
+-   **Auxproxy路径**: Auxproxy文件在OBS的存放路径，请保证已将**auxproxy.zip**上传至你将要配置的OBS路径中
 
 -   **ECS-应用包配置脚本路径**:
-    用于创建ECS资源应用包的脚本文件在OBS的存放路径，请保证已将**image_env.sh**上传至O你将要配置的OBS路径中
+    用于创建ECS资源应用包的脚本文件在OBS的存放路径，请保证已将**image_env.sh**上传至你将要配置的OBS路径中
 
 -   **文件存放Region**: OBS桶所在的Region
 

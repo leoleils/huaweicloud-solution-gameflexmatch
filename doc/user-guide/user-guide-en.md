@@ -88,6 +88,7 @@ resources.
     administrator needs to associate the resource tenant first.
 
 ![](images-en/media/image3.png)
+![](images/media/add-user.png)  
 
 3.  **Enter information about associated resource tenants.**
 
@@ -95,45 +96,33 @@ Use tenant information:
 
 ![](images-en/media/image4.png)
 
--   **Tenant name: name of the tenant on the GameFlexMatch platform**
+-   **Tenant name**: The name of the tenant bound to the GameFlexMatch platform is also your HUAWEI CLOUD tenant name. You can log in to [IAM-users](https://account-intl.huaweicloud.com/usercenter/#/iam/users) and select a HUAWEI CLOUD tenant.
 
--   **Project ID: specifies the ID of the API project used by
-    GameFlexMatch to create resources. You can obtain the project ID by
-    choosing My Credential \> API Credential on the HUAWEI CLOUD
-    console.**
+-   **Project ID**: Project ID of the API used by GameFlexMatch to create resources. To obtain the project ID,  You can log in to [mine-apiCredential](https://console-intl.huaweicloud.com/iam/#/mine/apiCredential) to select the ID of the regional project that you want to bind.
 
--   **Access Key: specifies the key used by GameFlexMatch to access
-    APIs. You can obtain the key by choosing My Credential \> Access Key
-    on the HUAWEI CLOUD console.**
+-   **Access Key**: Key used by GameFlexMatch to access APIs. You can obtain it from HUAWEI CLOUD console -> My Credentials -> [Access key](https://console-intl.huaweicloud.com/iam/#/mine/accessKey).
 
--   **Secret Access Key: specifies the key used by GameFlexMatch to
-    access APIs. You can obtain the key by choosing My Credential \>
-    Access Key on the HUAWEI CLOUD console.**
+-   **Secret Access Key**: Key used by GameFlexMatch to access APIs. You can obtain it from HUAWEI CLOUD console -> My Credentials -> [Access key](https://console-intl.huaweicloud.com/iam/#/mine/accessKey).
 
--   **Region: indicates the region where the resource tenant creates
-    GameFlexMatch resources.**
+-   **Region**: Resource tenants are used to create regions for GameFlexMatch resources. The information must correspond to the project ID.
 
--   **Key name: Login authentication key used during VM scaling by
-    GameFlexMatch**
+-   **Key name**: Login authentication key pair for GameFlexMatch elastic VM capacity expansion. You can use this key pair to log in to the VM of the battle server. You can log in to the DEW console and choose [Key Pair Management](https://console-intl.huaweicloud.com/console/#/dew/kps/kpsList/accountKey) to view the account key pair. If no key pair is available, create one.
 
--   **Cloud Service Agency Name: This parameter is used to install
-    ICAgent during image packing and use LTS to dump logs.**
+-   **Cloud Service Agency Name**: You can choose Identity and Access Management > [Agency] (https://console-intl.huaweicloud.com/iam/#/iam/agencies) on the HUAWEI CLOUD console to view the ICAgent and LTS log dump.
+    1.  You can customize the agency name, for example, gfm-lts-agency.
+    2.  Select **Cloud Service** for Agency Type.
+    3.  Cloud Service: Select ECS.
+    4.  Click Next and grant the agency permissions:'APM FullAccess' and'LTS FullAccess'.
+    5.  After the agency is created, you can configure the agency name'gfm-lts-agency' to the corresponding location.
 
-Application package information (Optional. If this parameter is left
-blank, the default parameter is used.)
+Application package information (optional. If this parameter is left blank, the default value is used.)
 
--   **Auxproxy Path: Path for storing Auxproxy files on OBS.**
+-   **Auxproxy Path**: OBS path for storing the Auxproxy file. Ensure that **auxproxy.zip** has been uploaded to the OBS path to be configured.
+-   **ECS-Application Package Configuration Script Path**: OBS path for storing the script file used to create the ECS resource application package. Ensure that **image_env.sh** has been uploaded to the OBS path to be configured.
 
--   **ECS-Application Package Configuration Script Path: OBS path for
-    storing the script file used to create ECS resource application
-    packages.**
+-   **Region**: Region where the OBS bucket resides
 
--   **Region: indicates the region where the OBS bucket is located.**
-
--   **Container-Application Package Configuration Script Path: OBS
-    storage path of the script for creating container resource
-    application packages. If a container is used, this parameter is
-    mandatory.**
+-   **Container-Application Package Configuration Script Path**: OBS path for storing the script for creating a containerized application package; If a container is used, this parameter is mandatory. Ensure that **docker_image_env.sh** has been uploaded to the OBS path to be configured.
 
 The resource tenant is successfully associated and can use
 GameFlexMatch.

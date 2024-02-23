@@ -2,9 +2,9 @@
 
 ## Terminology: ##
 
-1.  Tenant indicates the enterprise user who uses Huawei cloud services.
-2.  User indicates the user of the tenant application.
-3.  Game Flex Match service indicates the application hosting service platform provided by HUAWEI CLOUD.
+1.  Tenant: indicates the enterprise user who uses Huawei cloud services.
+2.  User: indicates the user of the tenant application.
+3.  Game Flex Match service: indicates the application hosting service platform provided by HUAWEI CLOUD.
 4.  The tenant management side, which represents the applications, such as game lobbies, in which the tenant interacts with the GameFlexMatch service.
 5.  Tenant-hosted application, denotes an application, such as a gaming application, that is hosted by a tenant on the Game Flex Match service platform.
 <font color=red>Note: All interfaces involved in the client session process in this document are reserved interfaces.</font>
@@ -13,14 +13,14 @@
 
 Interface interactions are categorized into management layer interfaces and application layer interfaces.
 
-1.  Management layer interface: Interaction between the tenant management plane and the Game Flex Match service through RESTful APIs.<img src="img/ManangerAPI-EN.jpg" alt="Image" style="zoom:80%;" />	
-2.  Application layer interface: The overall flow of the tenant hosted application interacting with the GameFlexMatch service (via the integration SDK) is as follows.<img src="img/ApplicationAPI-EN.jpg" alt="Image" style="zoom:80%;" />	
+1.  Management interface: Interaction between the tenant management plane and the Game Flex Match service through RESTful APIs.
+2.  Application interface: The overall flow of the tenant hosted application interacting with the GameFlexMatch service (via the integration SDK) is as follows.	
 
 ## Interface authentication ##
 
 Authentication checks are required before calling all interfaces.
 
-1.  Construct a login request where the password is RSA encrypted cipher, the encrypted public key needs to be consistent with the private key of the backend deployed by fleetmanager, the encryption script can be found in `/tools/cipher`.
+1.  Construct a login request where the password is RSA encrypted cipher, the encrypted public key needs to be consistent with the private key of the backend deployed by fleetmanager, the encryption script can be found in `/tools/cipher`. You can exec: `./sac-gfm cipher --mode encode --method rsa --text {登录密码}`
 
 `POST URL: /v1/user/login` `Request Body`\:
 

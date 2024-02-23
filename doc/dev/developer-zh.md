@@ -17,7 +17,7 @@
 
 ## 接口认证
 在调用所有的接口前，需要进行认证校验
-1. 构造登录请求，其中密码为`RSA`加密后的密文，加密的公钥需与`fleetmanager`部署的后端私钥保持一致，加密脚本可参考`/tools/cipher`
+1. 构造登录请求，其中密码为`RSA`加密后的密文，加密的公钥需与`fleetmanager`部署的后端私钥保持一致，加密脚本可参考`/tools/cipher`，你可以执行：`./sac-gfm cipher --mode encode --method rsa --text {登录密码}`
 
 `POST URL: /v1/user/login`
 `Request Body`: 

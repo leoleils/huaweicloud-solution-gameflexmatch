@@ -2,21 +2,19 @@
 
 <div align="center">
 
-  <img src="doc/img/logo.jpg" height="40" />
-
-   语言: **zh** | [en](README_EN.md)
+**`ZH`** | [`EN`](README_EN.md)
 
 </div>
 
 # 简介
 
-`GameFlexMatch`是一个服务托管解决方案，包含四个服务组件(`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`)，可以实现应用的托管、托管应用所需资源的弹性伸缩、应用进程的资源调度管理、应用的灰度发布，多`region`部署时可以实现用户的就近接入，减少时延，以及服务资源的跨地域容灾。可以帮助开发者快速构建稳定、低延时的多人游戏的部署环境，并节省大量的运维成本，支持`Unreal`、`Unity`引擎，`C#`、`C++`以及`gRPC`支持的任何语言的`server`框架部署和运行，可以帮助你快速构建与管理游戏战斗服集群。
+`GameFlexMatch`是一个服务托管解决方案，包含五个服务组件(`Fleetmanager`/`AppGateway`/`AASS`/`AuxProxy`/`Console`)，可以实现应用的托管、托管应用所需资源的弹性伸缩、应用进程的资源调度管理、应用的灰度发布，多`region`部署时可以实现用户的就近接入，减少时延，以及服务资源的跨地域容灾。可以帮助开发者快速构建稳定、低延时的多人游戏的部署环境，并节省大量的运维成本，支持`Unreal`、`Unity`引擎，`C#`、`C++`以及`gRPC`支持的任何语言的`server`框架部署和运行，可以帮助你快速构建与管理游戏战斗服集群。
 
 
 # 逻辑架构
 <img src="doc/img/architecture.jpg" width="80%">
 
-GameFlexMatch平台由五个服务组件组成：
+`GameFlexMatch`平台由五个服务组件组成：
 
 + [FleetManager](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-fleetmanager): 负责应用进程的全局化动态部署及管理，支持配置动态部署策略，基于成本或时延优化应用分布，负责弹性伸缩策略的配置和服务端会话、客户端会话与应用包的管理，服务端应用的灰度发布等
 + [AppGateway](https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-appgateway): 负责应用进程、会话与客户端连接的管理，通过与`AuxProxy`通信获得应用进程信息，决策进程资源的调度
@@ -49,7 +47,7 @@ huaweicloud-solution-gameflexmatch
 |  分布式缓存服务DCS(Redis)   |    1     |       1        |                 用于存储缓存数据                 |
 |       弹性负载均衡ELB       |    0     |       3        |        集群部署时需要，实现流量的智能分发        |
 
-+ **云账号资源**
+## **云账号资源**
 需要提前准备一个云账号资源，并服务该账号以下权限：
   1. 弹性云服务器所有权限：`ECS FullAccess`
   2. 云容器实例所有权限：`CCI FullAccess`
@@ -66,7 +64,8 @@ huaweicloud-solution-gameflexmatch
   13. 消息通知服务的所有权限：`SMN FullAccess`
   14. 云日志服务所有权限：`LTS FullAccess`
 ## 涉及云服务
-该解决方案与华为云深度耦合，在运行过程中涉及到的云服务与用途如下，为保证可以正常使用该解决方案，请保证使用租户包含下列云服务的必要权限：
+该解决方案与华为云深度耦合，在运行过程中涉及到的云服务与用途如下，为保证可以正常使用该解决方案，请保证使用租户包含下列云服务的[必要权限](./README.md#云账号资源)：
+
 |    云服务名称    | 简称  |                      用途                      |
 | :--------------: | :---: | :--------------------------------------------: |
 |     云服务器     |  ECS  |             用于创建管理战斗服集群             |
@@ -119,14 +118,14 @@ game-flex-match_release
 ```
 
 **后端服务部署步骤**
-> NOTE：部署过程基于`sac-gfm`脚本进行，脚本的说明请参考：[ZH](./doc/deployment/sac-gfm-intro-zh.md)|[EN]((./doc/deployment/sac-gfm-intro-en.md))
+> NOTE：部署过程基于`sac-gfm`脚本进行，脚本的说明请参考：[`ZH`](./doc/deployment/sac-gfm-intro-zh.md)|[`EN`]((./doc/deployment/sac-gfm-intro-en.md))
 
 1. 获取二进制应用包并解压
    + 下载：`wget https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch/releases/download/laster/game-flex-match_release.tar.gz`
    + 解压：`tar -zxvf game-flex-match_release.tar.gz`
    + 进入目录：`cd game-flex-match_release`
 2. 修改配置文件
-   + 在安装部署时，你可以先了解先各个配置文件的各个参数说明，并根据实际情况进行修改,可以参考：[ZH](./doc/deployment/config-intro-zh.md)|[EN](./doc/deployment/config-intro-en.md)
+   + 在安装部署时，你可以先了解先各个配置文件的各个参数说明，并根据实际情况进行修改,可以参考：[`ZH`](./doc/deployment/config-intro-zh.md)|[`EN`](./doc/deployment/config-intro-en.md)
    + 配置文件在二进制应用包中可以找到: `./conf/init.yaml`，你可以根据实际情况修改,你也可以在[init.yaml](release/conf/init.yaml)中查看
 3. 安装服务组件
    + **FleetManager**: 
@@ -143,11 +142,12 @@ game-flex-match_release
    `./sac-gfm restart --service fleetmanager`
 
 **前端服务部署步骤**
-> NOTE: 前端服务已通过`npm`基于已提供的`./conf/public.pem`公钥进行编译，若您的公钥有更新，需要重新编译；以下所有命令基于`Centos`操作系统，重新编译请参考[编译指导](doc/deployment/build.md#console)
+> NOTE: 前端服务已通过`npm`基于已提供的`./conf/public.pem`公钥进行编译，若您的公钥有更新，需要重新编译；以下所有命令基于`Centos`操作系统，重新编译请参考编译指导: [`ZH`](doc/deployment/build-zh.md#console) | [`EN`](./doc/deployment/build-en.md)
 1. 安装`nginx`: `yum install -y nginx`
 2. 安装前端应用：`\cp -r -f  ./conf/dist/* /usr/share/nginx/html/`
-3. 根据下面指导进行修改修改`nginx`配置文件：
-   `vim /etc/nginx/nginx.conf`
+3. 根据下面指导进行修改`nginx`配置文件：
+   打开`nginx`配置文件：`vim /etc/nginx/nginx.conf`
+   共有三个地方需要修改
    ```conf
    http {
     ...
@@ -171,17 +171,17 @@ game-flex-match_release
 4. 启动`nginx`，直接执行：`nginx`
 5. 浏览器输入网址: `http://{前端服务器所在IP地址}:80`
 **更新步骤**
-如果你想从源码进行编译，可以参考以下步骤: [ZH](./doc/deployment/build.md)|EN
+如果你想从源码进行编译，可以参考以下步骤: [ZH](./doc/deployment/build-zh.md)|[`EN`](./doc/deployment/build-en.md)
 
 ## 使用指南
-+ `console`平台的用户指南详见[/doc/user-guide/gameflexmatch-user-guide](doc/user-guide/gameflexmatch-user-guide.md)
++ `console`平台的用户指南详见: [`ZH`](doc/user-guide/user-guide-zh.md)|[`EN`](doc/user-guide/user-guide-en.md)
 
 ## 开发指南
-+ 支持GRPC的方式将应用托管到GameFlexMatch，相关接口与接入流程参考[ZH](doc/dev/developer-zh.md)|[EN](doc/dev/developer-en.md)
++ 支持`GRPC`的方式将应用托管到`GameFlexMatch`，相关接口与接入流程参考[`ZH`](doc/dev/developer-zh.md)|[`EN`](doc/dev/developer-en.md)
 + 应用托管接入示例可参考`sdk`目录
 
 ## Reference
-+ 管理面API参考文档 [doc/api/FleetManager.yaml](doc/api/FleetManager.yaml)
++ 管理面`API`参考文档 [doc/api/FleetManager.yaml](doc/api/FleetManager.yaml)
 + 你可以使用[swagger](https://editor.swagger.io/)进行打开，在菜单栏中选择`File->Import URL`导入API文档进行查看
 
 ## 联系我们
