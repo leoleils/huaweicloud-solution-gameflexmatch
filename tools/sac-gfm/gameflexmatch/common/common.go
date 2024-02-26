@@ -6,9 +6,6 @@ import (
 	"os/exec"
 	"time"
 	"os"
-
-	// "gopkg.in/ini.v1"
-	// "github.com/spf13/viper"
 	"gopkg.in/yaml.v3"
 )
 

@@ -203,6 +203,7 @@ game-flex-match_release
    ```
 4. 启动`nginx`，直接执行：`nginx`
 5. 浏览器输入网址: `http://{前端服务器所在IP地址}:80`
+
 **更新步骤**
 如果你想从源码进行编译，可以参考以下步骤: [ZH](./doc/deployment/build-zh.md)|[`EN`](./doc/deployment/build-en.md)
 
