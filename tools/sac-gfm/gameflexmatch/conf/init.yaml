@@ -1,0 +1,419 @@
+cipher:
+  # 24 characters used for encrypting and decrypting sensitive data such as passwords
+  GCMKey:
+  # 16 characters used for encrypting and decrypting sensitive data such as passwords
+  GCMNonce:
+  # Encryption for password transmission between the console and the service with RSA
+  RSAPublicKey: ./conf/public.key
+  RSAPrivateKey: ./conf/private.key
+  # Certificate used for HTTPS
+  TlsKey: ./conf/tls.key
+  TlsCsr: ./conf/tls.csr
+  TlsCrt: ./conf/tls.crt
+
+fleetmanager:
+  # mysql used by fleetmanager
+  MysqlAddress: 
+  MysqlUser: root
+  MysqlDBName: fleetmanager
+  MysqlPassword: 
+  # Database Encoding Type
+  # Default: uft8
+  MysqlCharset: utf8
+  RedisAddress: 
+  RedisPassword:
+  # Default Redis partition
+  # Default: 1
+  RedisDB: 1
+  # Size of a log split, in MB.
+  # Default: 1024MB
+  LogRotateSize: 1024
+  # Maximum number of logs that can be retained. 
+  # If the number of logs exceeds the maximum, the logs are deleted by time.
+  # Default: 100
+  LogBackupCount: 100
+  # Maximum number of days for storing logs.
+  # Default: 7
+  LogMaxAge: 7
+  # If multiple regions are deployed, you can enter multiple values. 
+  # Otherwise, only one value is required.
+  # You can refer: 
+  # China: https://developer.huaweicloud.com/endpoint
+  # Intl: https://developer.huaweicloud.com/intl/en-us/endpoint?all
+  SupportRegions: 
+    - 
+  # It is used only when you log in to the system for the first time. 
+  # After the initialization, the password will be changed to a new one.
+  DefaultLoginPassword: Gfm@2024
+  # Path of the workflow configuration file
+  WorkflowPath: "./conf/workflow/"
+  # List of public ECS images that have been verified. 
+  # If other images are available, you can change them to the ones you want.
+  SupportPublicImage:
+    - region:
+      image: "CentOS 7.2 64bit,CentOS 7.9 64bit,CentOS 8.1 64bit,Ubuntu 22.04 server 64bit,CentOS 7.6 64bit for Tenant 20210525"
+  # List of Docker images of verified pods. 
+  # If you are sure that other images are available, you can change them to the ones you want.
+  SupportDockerImage:
+    - region:
+      dockerOS: "swr.cn-north-7.myhuaweicloud.com/game/centos-super:v1,centos:7.6.1810,centos:7.2.1511"
+  # The EIP type supported by each region may be different. 
+  # You need to manually configure the EIP type after querying the EIP type on the cloud service.
+  # You can refer to: 
+  # Table 4 in China:  https://support.huaweicloud.com/api-eip/eip_api_0001.html
+  # Table 3 in Intl: https://support.huaweicloud.com/intl/en-us/api-eip/eip_api_0001.html
+  # If you have more, should Use commas to separate, for example: "eip-type1,eip-type2"
+  EipType:
+    - region:
+      supportEipType: 
+  # Huawei Cloud Private DNS Server Addresses.
+  # You can get it from Table 1 in:
+  # China: https://support.huaweicloud.com/dns_faq/dns_faq_002.html
+  # Intl: https://support.huaweicloud.com/intl/en-us/dns_faq/dns_faq_002.html
+  DnsConfig: 
+    - region: 
+      dnsServer: 
+  # This configuration item is used if you want to use LTS to manage logs.
+  # This configuration item is used to automatically install ICAgent on HUAWEI CLOUD hosts for log collection. 
+  # You need to query the configuration address.
+  # You can log in to the LTS service console, Select the region to be deployed, 
+  # Select: Host Management -> Install ICAgent.
+  # You can get it from the step 2 by accessip in command given.
+  LtsIps:
+    - region:
+      ltsIp: 
+  # If the region information is not provided when creating fleet, the value will be used.
+  DefaultRegion: 
+  # Default protection policy of the fleet. 
+  # This configuration item will be used during scale-in.
+  # Support: [TIME_LIMIT_PROTECTION, NO_PROTECTION]
+  # NO_PROTECTION maybe affect the player who is playing the game, not suggest
+  # TIME_LIMIT_PROTECTION: You will give a protection period. 
+  # After the scale-in is triggered, the machine will not be forcibly reclaimed during the protection period.
+  # Default: TIME_LIMIT_PROTECTION
+  DefaultFleetProtectPolicy: TIME_LIMIT_PROTECTION
+  # Protection time during Fleet scale-in, in minute.
+  # This parameter is valid only when Protection Policy is set to TIME_LIMIT_PROTECTION.
+  # Default: 30min
+  DefaultProtectTimeLimit: 30
+  # When a session is created, 
+  # if the session is not activated after the time specified by this parameter, in seconds.
+  # the session will set to error.
+  # Default: 60s
+  DefaultSessionTimeoutSeconds: 60
+  # Configure the default number of session to be started per process.
+  # Default: 50
+  DefaultMaxSessionNumPerProcess: 50
+  # Configure the default number of Process to be started per instance.
+  # Default: 50
+  DefaultProcessNumPerInstance: 50
+  
+  # Default bandwidth
+  # Default: 5Mbit/s
+  DefaultBandwidth: 5
+  # Default bandwidth charge mode
+  # Support: [bandwidth, traffic]
+  # Default: traffic
+  DefaultBandwidthChargingMode: "traffic"
+  # Default disk size
+  # Default 100G
+  DefaultDiskSize: 40
+  DefaultVolumeType: "SATA"
+  # Specifies the bandwidth sharing type.
+  # Share type enumerated value: 
+  # PER, indicating exclusive use. WHOLE: indicates sharing.
+  # Support: [PER, WHOLE]
+  # Default: PER
+  DefaultEipShareType: "PER"
+  # This configuration item is required when a VPC needs to be created during fleet creation.
+  # You can keep default value
+  FleetCidr:
+    from: 10.100.0.0
+    to: 10.240.0.0
+    vpcNetMask: 19
+    subnetNetMask: 20
+  # A security group is created by default when a fleet is created. 
+  # The following lists the security group rules that need to be configured by default.
+  # Must contain as following:
+  InternalInboundPermissions:
+    - protocol: "TCP"
+      ipRange: 
+      fromPort: 60001
+      toPort: 60001
+  # Default OS used when creating an image
+  BuildImageRef: "CentOS 7.2 64bit"
+  # Default flavor used during image creation
+  BuildFlavor: "s6.large.2"
+  # Default bandwidth used during image creation
+  BuildBandwidth: 100
+  # Script for creating an ECS image.
+  BuildScriptPath: 
+  # Script used for creating POD images.
+  BuildDockerScriptPath: 
+  # Auxproxy obs path diameter
+  AuxproxyPath: 
+  # Disk size of image michine
+  ImageDiskSize: 40
+  # Expiration time of historical data, in days.
+  # Default: 1 days
+  ServerSessionBackupDays: 1 
+  # Scale-in interval, in minutes
+  # default: 10min
+  DefaultScalingInCoolDownInterval: 10
+  
+  # Maximum, minimum, and desire number of instances in an AS group
+  DefaultGroupMaxSize: 1
+  DefaultGroupMinSize: 1
+  DefaultGroupDesiredSize: 1
+  # Service Endpoint about HuaweiCloud Service, you can get those from: 
+  # China: https://developer.huaweicloud.com/endpoint
+  # Intl: https://developer.huaweicloud.com/intl/en-us/endpoint?all
+  ServiceEndpoint:
+    IamService:
+      - region:
+        endPoint:
+    # Address used by the AASS to provide services for external systems. 
+    # FleetManager can access the AASS through this address.
+    AASS:
+      - region:
+        endPoint:
+    # Address used by the Appgateway to provide services for external systems. 
+    # FleetManager can access the AASS through this address.
+    AppGateway:
+      - region:
+        endPoint:
+    VpcService:
+      - region:
+        endPoint:
+    ObsService:
+      - region:
+        endPoint:
+    ImsService:
+      - region:
+        endPoint:
+    EcsService:
+      - region:
+        endPoint:
+    SwrService:
+      - region:
+        endPoint:
+    CciService:
+      - region:
+        endPoint:
+    EvsService:
+      - region:
+        endPoint:
+    CesService:
+      - region:
+        endPoint:
+    DnsService:
+      - region:
+        endPoint:
+    EpsService:
+      - region:
+        endPoint:
+  # Similar to the key used to generate or verify the login session,
+  # you can choose a random character string of 24 or 32 bits.
+  SessionJwtKey:
+  # Timeout interval of the login status token. 
+  # If the timeout interval is exceeded, you need to log in again.
+  # Default: 7200s
+  SessionJwtTokenLifeTimeSecond: 7200
+  
+  # Interval for taking over asynchronous tasks, in seconds. 
+  # This parameter is used when a node is faulty.
+  # Default: 60s
+  TakeOverTaskIntervalSeconds: 60
+
+  # bind address and port
+  HttpsAddress: 0.0.0.0
+  HttpsPort: 31002
+  
+  # Interval for reporting node health status, in seconds, 
+  # which is used to determine whether a node is normal.
+  # Default: 60s
+  HeartBeatTaskIntervalSeconds: 60
+  # Interval for monitoring zombie nodes, in seconds, 
+  # Default: 60s
+  DeadCheckTaskIntervalSeconds: 60
+  # Interval for determining a zombie node, in mintues.
+  # Default: 3min
+  MaxDeadMinutes: 3
+  # Specifies the maximum number of instances in an AS group.
+  # Default: 200
+  
+appgateway:
+  # AASS address for the AppGateway to access the AASS 
+  AASSAddress: 
+  # IP address of the MySQL database.
+  MysqlAddress: 127.0.0.1:3306
+  MysqlUser: root
+  MysqlDBName: appgateway
+  # Password encrypted using GCM
+  MysqlPassword: 
+  RedisAddress: 127.0.0.1:6379
+  # Password encrypted using GCM
+  RedisPassword: 
+  # Default Redis partition
+  # Default: 3
+  RedisDB: 3
+  # clean data in Database or not
+  # Support: [off, on]
+  # Default: on
+  CleanStrategy: on
+  # Delete data in process and session backup table from database, Default 14 days
+  CleanupDays: 14
+  # Backup data in process and session runtime table from database, Default 3 days
+  BackupDays: 3
+  # bind address and port
+  HttpsAddress: 0.0.0.0
+  HttpsPort: 60003
+  # Appgateway startup mode
+  # Support: [singleton, multi-instances], 
+  # Default: multi-instances
+  DeployModel: "multi-instances"
+  # Configure the Appgateway to connect to the AuxProxy using a public or private IP address.
+  # Support: [publicIP, privateIP]
+  # Default: publicIP
+  AuxproxyIpType: publicIP
+  # Indicates whether to print debug logs.
+  # Support: [info, debug]
+  # Default: info
+  LogLevel: info
+  # Size of a log split, in MB.
+  # Default: 1024MB
+  LogRotateSize: 1024
+  # Maximum number of logs that can be retained. 
+  # If the number of logs exceeds the maximum, the logs are deleted by time.
+  # Default: 100
+  LogBackupCount: 100
+  # Maximum number of days for storing logs.
+  # Default: 7
+  LogMaxAge: 7
+  # Indicates whether logs are automatically compressed.
+  # NOTE: Some logs may be damaged after log compression. 
+  # Therefore, you are advised not to compress logs.
+  # Default: false
+  LogCompress: false
+
+aass: 
+  # AppGateway address for the AASS to access the AppGateway
+  AppgatewayAddress: 127.0.0.1
+  MysqlUser: root
+  MysqlAddress: 127.0.0.1:3306
+  MysqlDBName: aass
+  # Password encrypted using GCM
+  MysqlDBPassword: 
+  # Database Encoding Type
+  # Default: uft8
+  MysqlCharset: utf8
+  RedisAddress: 127.0.0.1:6379
+  # Password encrypted using GCM
+  RedisPassword:
+  # Default Redis partition
+  # Default: 2
+  RedisDB: 2
+  # Size of a log split, in MB.
+  # Default: 1024MB
+  LogRotateSize: 1024
+  # Maximum number of logs that can be retained. 
+  # If the number of logs exceeds the maximum, the logs are deleted by time.
+  # Default: 100
+  LogBackupCount: 100
+  # Maximum number of days for storing logs.
+  # Default: 7
+  LogMaxAge: 7
+
+  # Region where the AASS service is deployed, Only One if you use one region
+  CloudClientRegion: 
+  # Service Endpoint about HuaweiCloud Service, you can get those from: 
+  # China: https://developer.huaweicloud.com/endpoint
+  # Intl: https://developer.huaweicloud.com/intl/en-us/endpoint?all
+  CloudClientIamEndpoint: 
+  CloudClientAsEndpoint:
+  CloudClientEcsEndpoint:
+  CloudClientLtsEndpoint:
+  CloudClientSmnEndpoint:
+  CloudClientPodEndpoint:
+  CloudClientDNSEndpoint:
+  # ECS metadata includes basic information of an ECS on the cloud platform, such as the ECS ID, hostname, and network information. 
+  # You can refer to:
+  # China: https://support.huaweicloud.com/usermanual-ecs/ecs_03_0166.html
+  # Intl: https://support.huaweicloud.com/intl/en-us/usermanual-ecs/ecs_03_0166.html
+  # The cloud platform addr is certain, as follows.
+  CloudPlatformAddr: http://169.254.169.254
+  # Type of the network used by the ASS to connect to the AuxProxy server during scale-in.
+  # Support: [publicIP, privateIP]
+  # Default: publicIP
+  ConnectToAuxproxyIPType: publicIP
+  # Interval for monitoring asynchronous autoscaling tasks. 
+  # You can retain the default value.
+  MonitorDuration: 10s
+  # Expiration time of data in the data table. 
+  # Data will be deleted after the expiration time, in days.
+  # Default: 14 days
+  CleanUpDayBefore: 14
+  # Interval for starting an asynchronous cleanup task, in hours.
+  # Default: 1 hour.
+  CleanUpPeriodHour: 1
+  # Interval between obtaining the distributed lock and updating the status of the AASS instance, in seconds.
+  # Default: 30s
+  HealthCheckInterval: 30
+  # Whether to enable host protection.
+  # Support: [true, false]
+  # Default: true
+  HostProtect: true
+  # Specifies the host protection type if host protection is enabled.
+  # You can refer to: 
+  # China: https://support.huaweicloud.com/api-ecs/zh-cn_topic_0167957246.html#ZH-CN_TOPIC_0167957246__table2373623012315
+  # Intl: Not valid for the time being by 2024-01-22.
+  # Support: ["ces", "hss", "hss,hss-ent"]
+  HostProtectValue: hss 
+  # Due to the restriction of the APIG during pod creation, 
+  # to avoid excessive invoking times, 
+  # if the number of times exceeds the value of this parameter, 
+  # the pod is hibernated for 10 seconds. 
+  # You can retain the default value.
+  # Default: 50
+  BatchCreatePodNum: 50
+  # bind address and port
+  HttpsAddress: 0.0.0.0
+  HttpsPort: 9091
+  # Interval for taking over asynchronous tasks, in seconds. 
+  # This parameter is used when a node is faulty.
+  # Default: 60s
+  TakeOverTaskIntervalSeconds: 60
+  # Interval for reporting node health status, in seconds, 
+  # which is used to determine whether a node is normal.
+  # Default: 60s
+  HeartBeatTaskIntervalSeconds: 60
+  # Interval for monitoring zombie nodes, in seconds, 
+  # Default: 60s
+  DeadCheckTaskIntervalSeconds: 60
+  # Interval for determining a zombie node, in mintues.
+  # Default: 3min
+  MaxDeadMinutes: 3
+  # Specifies the maximum number of instances in an AS group.
+  # Default: 200
+  InstanceMaximumLimit: 200
+  # Maximum network bandwidth used when creating a machine.
+  # Default: 300Mbit/s
+  BandwidthMaximumLimit: 300
+  # Supported volume types.
+  # Default: "SATA;SAS;GPSSD;SSD;ESSD"
+  SupportedVolumeTypes: "SATA;SAS;GPSSD;SSD;ESSD"
+  # Bandwidth charging mode.
+  # Support: [traffic, bandwidth]
+  # Default: traffic
+  BandwidthChargingMode: traffic
+
+influxdb:
+  InfluxDBUser: root
+  influxDBAddress: 
+  # Password encrypted using GCM
+  InfluxDBPassword: 
+  # The AppGateway service is the same as the AASS service. 
+  # You can retain the default value.
+  inflxuDBName: autoscaling
+
+

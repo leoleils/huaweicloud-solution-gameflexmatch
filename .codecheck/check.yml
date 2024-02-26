@@ -25,5 +25,7 @@ tool_params:
 params:
   - name: exclude  # 排除检查文件目录
     value: (.+\.pb.go|.+\.md|.+\.yaml|.+\.go)   # 使用正则表达式，注意括号不能去掉
+  - name: exclude  # 排除检查sac-gfm
+    value: (tools/*|sdk/*)
   - name: includePaths  # 指定代码检查路径
     value: demo/go/fake-server
