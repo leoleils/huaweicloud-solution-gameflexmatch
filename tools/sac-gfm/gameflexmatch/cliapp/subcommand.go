@@ -129,35 +129,3 @@ func (c *CliApp) getSubCommandCipher() *cli.Command {
 	return cmd
 }
 
-/*
-init hwcloud on hwcloud:
-1. create key-pair on dew
-2. create OBS bucket for storing auxproxy info
-3. create agency
-*/
-func (c *CliApp) getSubCommandInitHwCloud() *cli.Command {
-	cmd := &cli.Command{
-		Name: "init-hwcloud",
-		Usage: "init env on hwcloud, can help you create agency/keypair/ObsBucket/upload auxproxy or other info",
-		Action: c.action.InitHwcloud,
-		Flags: []cli.Flag{
-			c.getFlagInitConf(),
-			c.getFlagAk(),
-			c.getFlagSk(),
-			c.getFlagObsName(),
-			c.getFlagKeyPairName(),
-			c.getFlagUploadAuxproxy(),
-			c.getFlagCreateKeyPair(),
-			c.getFlagCreateOBSBucket(),
-			c.getFlagCreateLtsAgency(),
-			c.getFlagRegion(),
-			c.getFlagAuxproxyPath(),
-			c.getFlagUploadFile(),
-			c.getFlagLtsAgencyName(),
-		},
-	}
-	return cmd
-}
-
-
-
