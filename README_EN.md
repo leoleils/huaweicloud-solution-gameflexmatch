@@ -161,7 +161,7 @@ game-flex-match_release
 **Front-End Service Deployment Procedure**
 > NOTE: Frontend services have been provided via `npm` based on the`./conf/public.pem` public key. If your public key is updated, you need to recompile it. The following commands are based on the `Centos` operating system. For details about recompilation, see Compilation Guide:[`ZH`](doc/deployment/build-zh.md#console) | [`EN`](./doc/deployment/build-en.md).
 1.  Installing the `nginx`: `yum install -y nginx`
-2.  Run the `\cp -r -f command to install the frontend application. /conf/dist/* /usr/share/nginx/html/`
+2.  Run the command to install the frontend application: `\cp -r -f  ./bin/dist/* /usr/share/nginx/html/`
 3.  Modify the `nginx` configuration file as follows:
    Run the `vim /etc/nginx/nginx.conf` command to open the'nginx' configuration file.
     There are three areas that need to be modified:
@@ -189,7 +189,9 @@ game-flex-match_release
 5.  Enter the URL `http://{IP address of the front-end server}:80` in the browser.
 
 **Update Steps**
+
 If you want to compile from source, follow these steps: ['ZH'](./doc/deployment/build-zh.md)||[`EN`](./doc/deployment/build-en.md)
+
 
 ## 3.6. Usage Guide
 + `console` platform quick start is available at: [`ZH`](doc/user-guide/quick-start-zh.md)|[`EN`](doc/user-guide/quick-start-en.md)

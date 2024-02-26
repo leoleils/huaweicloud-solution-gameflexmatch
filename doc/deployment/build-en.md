@@ -64,6 +64,9 @@ go build -o auxproxy ./cmd/auxproxy.go
 + Upload the compressed `auxproxy.zip` to the `OBS` bucket.
 
 ## 1.5. Console
++ Configuring the Compilation Environment
+  `yum install -y nodejs`
+  `yum install -y npm`
 + Compile
 ```sh
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-console.git

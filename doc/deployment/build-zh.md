@@ -64,12 +64,15 @@ go build -o auxproxy ./cmd/auxproxy.go
 + 将压缩后的`auxproxy.zip`上传至`OBS`桶中
 
 ## 1.5. Console
++ 配置编译环境：
+  `yum install -y nodejs`
+  `yum install -y npm`
 + 编译
 ```sh
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-console.git
 cd huaweicloud-solution-gameflexmatch-console
 ```
 + 将`game-flex-match_release/conf/public.pem`公钥文件复制到`huaweicloud-solution-gameflexmatch-console/cert/public.pem`
-+ 执行`huaweicloud-solution-gameflexmatch-console`目录下执行`npm install` 安装必要依赖
++ 在`huaweicloud-solution-gameflexmatch-console`目录下执行`npm install` ，用于安装必要依赖
 + 执行: `npm run build` 进行编译
 + 在目录下会得到编译后的`huaweicloud-solution-gameflexmatch-console/dist`前端应用
