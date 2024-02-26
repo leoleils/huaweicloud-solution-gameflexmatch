@@ -1975,7 +1975,7 @@ paths:
     get:
       tags:
         - 用户管理
-      operationId: ListOSupportRegions
+      operationId: ListSupportRegions
       summary: 查询支持的region
       description: 查询支持的region
       x-is-registered: 'Y'
@@ -1993,10 +1993,32 @@ paths:
             X-Request-Id:
               type: string
               description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
-        '400':
-          description: 参数错误
+        '500':
+          description: 服务器内部错误
           schema:
             $ref: '#/definitions/ErrorRsp'
+          headers:
+            X-Request-Id:
+              type: string
+              description: 这个字段作为一个请求的唯一标志，用于任务流程追溯，格式为 request_id(uuid)-timestamp-hostname
+  /user/support-eip-types:
+    get:
+      tags:
+        - 用户管理
+      operationId: ListSupportEipType
+      summary: 查询支的EIP类型列表
+      description: 查询支的EIP类型列表
+      x-is-registered: 'Y'
+      x-support-sdk: 'Y'
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Auth-token'
+      responses:
+        '200':
+          description: 查询应用进程队列详情响应
+          schema:
+            $ref: '#/definitions/ListSupportEipTypes'
           headers:
             X-Request-Id:
               type: string
@@ -5076,8 +5098,144 @@ definitions:
         items:
           $ref: '#/definitions/MonitorServerSession'
   MonitorServerSession:
-    allOf:
-      - $ref: '#/definitions/ServerSession'
+    properties:
+      server_session_id:
+        type: string
+        description: 服务器会话的id，全局唯一
+        minLength: 1
+        maxLength: 64
+        example: 43b75508-5c7f-49e0-9982-fe3cf73bdb3a
+      name:
+        type: string
+        description: server session的名字，不要求唯一
+        minLength: 1
+        maxLength: 1024
+        example: session_name1
+      creator_id:
+        type: string
+        description: 创建者的ID
+        minLength: 1
+        maxLength: 1024
+        example: creatorId1
+      fleet_id:
+        type: string
+        description: 应用进程队列的id
+        minLength: 1
+        maxLength: 64
+        example: fleet-77317ac6-acd8-11ec-a7e0-6805cab276a1
+      state:
+        type: string
+        description: |-
+          服务器会话当前所属的状态 
+          * ACTIVATING:  激活中 
+          * ACTIVE:      活跃 
+          * TERMINATING: 终止中 
+          * TERMINATED:  终止 
+          * ERROR:       异常
+        enum:
+          - ACTIVATING
+          - ACTIVE
+          - TERMINATING
+          - TERMINATED
+          - ERROR
+        example: ACTIVATING
+      state_reason:
+        type: string
+        description: 状态为ERROR时这个字段表示错误信息
+        minLength: 1
+        maxLength: 1024
+        example: error info
+      session_data:
+        type: string
+        description: 会话信息
+        example: data
+      session_properties:
+        type: array
+        items:
+          $ref: '#/definitions/ServerSessionProperty'
+        description: 服务器会话属性
+      process_id:
+        type: string
+        description: 进程id
+        example: 6066645a-b078-4a00-90d1-7f10aaf87a5b
+      instance_id:
+        type: string
+        description: 实例id
+        example: 5266645a-b078-4a00-90d1-7f10aaf87a5b
+      ip_address:
+        type: string
+        description: 公网IP，需符合IP地址的规范
+        example: 100.10.10.90
+        minLength: 7
+        maxLength: 15
+      port:
+        type: integer
+        format: int32
+        description: 进程提供服务的接口（需要符合端口要求：1025~60000）
+        example: 8080
+        minimum: 1025
+        maximum: 60000
+      current_client_session_count:
+        type: integer
+        description: 当前客户端会话数量
+        minimum: 0
+        maximum: 1024
+        example: 1
+      max_client_session_count:
+        type: integer
+        description: 一个服务器会话支持的最大客户端会话数
+        minimum: 0
+        maximum: 1024
+        example: 1
+      client_session_creation_policy:
+        description: |-
+          新建客户端会话的策略  
+          * ACCEPT_ALL: 接受所有新建客户端会话的请求  
+          * DENY_ALL: 拒绝所有新建客户端会话的请求
+        type: string
+        enum:
+          - ACCEPT_ALL
+          - DENY_ALL
+        example: ACCEPT_ALL
+      server_session_protection_policy:
+        type: string
+        description: >-
+          服务服务器会话保护策: >-
+            服务服务器会话保护策略
+          * NO_PROTECTION: >-
+            不保护，缩容时如果有会话在实例上运行，直接缩容    
+          * FULL_PROTECTION: >-
+            完全保护，缩容时如果有会话在实例上运行，等待会话结束再缩容
+          * TIME_LIMIT_PROTECTION: >-
+            限时保护，缩容时如果有会话在实例上运行，等待一定时间后缩容，等待时间由server_session_protection_time_limit_minutes指定
+        example: NO_PROTECTION
+        enum:
+          - NO_PROTECTION
+          - FULL_PROTECTION
+          - TIME_LIMIT_PROTECTION
+      server_session_protection_time_limit_minutes:
+        type: integer
+        format: int32
+        description: >-
+          server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一: >-
+            server_session_protection_policy字段为TimeLimitProtection时有效，单位分钟，最大值不超过一天
+        minimum: 5
+        maximum: 1440
+        default: 5
+        example: 5
+      creation_time:
+        description: 标识serversession创建的时间，UTC时间，遵循RFC3339规范
+        type: string
+        minLength: 0
+        maxLength: 2048
+        example: '2020-06-28T00:00:00Z'
+      updated_time:
+        description: 标识serversession更新的时间，UTC时间，遵循RFC3339规范
+        type: string
+        minLength: 0
+        maxLength: 2048
+        example: '2020-06-28T00:00:00Z'
+        
   ListFleetsResponseBody:
     properties:
       count:
@@ -6870,6 +7028,40 @@ definitions:
         maximum: 2147483647
       regions:
         description: 支持的region数组
+        minItems: 0
+        maxItems: 100
+        items:
+          type: string
+        type: array
+  ListSupportEipTypes:
+    type: object
+    description: 后台支持的EIP类型
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 支持的region数量
+        example: 1
+        minimum: 1
+        maximum: 2147483647
+      eip_types:
+        description: 支持的所有region的EIP类型
+        minItems: 0
+        maxItems: 100
+        items:
+          $ref: '#/definitions/EipType'
+        type: array
+  EipType:
+    type: object
+    description: 某个region的EIP类型
+    properties:
+      region:
+        description: 支持的region
+        minItems: 0
+        maxItems: 100
+        type: string
+      eip_type:
+        description: 支持EIP类型列表
         minItems: 0
         maxItems: 100
         items:
