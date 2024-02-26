@@ -99,44 +99,6 @@ func (a *Action) Install(c *cli.Context) error {
 	return nil
 }
 
-// init env for starting gfm on hwcloud
-func (a *Action) InitHwcloud(c *cli.Context) error {
-	initHwCloudAction := NewInitHwCloudAction(c)
-	initConf := a.getInitConf(c)
-	if c.Bool(common.FlagCreateKeyPair) {
-		if err := initHwCloudAction.CreateKeyPair(initConf); err != nil {
-			return err
-		}
-	}
-	if c.Bool(common.FlagCreateOBSBucket) {
-		if err := initHwCloudAction.CreateObsBucket(initConf); err != nil {
-			return err
-		}
-	}
-
-
-	if c.Bool(common.FlagUploadAuxproxy) {
-		if err := initHwCloudAction.UploadAuxproxy(initConf); err != nil {
-			return err
-		}
-	}
-
-	uploadFile := c.String(common.FlagUploadFile)
-	if uploadFile != "" {
-		if err := initHwCloudAction.UploadFile(initConf); err != nil {
-			return err
-		}
-	}
-
-	if c.Bool(common.FlagCreateLtsAgency) {
-		if err := initHwCloudAction.CreateLtsAgency(initConf); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 func (a *Action) getInitConf(c *cli.Context) string {
 	initConf := c.String(InitConf)
 	if initConf == "" {
