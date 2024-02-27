@@ -94,7 +94,12 @@ func (a *InstallAction) InitConfig(confPath string, targetPath string, service s
 	if !path.IsAbs(cipher["TlsCrt"]) {
 		cipher["TlsCrt"] = path.Join(common.RootPath, cipher["TlsCrt"])
 	}
-	conf["cipher"] = cipher
+	mapCipher := make(map[string]interface{})
+	for k, v := range cipher {
+		mapCipher[k] = v
+	}
+
+	conf["cipher"] = mapCipher
 	switch service {
 	case "fleetmanager":
 		if err := a.generateFleetmanagerConfig(conf, targetPath); err != nil {
