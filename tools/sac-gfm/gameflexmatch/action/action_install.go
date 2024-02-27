@@ -75,7 +75,10 @@ func (a *InstallAction) InitConfig(confPath string, targetPath string, service s
 		return err
 	}
 	targetPath = fmt.Sprintf("%s/%s.yaml", targetPath, service)
-	cipher := conf["cipher"].(map[string]string)
+	cipher := make(map[string]string)
+	for k, v := range conf["cipher"].(map[string]interface{}) {
+		cipher[k] = v.(string)
+	}
 	if !path.IsAbs(cipher["RSAPublicKey"]) {
 		cipher["RSAPublicKey"] = path.Join(common.RootPath, cipher["RSAPublicKey"])
 	}
