@@ -39,7 +39,7 @@ fi
 if [ "${APP_FILE##*.}" = "rar" ]; then
 	unrar e  ${APP_FILE}
 fi
-chmod 750 *
+chmod -R 750 *
 
 # download auxproxy
 mkdir -p /etc/docker-build/auxproxy
@@ -51,7 +51,7 @@ fi
 if [ "${AUX_FILE##*.}" = "rar" ]; then
 	unrar e  ${AUX_FILE}
 fi
-chmod 750 *
+chmod -R 750 *
 
 
 mkdir -p /etc/docker-build/auxproxy/security
@@ -60,6 +60,8 @@ cd /etc/docker-build/auxproxy/security
 openssl genrsa -out tls.key 3072
 openssl req -new -key tls.key -out tls.csr -subj "/OU=gameflexmatch/"
 openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
+
+chmod -R 750 *
 
 mkdir -p /etc/docker-build/auxproxy/logs
 
