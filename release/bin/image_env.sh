@@ -33,7 +33,7 @@ if [ "${APP_FILE##*.}" = "rar" ]; then
 	unrar e  ${APP_FILE}
 fi
 chown -R ${USER}:${GROUP} /local/app/${APP_NAME}
-chmod 750 *
+chmod -R 750 *
 # download auxproxy
 mkdir -p /etc/auxproxy
 cd /etc/auxproxy
@@ -45,7 +45,7 @@ if [ "${AUX_FILE##*.}" = "rar" ]; then
 	unrar e  ${AUX_FILE}
 fi
 chown -R ${USER}:${GROUP} /etc/auxproxy
-chmod 750 *
+chmod -R 750 *
 
 cat > /etc/systemd/system/auxproxy.service <<- EOF
 [Unit]
@@ -53,8 +53,8 @@ Description=auxproxy.service
 
 [Service]
 Type=simple
-User=root
-Group=root
+User=${USER}
+Group=${GROUP}
 ExecStart=/etc/auxproxy/auxproxy-start.sh
 Restart=always
 RestartSec=30
@@ -72,6 +72,9 @@ cd /etc/auxproxy/security
 openssl genrsa -out tls.key 3072
 openssl req -new -key tls.key -out tls.csr -subj "/OU=gameflexmatch/"
 openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
+
+chown -R ${USER}:${GROUP} /etc/auxproxy/security
+chmod -R 750 *
 
 
 systemctl enable auxproxy.service
