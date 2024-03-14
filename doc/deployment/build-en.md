@@ -31,7 +31,7 @@ cd huaweicloud-solution-gameflexmatch-fleetmanager
 go mod neat
 go build -o fleetmanager. /main.go
 ```
-+ Move the compiled binary package to: `/home/gfm/bin`
++ Move the compiled binary package `./fleetmanager` to: `/home/gfm/bin`
 ## 1.2. AppGateway
 + Compile
 ```shell
@@ -40,7 +40,7 @@ cd huaweicloud-solution-gameflexmatch-appgateway
 go mod tidy
 go build -o appgateway ./cmd/application_gateway.go
 ```
-+ Move the compiled binary package to: `/home/gfm/bin`
++ Move the compiled binary package `./appgateway` to: `/home/gfm/bin`
 ## 1.3. AASS
 + Compile
 ```shell
@@ -49,7 +49,7 @@ cd huaweicloud-solution-gameflexmatch-aass
 go mod tidy
 go build -o aass ./cmd/application-auto-scaling-service/application_auto_scaling_service.go
 ```
-+ Move the compiled binary package to: `/home/gfm/bin`
++ Move the compiled binary package: `./aass` to: `/home/gfm/bin`
 ## 1.4. Auxproxy
 + Compile
 ```shell
@@ -65,8 +65,10 @@ go build -o auxproxy ./cmd/auxproxy.go
 
 ## 1.5. Console
 + Configuring the Compilation Environment
-  `yum install -y nodejs`
-  `yum install -y npm`
+```shell
+  yum install -y nodejs
+  yum install -y npm
+```
 + Compile
 ```sh
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-console.git
@@ -77,3 +79,4 @@ cd huaweicloud-solution-gameflexmatch-console
 + Execute: `npm install --save vue-i18n@next`
 + Execute: `npm run build` to compile
 + You will get the compiled `huaweicloud-solution-gameflexmatch-console/dist` front-end application in the directory
++ Move `huaweicloud-solution-gameflexmatch-console/dist` to the `/home/gfm/bin` directory.
