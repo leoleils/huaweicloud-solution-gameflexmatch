@@ -163,7 +163,7 @@ This solution is deeply coupled with HUAWEI CLOUD. The following cloud services 
 > For details about recompilation, see Compilation Guide:[`ZH`](doc/deployment/build-zh.md#console) | [`EN`](./doc/deployment/build-en.md).
 > The following commands are based on the `Centos` operating system. 
 1.  Installing the `nginx`: `yum install -y nginx`
-2.  Run the command to install the frontend application: `\cp -r -f  ./bin/dist/* /usr/share/nginx/html/`
+2.  Run the command to install the frontend application: `\cp -r -f  /home/gfm/bin/dist/* /usr/share/nginx/html/`
 3.  Modify the `nginx` configuration file as follows:
    Run the `vim /etc/nginx/nginx.conf` command to open the'nginx' configuration file.
     There are three areas that need to be modified:
