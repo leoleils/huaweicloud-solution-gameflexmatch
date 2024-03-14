@@ -27,7 +27,7 @@
 
 ## 1.3. 接口认证
 在调用所有的接口前，需要进行认证校验
-1. 构造登录请求，其中密码为`RSA`加密后的密文，加密的公钥需与`fleetmanager`部署的后端私钥保持一致，加密脚本可参考`/tools/cipher`，你可以执行：`./sac-gfm cipher --mode encode --method rsa --text {登录密码}`
+1. **获取认证信息：** 构造登录请求，其中密码为`RSA`加密后的登录密码，加密的公钥需与`fleetmanager`部署的后端私钥保持一致，加密脚本可参考`/tools/cipher`，你可以执行：`./sac-gfm cipher --mode encode --method rsa --text {登录密码}`
 
 `POST URL: /v1/user/login`
 `Request Body`: 
@@ -48,37 +48,40 @@
     "total_res_count": 1
 }
 ```
-2. 将`Response`中的`Auth-Token`字段以及字段值加入到请求体的`header`里，即可正常访问`GameFlexMatch`接口业务
+2. **构造请求URL:** 以创建`fleet`接口为例，`URL`为：https://{{fleetmanager}}:31002/v1/{{project-id}}/fleets, 其中`fleetmanager`参数为fleetmanager节点的IP地址，`project_id`为您在控制台首页中看到的`租户标识`:
+   ![](../img/home/tenantID-zh.PNG)
+   
+3. **构造请求头：** 将第一步`Response`中的`Auth-Token`字段以及字段值加入到请求体的`header`里，即可正常访问`GameFlexMatch`接口业务
 ## 1.4. 管理层接口
 ### 1.4.1. 租户管理面与GameFlexMatch服务的交互接口说明
 详细接口信息看`API`[接口文档](../api/FleetManager.yaml)，下面对接口做一些说明：
 1. **CreateFleet**
 创建`fleet`，这里可以通过"`process_configuration`"指定开机之后的启动路径和参数（这些参数是这个`fleet`每个虚拟机都可以拿到的参数）
 
-2. **ShowFleet**
+1. **ShowFleet**
 `fleet`创建之后状态是`Activating`，需要通过`ShowFleet`查询改`Fleet`的状态，只有状态变成"`active`"之后才表示这个`Fleet`可用，才可以进行`Server Session`的创建
 
-3. **UpdateFleetInstanceCapacity**
+1. **UpdateFleetInstanceCapacity**
 `Fleet`创建之后默认会启动一个虚拟机来启动进程，需要等`Fleet`的状态为`active`，通过这个接口可以修改指定`Fleet`的虚拟机最大值、最少值和期望值
 
-4. **UpdateFleet**
+1. **UpdateFleet**
 该接口主要是修改`Fleet`的属性，比如打开弹性伸缩，修改实例标签，会话保护策略与保护时长等
 
-5. **CreateScalingPolicy**
+1. **CreateScalingPolicy**
 `Fleet`创建之后默认不启动弹性伸缩，需要等`Fleet`的状态为`active`，调用`updateFleet` 开启弹性伸缩，然后通过`CreateScalingPolicy`可以配置自己的弹性阈值
 
-6. **CreateServerSession**
+1. **CreateServerSession**
 可以通过`CreateServerSession`，给`Fleet`创建一个`server session`，如果该`Fleet`有可用的进程，该进程会接收到这个接口的参数
 如果指定Fleet当前没有可用的虚拟机可用于分配，该接口会返回失败，如果开启了弹性策略的话，业务可以等待一段时间后再重试。
 
-7. **ShowServerSession**
+1. **ShowServerSession**
 可以通过`ShowServerSession`，获取指定`ServerSession`的连接信息，也可以为`Server Session`创建`client session`来获取连接信息，`GameFlexMatch`平台通过`client session`对连接做了细致管理，推荐使用
 如果`ServerSession`还没`active`的话，访问地址会被隐藏
 
-8. **CreateClientSession `(保留接口)`**
+1. **CreateClientSession `(保留接口)`**
 可以通过`CreateSession`，给指定的`Server Session`创建一个`client session`，根据这个`client session`，不同的用户可以连接入服务器上，比如游戏里面，`10`个用户一局游戏，游戏局就是`server session`，而`client session`就表示了不同的用户，这些用户使用相同的服务器连接地址连接入托管服务器；创建`client session`之后，会有`60s`的有效期，超过这个时间之后`client session`会变为不可用
 
-9. **DeleteFleet**
+1. **DeleteFleet**
 结束后，该接口是提供给用户做最后清理的，该接口可以清理所有指定`fleet`的所有资源
 
 ## 1.5. 应用层接口

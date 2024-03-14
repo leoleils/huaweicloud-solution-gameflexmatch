@@ -31,7 +31,7 @@ cd huaweicloud-solution-gameflexmatch-fleetmanager
 go mod tidy
 go build -o fleetmanager ./main.go
 ```
-+ 将编译后的二进制包，移动至`/home/gfm/bin`目录下
++ 将编译后的二进制包./fleetmanager，移动至`/home/gfm/bin`目录下
 ## 1.2. AppGateway
 + 编译
 ```shell
@@ -40,7 +40,7 @@ cd huaweicloud-solution-gameflexmatch-appgateway
 go mod tidy
 go build -o appgateway ./cmd/application_gateway.go
 ```
-+ 将编译后的二进制包，移动至`/home/gfm/bin`目录下
++ 将编译后的二进制包./appgateway，移动至`/home/gfm/bin`目录下
 ## 1.3. AASS
 + 编译
 ```shell
@@ -49,7 +49,7 @@ cd huaweicloud-solution-gameflexmatch-aass
 go mod tidy
 go build -o aass ./cmd/application-auto-scaling-service/application_auto_scaling_service.go
 ```
-+ 将编译后的二进制包，移动至`/home/gfm/bin`目录下
++ 将编译后的二进制包./aass，移动至`/home/gfm/bin`目录下
 ## 1.4. Auxproxy
 + 编译
 ```shell
@@ -64,9 +64,11 @@ go build -o auxproxy ./cmd/auxproxy.go
 + 将压缩后的`auxproxy.zip`上传至`OBS`桶中
 
 ## 1.5. Console
-+ 配置编译环境：
-  `yum install -y nodejs`
-  `yum install -y npm`
++ 配置编译环境
+```shell
+  yum install -y nodejs
+  yum install -y npm
+```
 + 编译
 ```sh
 git clone -b master-dev https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch-console.git
@@ -77,3 +79,4 @@ cd huaweicloud-solution-gameflexmatch-console
 + 执行：`npm install --save vue-i18n@next`
 + 执行: `npm run build` 进行编译
 + 在目录下会得到编译后的`huaweicloud-solution-gameflexmatch-console/dist`前端应用
++ 将`huaweicloud-solution-gameflexmatch-console/dist`移动至`/home/gfm/bin`目录下
