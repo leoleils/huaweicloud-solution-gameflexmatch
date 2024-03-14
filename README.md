@@ -71,13 +71,13 @@ huaweicloud-solution-gameflexmatch
 ## 3.2. 资源规划
 + **部署资源**
   
-|          资源类型           | 单机部署 | 分布式集群部署 |                       说明                       |
-| :-------------------------: | :------: | :------------: | :----------------------------------------------: |
-|         云服务器ECS         |    1     |       6        |              用于部署GFM前后端服务               |
-|    云数据库RDS for Mysql    |    1     |       1        |              用于存储必要的运行数据              |
-| 云数据库GaussDB(for Influx) |    1     |       1        | 用于存储战斗服集群的实时运行数据，以进行弹性伸缩 |
-|  分布式缓存服务DCS(Redis)   |    1     |       1        |                 用于存储缓存数据                 |
-|       弹性负载均衡ELB       |    0     |       3        |        集群部署时需要，实现流量的智能分发        |
+|           资源类型           | 单机部署 | 分布式集群部署 |                                              说明                                               |
+| :--------------------------: | :------: | :------------: | :---------------------------------------------------------------------------------------------: |
+|         云服务器ECS          |    1     |       7        | 用于部署GFM前后端服务，若为分布式部署，则3个服务组件“Fleetmanager/AppGateway/AASS”服务组件各2台，前端服务1台 |
+|    云数据库RDS for Mysql     |    1     |       1        |                                     用于存储必要的运行数据                                      |
+| 云数据库GeminiDB(for Influx) |    1     |       1        |                        用于存储战斗服集群的实时运行数据，以进行弹性伸缩                         |
+|   分布式缓存服务DCS(Redis)   |    1     |       1        |                                        用于存储缓存数据                                         |
+|       弹性负载均衡ELB        |    0     |       3        |                               集群部署时需要，实现流量的智能分发                                |
 
 ## 3.3. 云账号资源
 
@@ -97,7 +97,7 @@ huaweicloud-solution-gameflexmatch
   13. 消息通知服务的所有权限：`SMN FullAccess`
   14. 云日志服务所有权限：`LTS FullAccess`
 ## 3.4. 涉及云服务
-该解决方案与华为云深度耦合，在运行过程中涉及到的云服务与用途如下，为保证可以正常使用该解决方案，请保证使用租户包含下列云服务的[必要权限](./README.md#云账号资源)：
+该解决方案与华为云深度耦合，在运行过程中涉及到的云服务与用途如下，为保证可以正常使用该解决方案，请保证使用租户包含下列云服务的[必要权限](./README.md#33-云账号资源)：
 
 |    云服务名称    | 简称  |                      用途                      |
 | :--------------: | :---: | :--------------------------------------------: |
@@ -121,7 +121,7 @@ huaweicloud-solution-gameflexmatch
 ### 3.5.1. 基于发布的应用包进行部署
 **应用包目录介绍**
 ```lua
-game-flex-match_release
+/home/gfm
    |- bin                -- 存放服务的二进制文件的目录
       |- fleetmanager   -- fleetmanager服务组件的二进制文件
       |- appgateway     -- appgateway服务组件的二进制文件
@@ -154,9 +154,9 @@ game-flex-match_release
 > NOTE：部署过程基于`sac-gfm`脚本进行，脚本的说明请参考：[`ZH`](./doc/deployment/sac-gfm-intro-zh.md)|[`EN`]((./doc/deployment/sac-gfm-intro-en.md))
 
 1. 获取二进制应用包并解压
-   + 下载：`wget https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch/releases/download/laster/game-flex-match_release.tar.gz`
-   + 解压：`tar -zxvf game-flex-match_release.tar.gz`
-   + 进入目录：`cd game-flex-match_release`
+   + 下载并进入目录：`wget -P /home --no-check-certificate https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch/releases/download/laster/game-flex-match_release.tar.gz; mkdir -p /home/gfm`
+   + 解压：`tar -zxvf /home/game-flex-match_release.tar.gz -C /home/gfm`
+   + 进入目录：`cd /home/gfm`
 2. 修改配置文件
    + 在安装部署时，你可以先了解先各个配置文件的各个参数说明，并根据实际情况进行修改,可以参考：[`ZH`](./doc/deployment/config-intro-zh.md)|[`EN`](./doc/deployment/config-intro-en.md)
    + 配置文件在二进制应用包中可以找到: `./conf/init.yaml`，你可以根据实际情况修改,你也可以在[init.yaml](release/conf/init.yaml)中查看
@@ -175,7 +175,9 @@ game-flex-match_release
    `./sac-gfm restart --service fleetmanager`
 
 **前端服务部署步骤**
-> NOTE: 前端服务已通过`npm`基于已提供的`./conf/public.pem`公钥进行编译，若您的公钥有更新，需要重新编译；以下所有命令基于`Centos`操作系统，重新编译请参考编译指导: [`ZH`](doc/deployment/build-zh.md#console) | [`EN`](./doc/deployment/build-en.md)
+> NOTE: 前端服务已通过`npm`基于已提供的`./conf/public.pem`公钥进行编译，若您的公钥有更新，需要重新编译
+> 重新编译请参考编译指导: [`ZH`](doc/deployment/build-zh.md#console) | [`EN`](./doc/deployment/build-en.md)
+> 以下所有命令基于`Centos`操作系统，
 1. 安装`nginx`: `yum install -y nginx`
 2. 安装前端应用：`\cp -r -f  ./bin/dist/* /usr/share/nginx/html/`
 3. 根据下面指导进行修改`nginx`配置文件：
@@ -192,7 +194,7 @@ game-flex-match_release
         location /api/ {
             proxy_pass https://{fleetmanager-ip}:31002/;
         }
-        # 3.增加该字段，避免刷新后页面不存在的问题
+        # 3.修改该字段，避免刷新后页面不存在的问题
         location / {
             root html;
             try_files $uri /index.html;  # try_files：检查文件； $uri：监测的文件路径； /index.html：文件不存在重定向的新路径
