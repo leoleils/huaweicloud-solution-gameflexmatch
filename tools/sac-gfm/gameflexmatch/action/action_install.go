@@ -75,7 +75,10 @@ func (a *InstallAction) InitConfig(confPath string, targetPath string, service s
 		return err
 	}
 	targetPath = fmt.Sprintf("%s/%s.yaml", targetPath, service)
-	cipher := conf["cipher"].(map[string]string)
+	cipher := make(map[string]string)
+	for k, v := range conf["cipher"].(map[string]interface{}) {
+		cipher[k] = v.(string)
+	}
 	if !path.IsAbs(cipher["RSAPublicKey"]) {
 		cipher["RSAPublicKey"] = path.Join(common.RootPath, cipher["RSAPublicKey"])
 	}
@@ -91,7 +94,12 @@ func (a *InstallAction) InitConfig(confPath string, targetPath string, service s
 	if !path.IsAbs(cipher["TlsCrt"]) {
 		cipher["TlsCrt"] = path.Join(common.RootPath, cipher["TlsCrt"])
 	}
-	conf["cipher"] = cipher
+	mapCipher := make(map[string]interface{})
+	for k, v := range cipher {
+		mapCipher[k] = v
+	}
+
+	conf["cipher"] = mapCipher
 	switch service {
 	case "fleetmanager":
 		if err := a.generateFleetmanagerConfig(conf, targetPath); err != nil {

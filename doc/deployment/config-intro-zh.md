@@ -170,7 +170,7 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">用户可以自定义区域，其他参数保持默认值。</td>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">SupportDockerImage:
         <br> &nbsp;&nbsp;    - region: cn-north-4
-        <br> &nbsp;&nbsp;      dockerOS: "swr.cn-north-7.myhuaweicloud.com/game/centos-super:v1,centos:7.6.1810,centos:7.2.1511"</td>
+        <br> &nbsp;&nbsp;      dockerOS: "swr-api.cn-north-4.myhuaweicloud.com/game/centos-super:v1,centos:7.6.1810,centos:7.2.1511"</td>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">该配置项需要配置为YAML列表类型。</td>
     </tr>
     <tr>
@@ -319,7 +319,7 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
         <br> &nbsp;&nbsp;      fromPort: 60001
         <br> &nbsp;&nbsp;      toPort: 60001
         <br> &nbsp;&nbsp;    - protocol: "TCP"
-        <br> &nbsp;&nbsp;      ipRange: 10.100.0.1/32
+        <br> &nbsp;&nbsp;      ipRange: 10.100.0.2/32
         <br> &nbsp;&nbsp;      fromPort: 60001
         <br> &nbsp;&nbsp;      toPort: 60001</td>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">　</td>
@@ -351,7 +351,7 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">上传镜像打包脚本到OBS桶中。
         <br> &nbsp;&nbsp;例如，OBS桶为gfm，则配置为类似示例的值。</td>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">gfm/image_env.sh</td>
-      <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">将bin/image_env.sh脚本上传到OBS桶中。</td>
+      <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">将/home/gfm/bin/image_env.sh脚本上传到OBS桶中。</td>
     </tr>
     <tr>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#F00;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">BuildDockerScriptPath</td>
@@ -359,7 +359,7 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">将打包docker镜像的脚本上传到OBS桶中。
         <br> &nbsp;&nbsp;例如，OBS桶为gfm，则配置为类似示例的值。</td>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">gfm/docker_image_env.sh</td>
-      <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">将bin/docker_image_env.sh脚本上传到OBS桶中。</td>
+      <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">将/home/gfm/bin/docker_image_env.sh脚本上传到OBS桶中。</td>
     </tr>
     <tr>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#F00;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">AuxproxyPath</td>
@@ -367,7 +367,7 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">上传应用包到OBS桶中。
         <br> &nbsp;&nbsp;例如，OBS桶为gfm，则配置为类似示例的值。</td>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">gfm/auxproxy.zip</td>
-      <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">将bin/auxproxy.zip上传到OBS桶中。</td>
+      <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">将/home/gfm/bin/auxproxy.zip上传到OBS桶中。</td>
     </tr>
     <tr>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">ImageDiskSize</td>
@@ -453,7 +453,7 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
     </tr>
     <tr>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#F00;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">ServiceEndpoint.SwrService</td>
-      <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">https://swr.cn-north-4.myhuaweicloud.com</td>
+      <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">https://swr-api.cn-north-4.myhuaweicloud.com</td>
     </tr>
     <tr>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#F00;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">ServiceEndpoint.CciService</td>
@@ -986,7 +986,7 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
       <td style="background-color:#fff;border-color:inherit;border-style:solid;border-width:1px;color:#F00;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">influxDBAddress</td>
       <td style="background-color:#fff;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">aass和appgateway使用的influxdb地址</td>
       <td style="background-color:#fff;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">确保aass和appgateway服务能够连接到数据库。</td>
-      <td style="background-color:#fff;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">127.0.0.1:8086</td>
+      <td style="background-color:#fff;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">127.0.0.1:8035</td>
       <td style="background-color:#fff;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">
       </td>
     </tr>
