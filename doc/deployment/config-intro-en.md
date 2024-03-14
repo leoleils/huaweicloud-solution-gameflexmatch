@@ -173,7 +173,7 @@ GFM generates configuration files required by each service component based on th
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">You can customize the region and retain the default values for other parameters.</td>
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">SupportDockerImage:
         <br> &nbsp;&nbsp;    - region: cn-north-4
-        <br> &nbsp;&nbsp;      dockerOS: "swr.cn-north-7.myhuaweicloud.com/game/centos-super:v1,centos:7.6.1810,centos:7.2.1511"</td>
+        <br> &nbsp;&nbsp;      dockerOS: "swr-api.cn-north-4.myhuaweicloud.com/game/centos-super:v1,centos:7.6.1810,centos:7.2.1511"</td>
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">This configuration item needs to be configured as a YAML list.</td>
     </tr>
     <tr>
@@ -328,7 +328,7 @@ GFM generates configuration files required by each service component based on th
         <br> &nbsp;&nbsp;      fromPort: 60001
         <br> &nbsp;&nbsp;      toPort: 60001
         <br> &nbsp;&nbsp;    - protocol: "TCP"
-        <br> &nbsp;&nbsp;      ipRange: 10.100.0.1/32
+        <br> &nbsp;&nbsp;      ipRange: 10.100.0.2/32
         <br> &nbsp;&nbsp;      fromPort: 60001
         <br> &nbsp;&nbsp;      toPort: 60001</td>
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">　</td>
@@ -360,7 +360,7 @@ GFM generates configuration files required by each service component based on th
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">Upload the script for packaging the image to the OBS bucket.
         <br> &nbsp;&nbsp;For example, if the OBS bucket is gfm, set this parameter to a value similar to the example value.</td>
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">gfm/image_env.sh</td>
-      <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">Upload the bin/image_env.sh script to the gfm bucket of OBS.</td>
+      <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">Upload the /home/gfm/bin/image_env.sh script to the gfm bucket of OBS.</td>
     </tr>
     <tr>
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;color:#F00;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">BuildDockerScriptPath</td>
@@ -368,7 +368,7 @@ GFM generates configuration files required by each service component based on th
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">Upload the script for packaging the docker image to the OBS bucket.
         <br> &nbsp;&nbsp;For example, if the OBS bucket is gfm, set this parameter to a value similar to the example value.</td>
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">gfm/docker_image_env.sh</td>
-      <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">Upload the bin/docker_image_env.sh script to the gfm bucket of OBS.</td>
+      <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">Upload the /home/gfm/bin/docker_image_env.sh script to the gfm bucket of OBS.</td>
     </tr>
     <tr>
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;color:#F00;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">AuxproxyPath</td>
@@ -376,7 +376,7 @@ GFM generates configuration files required by each service component based on th
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">Upload the application package to the OBS bucket.
         <br> &nbsp;&nbsp;For example, if the OBS bucket is gfm, set this parameter to a value similar to the example value.</td>
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">gfm/auxproxy.zip</td>
-      <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">Upload the bin/auxproxy.zip to the gfm bucket of OBS.</td>
+      <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">Upload the /home/gfm/bin/auxproxy.zip to the gfm bucket of OBS.</td>
     </tr>
     <tr>
       <td style="background-color:#F2F2F2;border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">ImageDiskSize</td>
@@ -996,7 +996,7 @@ GFM generates configuration files required by each service component based on th
       <td style="border-color:black;border-style:solid;border-width:1px;color:#F00;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">influxDBAddress</td>
       <td style="border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">influxdb address used by aass and appgateway</td>
       <td style="border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">Ensure that the aass and appgateway service can connect to the database.</td>
-      <td style="border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">127.0.0.1:8086</td>
+      <td style="border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">127.0.0.1:8035</td>
       <td style="border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">
       </td>
     </tr>
