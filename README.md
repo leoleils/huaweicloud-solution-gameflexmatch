@@ -179,7 +179,7 @@ huaweicloud-solution-gameflexmatch
 > 重新编译请参考编译指导: [`ZH`](doc/deployment/build-zh.md#console) | [`EN`](./doc/deployment/build-en.md)
 > 以下所有命令基于`Centos`操作系统，
 1. 安装`nginx`: `yum install -y nginx`
-2. 安装前端应用：`\cp -r -f  ./bin/dist/* /usr/share/nginx/html/`
+2. 安装前端应用：`\cp -r -f  /home/gfm/bin/dist/* /usr/share/nginx/html/`
 3. 根据下面指导进行修改`nginx`配置文件：
    打开`nginx`配置文件：`vim /etc/nginx/nginx.conf`
    共有三个地方需要修改

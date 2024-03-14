@@ -30,7 +30,7 @@ Interface interactions are categorized into management layer interfaces and appl
 
 Authentication checks are required before calling all interfaces.
 
-1.  Construct a login request where the password is RSA encrypted cipher, the encrypted public key needs to be consistent with the private key of the backend deployed by fleetmanager, the encryption script can be found in `/tools/cipher`. You can exec: `./sac-gfm cipher --mode encode --method rsa --text {登录密码}`
+1. **Obtaining authentication information:** Construct a login request where the password is RSA encrypted cipher, the encrypted public key needs to be consistent with the private key of the backend deployed by fleetmanager, the encryption script can be found in `/tools/cipher`. You can exec: `./sac-gfm cipher --mode encode --method rsa --text {login password}`
 
 `POST URL: /v1/user/login` `Request Body`\:
 
@@ -53,8 +53,10 @@ Authentication checks are required before calling all interfaces.
     "total_res_count": 1
 }
 ```
+2.  **Construct a request URL:** For example, the URL of the fleet creation API is https://{{fleetmanager}}:31002/v1/{{project-id}}/fleets, `fleetmanager` indicates the IP address of the fleetmanager node, and `project_id` indicates the `tenant ID` displayed on the console home.
+    ![](../img/home/tenantID-en.PNG)
 
-2.  Add the `Auth-Token` field in the `Response` and its value to the `header` of the request body to access the `Game Flex Match` interface service normally.
+3.  **Construct the request header:** Add the `Auth-Token` field in the `Response` and its value to the `header` of the request body to access the `Game Flex Match` interface service normally.
 
 ## 1.4. Management layer interface ##
 
