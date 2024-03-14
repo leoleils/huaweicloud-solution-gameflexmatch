@@ -56,7 +56,7 @@ huaweicloud-solution-gameflexmatch
 
 |              Resource Type              | Single-Node System | Distributed Cluster |                                  Description                                  |
 | :-------------------------------------: | :----------------: | :-----------------: | :---------------------------------------------------------------------------: |
-|                   ECS                   |         1          |          6          |           Used to deploy the frontend and backend services of GFM.            |
+|                   ECS                   |         1          |          7          |           Used to deploy GFM frontend and backend services. In distributed deployment mode, two servers are required for each of the three service components Fleetmanager, AppGateway, and AASS, and one server is required for the frontend service.            |
 |              RDS for MySQL              |         1          |          1          |                        Stores necessary running data.                         |
 |   Cloud database GaussDB(for Influx)    |         1          |          1          | for storing real-time operational data clothing cluster, for elastic scaling  |
 | Distributed Cache Service (DCS) (Redis) |         1          |          1          |                              Stores cached data.                              |
@@ -80,7 +80,7 @@ You need to prepare a HuaweiCloud account in advance and grant the following per
   14.  All permissions of LTS: `LTS FullAccess`
 
 ## 3.4. Involved cloud services
-This solution is deeply coupled with HUAWEI CLOUD. The following cloud services and functions are involved during the running of this solution. To ensure that the tenant can use this solution properly, ensure that the tenant has the necessary [permissions](./README_EN.md#cloud-account-resources) for the following cloud services:
+This solution is deeply coupled with HUAWEI CLOUD. The following cloud services and functions are involved during the running of this solution. To ensure that the tenant can use this solution properly, ensure that the tenant has the necessary [permissions](./README_EN.md#33-cloud-account-resources) for the following cloud services:
 
 |          Cloud Service Name          |                Abbreviation                 |                                                 Usage                                                 |
 | :----------------------------------: | :-----------------------------------------: | :---------------------------------------------------------------------------------------------------: |
@@ -106,7 +106,7 @@ This solution is deeply coupled with HUAWEI CLOUD. The following cloud services 
 **Introduction to Released the application package directory**
 
 ```lua
-game-flex-match_release
+/home/gfm
     |- bin             -- Directory for storing binary files of the service
         |- fleetmanager         -- Binary file of the fleetmanager service component
         |- appgateway           -- Binary file of the appgateway service component
@@ -138,9 +138,9 @@ game-flex-match_release
 > Note: The deployment is performed based on the `sac-gfm` script. For details about the script, see [`ZH`](./doc/deployment/sac-gfm-intro-zh.md)|[`EN`](./doc/deployment/sac-gfm-intro-en.md).
 
 1. Obtain and decompress the binary application package.
-   + Download: `wget https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch/releases/download/laster/game-flex-match_release.tar.gz`
-   + Decompression: `tar -zxvf game-flex-match_release.tar.gz`
-   + Go to the directory: `cd game-flex-match_release`
+   + Download: `wget -P /home --no-check-certificate https://gitee.com/HuaweiCloudDeveloper/huaweicloud-solution-gameflexmatch/releases/download/laster/game-flex-match_release.tar.gz; mkdir -p /home/gfm`
+   + Decompression: `tar -zxvf /home/game-flex-match_release.tar.gz -C /home/gfm`
+   + Go to the directory: `cd /home/gfm`
 2. Modify the configuration file.
    + During installation and deployment, you can learn about the parameters in each configuration file and modify the parameters according to the actual situation. For details, see [`ZH`](./doc/deployment/config-intro-zh.md)|[`EN`](./doc/deployment/config-intro-en.md).
    + The configuration file can be found in the binary application package: `./conf/init.yaml`. You can modify the configuration file according to the actual situation or view it in [init.yaml](release/conf/init.yaml).
@@ -159,9 +159,11 @@ game-flex-match_release
     `./sac-gfm restart --service fleetmanager`
 
 **Front-End Service Deployment Procedure**
-> NOTE: Frontend services have been provided via `npm` based on the`./conf/public.pem` public key. If your public key is updated, you need to recompile it. The following commands are based on the `Centos` operating system. For details about recompilation, see Compilation Guide:[`ZH`](doc/deployment/build-zh.md#console) | [`EN`](./doc/deployment/build-en.md).
+> NOTE: Frontend services have been provided via `npm` based on the`./conf/public.pem` public key. If your public key is updated, you need to recompile it. 
+> For details about recompilation, see Compilation Guide:[`ZH`](doc/deployment/build-zh.md#console) | [`EN`](./doc/deployment/build-en.md).
+> The following commands are based on the `Centos` operating system. 
 1.  Installing the `nginx`: `yum install -y nginx`
-2.  Run the `\cp -r -f command to install the frontend application. /conf/dist/* /usr/share/nginx/html/`
+2.  Run the command to install the frontend application: `\cp -r -f  ./bin/dist/* /usr/share/nginx/html/`
 3.  Modify the `nginx` configuration file as follows:
    Run the `vim /etc/nginx/nginx.conf` command to open the'nginx' configuration file.
     There are three areas that need to be modified:
@@ -176,7 +178,7 @@ game-flex-match_release
         location /api/ {
             proxy_pass https://{fleetmanager-ip}:31002/;
         }
-        # 3. Add this field to avoid the problem that the page does not exist after refreshing.
+        # 3. Change this field to avoid the problem that the page does not exist after refreshing.
         location / {
             root html;
             try_files $uri /index.html; # try_files: Check the file. $uri: indicates the path of the file to be monitored. /index.html: file does not exist redirect to new path
@@ -189,7 +191,9 @@ game-flex-match_release
 5.  Enter the URL `http://{IP address of the front-end server}:80` in the browser.
 
 **Update Steps**
+
 If you want to compile from source, follow these steps: ['ZH'](./doc/deployment/build-zh.md)||[`EN`](./doc/deployment/build-en.md)
+
 
 ## 3.6. Usage Guide
 + `console` platform quick start is available at: [`ZH`](doc/user-guide/quick-start-zh.md)|[`EN`](doc/user-guide/quick-start-en.md)
