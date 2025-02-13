@@ -185,7 +185,7 @@ func (a *CipherAction) GcmDecode(initConf string) error {
 	if text == "" {
 		return fmt.Errorf("you must provide the text that would decode")
 	}
-	cipherText, err := a.AESGCMEncrypt(text, key, nonce)
+	cipherText, err := a.AESGCMDecrypt(text, key, nonce)
 	if err != nil {
 		return err
 	}
