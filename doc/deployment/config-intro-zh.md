@@ -310,7 +310,7 @@ GFM基于`conf/init.yaml`配置文件生成各个服务组件所需的配置文�
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#F00;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">InternalInboundPermissions</td>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">创建fleet时，默认会创建一个安全组。
         <br> &nbsp;&nbsp;下面列出了默认需要配置的安全组规则。</td>
-      <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">ipRange需要配置为所有AppGateway节点的IP地址。
+      <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">ipRange需要配置为所有AppGateway节点和aass的IP地址。
         <br> &nbsp;&nbsp;例如，AppGateway有两个节点10.100.0.1和10.100.0.2，则需要将ipRange的值设置为示例值。
         <br> &nbsp;&nbsp;其他参数可以保持默认配置。</td>
       <td style="background-color:#F2F2F2;border-color:inherit;border-style:solid;border-width:1px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:middle;word-break:normal">InternalInboundPermissions:
