@@ -1,0 +1,20 @@
+[submodule "src/huaweicloud-solution-gameflexmatch-aass"]
+	path = src/huaweicloud-solution-gameflexmatch-aass
+	url = git@github.com:leoleils/gameflexmatch-aass.git
+	branch = master-dev
+[submodule "src/huaweicloud-solution-gameflexmatch-appgateway"]
+	path = src/huaweicloud-solution-gameflexmatch-appgateway
+	url = git@github.com:leoleils/gameflexmatch-appgateway.git
+	branch = master-dev
+[submodule "src/huaweicloud-solution-gameflexmatch-auxproxy"]
+	path = src/huaweicloud-solution-gameflexmatch-auxproxy
+	url = git@github.com:leoleils/gameflexmatch-auxproxy.git
+	branch = master-dev
+[submodule "src/huaweicloud-solution-gameflexmatch-console"]
+	path = src/huaweicloud-solution-gameflexmatch-console
+	url = git@github.com:leoleils/gameflexmatch-console.git
+	branch = master-dev
+[submodule "src/huaweicloud-solution-gameflexmatch-fleetmanager"]
+	path = src/huaweicloud-solution-gameflexmatch-fleetmanager
+	url = git@github.com:leoleils/gameflexmatch-fleetmanager.git
+	branch = master-dev
