@@ -1,0 +1,284 @@
+# ============================================================================
+# 阿里云适配配置示例
+# Alibaba Cloud Configuration Example
+# ============================================================================
+# 说明：此配置文件展示如何将 GameFlexMatch 部署到阿里云
+# Description: This configuration file shows how to deploy GameFlexMatch to Alibaba Cloud
+#
+# 主要变更：
+# 1. cloud_provider 设置为 "alibaba"
+# 2. 服务端点替换为阿里云 OpenAPI 端点
+# 3. 区域使用阿里云地域ID格式
+# ============================================================================
+
+cipher:
+  # 用于加密解密敏感数据（如密码）的24位密钥
+  # 24 characters used for encrypting and decrypting sensitive data such as passwords
+  GCMKey: Fi1xOkgXvevHlTR5SIHHXAb2
+  # 用于加密解密敏感数据的16位密钥
+  # 16 characters used for encrypting and decrypting sensitive data such as passwords
+  GCMNonce: dlbaGmj9O32CFbTs
+  # RSA公私钥用于控制台与服务间的密码传输加密
+  RSAPublicKey: ./conf/public.key
+  RSAPrivateKey: ./conf/private.key
+  # HTTPS协议所需的TLS证书
+  TlsKey: ./conf/tls.key
+  TlsCsr: ./conf/tls.csr
+  TlsCrt: ./conf/tls.crt
+
+fleetmanager:
+  # ======================
+  # 云厂商配置 / Cloud Provider Configuration
+  # ======================
+  # 云厂商类型：huawei | alibaba
+  # Cloud provider type: huawei | alibaba
+  CloudProvider: alibaba
+  
+  # 数据库配置
+  MysqlAddress: 127.0.0.1:3306
+  MysqlUser: root
+  MysqlDBName: fleetmanager
+  MysqlPassword: 
+  MysqlCharset: utf8
+  RedisAddress: 127.0.0.1:6379
+  RedisPassword:
+  RedisDB: 1
+  
+  # 日志配置
+  LogRotateSize: 1024
+  LogBackupCount: 100
+  LogMaxAge: 7
+  
+  # 阿里云支持的地域列表
+  # Alibaba Cloud supported regions
+  # 参考: https://help.aliyun.com/document_detail/40654.html
+  SupportRegions: 
+    - cn-hangzhou
+    - cn-shanghai
+    - cn-beijing
+    
+  DefaultLoginPassword: Gfm@2024
+  WorkflowPath: "./conf/workflow/"
+  
+  # 阿里云公共镜像列表
+  # Alibaba Cloud public images
+  SupportPublicImage:
+    - region: cn-hangzhou
+      image: "centos_7_9_x64_20G_alibase_20230816.vhd,ubuntu_22_04_x64_20G_alibase_20230613.vhd"
+      
+  # 阿里云EIP类型
+  # Alibaba Cloud EIP type
+  # 参考: https://help.aliyun.com/document_detail/36016.html
+  EipType:
+    - region: cn-hangzhou
+      supportEipType: "5_bgp"
+      
+  # 阿里云DNS服务器地址
+  # 阿里云默认DNS: 100.100.2.136, 100.100.2.138
+  DnsConfig: 
+    - region: cn-hangzhou
+      dnsServer: "100.100.2.136,100.100.2.138"
+      
+  LtsIps:
+    - region: cn-hangzhou
+      ltsIp: 
+      
+  DefaultRegion: cn-hangzhou
+  DefaultFleetProtectPolicy: TIME_LIMIT_PROTECTION
+  DefaultProtectTimeLimit: 30
+  DefaultSessionTimeoutSeconds: 60
+  DefaultMaxSessionNumPerProcess: 50
+  DefaultProcessNumPerInstance: 50
+  
+  # 带宽配置
+  DefaultBandwidth: 100
+  # 阿里云带宽计费方式: PayByBandwidth, PayByTraffic
+  DefaultBandwidthChargingMode: "PayByTraffic"
+  DefaultDiskSize: 40
+  # 阿里云云盘类型: cloud_efficiency(高效云盘), cloud_ssd(SSD云盘), cloud_essd(ESSD云盘)
+  DefaultVolumeType: "cloud_efficiency"
+  DefaultEipShareType: "PER"
+  
+  FleetCidr:
+    from: 10.100.0.0
+    to: 10.240.0.0
+    vpcNetMask: 19
+    subnetNetMask: 20
+    
+  InternalInboundPermissions:
+    - protocol: "TCP"
+      ipRange: 
+      fromPort: 60001
+      toPort: 60001
+      
+  BuildImageRef: "centos_7_9_x64_20G_alibase_20230816.vhd"
+  # 阿里云规格族: ecs.g6.large, ecs.c6.large 等
+  # 参考: https://help.aliyun.com/document_detail/25378.html
+  BuildFlavor: "ecs.g6.large"
+  BuildBandwidth: 100
+  BuildScriptPath: 
+  BuildDockerScriptPath: 
+  AuxproxyPath: 
+  ImageDiskSize: 40
+  ServerSessionBackupDays: 1 
+  DefaultScalingInCoolDownInterval: 10
+  
+  DefaultGroupMaxSize: 1
+  DefaultGroupMinSize: 1
+  DefaultGroupDesiredSize: 1
+  
+  # ======================
+  # 阿里云服务端点 / Alibaba Cloud Service Endpoints
+  # ======================
+  # 参考: https://help.aliyun.com/document_detail/25489.html
+  ServiceEndpoint:
+    AASS:
+      - region: cn-hangzhou
+        endPoint: https://127.0.0.1:9091
+    AppGateway:
+      - region: cn-hangzhou
+        endPoint: https://127.0.0.1:60003
+    # 阿里云 IAM (RAM) 服务端点
+    IamService:
+      - region: cn-hangzhou
+        endPoint: https://ram.aliyuncs.com
+    # 阿里云 VPC 服务端点
+    VpcService:
+      - region: cn-hangzhou
+        endPoint: https://vpc.cn-hangzhou.aliyuncs.com
+    # 阿里云 OSS 服务端点
+    ObsService:
+      - region: cn-hangzhou
+        endPoint: https://oss-cn-hangzhou.aliyuncs.com
+    # 阿里云 ECS (镜像服务) 端点
+    ImsService:
+      - region: cn-hangzhou
+        endPoint: https://ecs.cn-hangzhou.aliyuncs.com
+    # 阿里云 ECS 服务端点
+    EcsService:
+      - region: cn-hangzhou
+        endPoint: https://ecs.cn-hangzhou.aliyuncs.com
+    # 阿里云容器镜像服务端点
+    SwrService:
+      - region: cn-hangzhou
+        endPoint: https://cr.cn-hangzhou.aliyuncs.com
+    # 阿里云容器服务端点
+    CciService:
+      - region: cn-hangzhou
+        endPoint: https://cs.cn-hangzhou.aliyuncs.com
+    # 阿里云云盘服务端点(EBS)
+    EvsService:
+      - region: cn-hangzhou
+        endPoint: https://ecs.cn-hangzhou.aliyuncs.com
+    # 阿里云云监控服务端点
+    CesService:
+      - region: cn-hangzhou
+        endPoint: https://metrics.cn-hangzhou.aliyuncs.com
+    # 阿里云DNS服务端点
+    DnsService:
+      - region: cn-hangzhou
+        endPoint: https://alidns.cn-hangzhou.aliyuncs.com
+    # 阿里云企业项目服务端点(资源管理)
+    EpsService:
+      - region: cn-hangzhou
+        endPoint: https://resourcemanager.aliyuncs.com
+        
+  SessionJwtKey: YehYul7Wj3iVrigKiEkMWi7lEH6R7sCT8DQmoSExmzDhb1TW
+  SessionJwtTokenLifeTimeSecond: 7200
+  TakeOverTaskIntervalSeconds: 60
+  HttpsAddress: 0.0.0.0
+  HttpsPort: 31002
+  HeartBeatTaskIntervalSeconds: 60
+  DeadCheckTaskIntervalSeconds: 60
+  MaxDeadMinutes: 3
+  
+appgateway:
+  AASSAddress: 127.0.0.1:9091
+  MysqlAddress: 127.0.0.1:3306
+  MysqlUser: root
+  MysqlDBName: appgateway
+  MysqlPassword: 
+  RedisAddress: 127.0.0.1:6379
+  RedisPassword: 
+  RedisDB: 3
+  CleanStrategy: on
+  CleanupDays: 14
+  BackupDays: 3
+  HttpsAddress: 0.0.0.0
+  HttpsPort: 60003
+  DeployModel: "multi-instances"
+  AuxproxyIpType: publicIP
+  LogLevel: info
+  LogRotateSize: 1024
+  LogBackupCount: 100
+  LogMaxAge: 7
+  LogCompress: false
+
+aass: 
+  # ======================
+  # 云厂商配置 / Cloud Provider Configuration
+  # ======================
+  CloudProvider: alibaba
+  
+  AppgatewayAddress: 127.0.0.1:60003
+  MysqlUser: root
+  MysqlAddress: 127.0.0.1:3306
+  MysqlDBName: aass
+  MysqlDBPassword: 
+  MysqlCharset: utf8
+  RedisAddress: 127.0.0.1:6379
+  RedisPassword:
+  RedisDB: 2
+  LogRotateSize: 1024
+  LogBackupCount: 100
+  LogMaxAge: 7
+
+  # 阿里云地域
+  CloudClientRegion: cn-hangzhou
+  
+  # ======================
+  # 阿里云服务端点 / Alibaba Cloud Service Endpoints
+  # ======================
+  # IAM (RAM) 服务端点
+  CloudClientIamEndpoint: https://ram.aliyuncs.com
+  # 弹性伸缩(ESS)服务端点
+  CloudClientAsEndpoint: https://ess.cn-hangzhou.aliyuncs.com
+  # ECS服务端点
+  CloudClientEcsEndpoint: https://ecs.cn-hangzhou.aliyuncs.com
+  # 日志服务(SLS)端点
+  CloudClientLtsEndpoint: https://cn-hangzhou.log.aliyuncs.com
+  # 消息服务(MNS)端点
+  CloudClientSmnEndpoint: https://mns.cn-hangzhou.aliyuncs.com
+  # 容器服务端点
+  CloudClientPodEndpoint: https://cs.cn-hangzhou.aliyuncs.com
+  # DNS服务端点
+  CloudClientDNSEndpoint: https://alidns.cn-hangzhou.aliyuncs.com
+  
+  # ECS元数据服务地址 (阿里云与华为云相同)
+  CloudPlatformAddr: http://100.100.100.200
+  
+  ConnectToAuxproxyIPType: publicIP
+  MonitorDuration: 10s
+  CleanUpDayBefore: 14
+  CleanUpPeriodHour: 1
+  HealthCheckInterval: 30
+  HostProtect: true
+  HostProtectValue: ""
+  BatchCreatePodNum: 50
+  HttpsAddress: 0.0.0.0
+  HttpsPort: 9091
+  TakeOverTaskIntervalSeconds: 60
+  HeartBeatTaskIntervalSeconds: 60
+  DeadCheckTaskIntervalSeconds: 60
+  MaxDeadMinutes: 3
+  InstanceMaximumLimit: 500
+  BandwidthMaximumLimit: 300
+  # 阿里云云盘类型
+  SupportedVolumeTypes: "cloud_efficiency;cloud_ssd;cloud_essd"
+  BandwidthChargingMode: PayByTraffic
+
+influxdb:
+  InfluxDBUser: root
+  influxDBAddress: 127.0.0.1:8086
+  InfluxDBPassword: 
+  inflxuDBName: autoscaling
