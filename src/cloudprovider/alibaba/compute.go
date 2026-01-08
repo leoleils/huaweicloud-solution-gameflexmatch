@@ -310,7 +310,7 @@ func (s *AlibabaComputeService) convertInstance(inst *ecs.DescribeInstancesRespo
 	instance := &cloudprovider.Instance{
 		Id:               *inst.InstanceId,
 		Name:             *inst.InstanceName,
-		Status:           *inst.Status,
+		Status:           s.convertInstanceStatus(*inst.Status),
 		FlavorId:         *inst.InstanceType,
 		ImageId:          *inst.ImageId,
 		AvailabilityZone: *inst.ZoneId,
@@ -335,4 +335,24 @@ func (s *AlibabaComputeService) convertInstance(inst *ecs.DescribeInstancesRespo
 	}
 
 	return instance
+}
+
+// convertInstanceStatus 将阿里云ECS状态转换为标准状态
+// 阿里云状态: Pending, Running, Starting, Stopping, Stopped
+// 标准状态: RUNNING, STOPPED, SHUTOFF, DELETED
+func (s *AlibabaComputeService) convertInstanceStatus(status string) string {
+	switch strings.ToLower(status) {
+	case "running":
+		return cloudprovider.InstanceStatusRunning
+	case "stopped":
+		return cloudprovider.InstanceStatusStopped
+	case "stopping":
+		return "STOPPING"
+	case "starting":
+		return "STARTING"
+	case "pending":
+		return "PENDING"
+	default:
+		return strings.ToUpper(status)
+	}
 }

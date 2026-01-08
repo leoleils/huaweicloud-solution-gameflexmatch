@@ -112,9 +112,9 @@ fleetmanager:
       toPort: 60001
       
   BuildImageRef: "aliyun_3_0_x64_20G_alibase_aiext_0.5.3_20251011.vhd"
-  # 阿里云规格族: ecs.g6.large, ecs.c6.large 等
+  # 阿里云规格族: ecs.c9i.xlarge, ecs.c6.large 等
   # 参考: https://help.aliyun.com/document_detail/25378.html
-  BuildFlavor: "ecs.g6.large"
+  BuildFlavor: "ecs.c9i.xlarge"
   BuildBandwidth: 100
   BuildScriptPath: 
   BuildDockerScriptPath: 

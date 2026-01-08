@@ -1,5 +1,4 @@
-#!/bin/bash
-# 阿里云适配版本的Docker镜像构建脚本
+#!bin/bash
 APP_URL=$1
 AUX_URL=$2
 APP_FILE=$3
@@ -8,13 +7,14 @@ APP_NAME=$5
 USER=$6
 GROUP=$7
 PWD=$8
-ACR_LOGIN=$9           # 阿里云ACR登录命令（替换SWR_LOGIN）
-ACR_NAMESPACE=${10}    # 阿里云ACR命名空间（替换SWR_ORGANIZATION）
-ACR_REGISTRY=${11}     # 阿里云ACR仓库地址（替换DAEMON_SPEEDUP_URL）
+SWR_LOGIN=$9
+SWR_ORGANIZATION=${10}
+DAEMON_SPEEDUP_URL=${11}
 IMAGE_NAME=${12}
 IMAGE_VERSION=${13}
 DOCKER_SYSTEM=${14}
 REGION=${15}
+
 
 # download rarlab
 mkdir /tmp/rar
@@ -53,6 +53,7 @@ if [ "${AUX_FILE##*.}" = "rar" ]; then
 fi
 chmod -R 750 *
 
+
 mkdir -p /etc/docker-build/auxproxy/security
 cd /etc/docker-build/auxproxy/security
 
@@ -69,7 +70,7 @@ cat > /etc/docker-build/supervisord.conf <<- EOF
 nodaemon=true
 
 [program:auxproxy]
-command=/bin/bash -c "exec /etc/auxproxy/auxproxy -auxproxy-address 0.0.0.0:60001 -grpc-address 0.0.0.0:60002 -cloud-platform-address http://100.100.100.200"
+command=/bin/bash -c "exec /etc/auxproxy/auxproxy -auxproxy-address 0.0.0.0:60001 -grpc-address 0.0.0.0:60002 -cloud-platform-address http://169.254.169.254"
 user = ${USER}
 group = ${GROUP}
 autostart = true
@@ -78,25 +79,24 @@ startsecs = 30
 
 EOF
 
-# download docker
+
+#download docker
 yum -y install docker
 
-# register docker
+#register docker
 systemctl enable docker
 
-# 配置阿里云ACR镜像加速
 cat > /etc/docker/daemon.json <<- EOF
 {
-    "insecure-registries": ["https://${ACR_REGISTRY}"],
-    "registry-mirrors": ["https://registry.${REGION}.aliyuncs.com"]
+    "insecure-registries": ["https://${DAEMON_SPEEDUP_URL}"]
 }
 EOF
 
-# restart docker
+#restart docker
 systemctl daemon-reload
 systemctl restart docker
 
-# build Dockerfile
+#build Dockerfile
 cat > /etc/docker-build/Dockerfile <<- EOF
 FROM ${DOCKER_SYSTEM}
 RUN mkdir -p /etc/auxproxy \
@@ -119,13 +119,12 @@ ENTRYPOINT ["/usr/bin/supervisord","-c","/etc/supervisor/supervisord.conf"]
 
 EOF
 
-# build image
+#build image
+${SWR_LOGIN} swr.${REGION}.myhuaweicloud.com
 docker build -t ${IMAGE_NAME}:${IMAGE_VERSION} /etc/docker-build/
 
-# 登录阿里云ACR并推送镜像
-# ACR地址格式: registry.${REGION}.aliyuncs.com/${ACR_NAMESPACE}/${IMAGE_NAME}
-${ACR_LOGIN}
-docker tag ${IMAGE_NAME}:${IMAGE_VERSION} registry.${REGION}.aliyuncs.com/${ACR_NAMESPACE}/${IMAGE_NAME}:${IMAGE_VERSION}
-docker push registry.${REGION}.aliyuncs.com/${ACR_NAMESPACE}/${IMAGE_NAME}:${IMAGE_VERSION}
+#upload SWR
+docker tag ${IMAGE_NAME}:${IMAGE_VERSION} swr.${REGION}.myhuaweicloud.com/${SWR_ORGANIZATION}/${IMAGE_NAME}:${IMAGE_VERSION}
+docker push swr.${REGION}.myhuaweicloud.com/${SWR_ORGANIZATION}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 shutdown

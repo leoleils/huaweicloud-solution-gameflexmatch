@@ -1,5 +1,4 @@
-#!/bin/bash
-# 阿里云适配版本的VM镜像构建脚本
+#bin/bash
 REGION=$1
 APP_URL=$2
 AUX_URL=$3
@@ -23,7 +22,6 @@ useradd ${USER}
 groupadd ${GROUP}
 usermod -g ${GROUP} ${USER}
 echo ${USER}:${PWD} | chpasswd
-
 # download app
 mkdir -p /local/app/${APP_NAME}
 cd /local/app/${APP_NAME}
@@ -36,7 +34,6 @@ if [ "${APP_FILE##*.}" = "rar" ]; then
 fi
 chown -R ${USER}:${GROUP} /local/app/${APP_NAME}
 chmod -R 750 *
-
 # download auxproxy
 mkdir -p /etc/auxproxy
 cd /etc/auxproxy
@@ -79,21 +76,18 @@ openssl x509 -req -days 365 -in tls.csr -signkey tls.key -out tls.crt
 chown -R ${USER}:${GROUP} /etc/auxproxy/security
 chmod -R 750 *
 
+
 systemctl enable auxproxy.service
 
-# ============================================
-# 阿里云日志服务和云监控（可选安装）
-# ============================================
-# 阿里云日志服务Logtail安装（如需要）
-# mkdir -p /etc/logtail
-# cd /etc/logtail
-# wget http://logtail-release-${REGION}.oss-${REGION}.aliyuncs.com/linux64/logtail.sh -O logtail.sh
-# chmod 755 logtail.sh && ./logtail.sh install ${REGION}
+# download LTS-ICAgent
+mkdir -p /etc/lts
+cd /etc/lts
 
-# 阿里云云监控插件安装（如需要）
-# ARGUS_VERSION=3.5.8
-# wget -O /tmp/cloudmonitor.tar.gz "http://cms-agent-${REGION}.oss-${REGION}-internal.aliyuncs.com/cms-go-agent/${ARGUS_VERSION}/cms-go-agent-${ARGUS_VERSION}.linux-amd64.tar.gz"
-# tar -xzf /tmp/cloudmonitor.tar.gz -C /usr/local/
-# /usr/local/cms-go-agent/install.sh
+curl http://icagent-${REGION}.obs.${REGION}.myhuaweicloud.com/ICAgent_linux/apm_agent_install.sh > apm_agent_install.sh && REGION=${REGION} bash apm_agent_install.sh -accessip ${LTS_IP} -obsdomain obs.${REGION}.myhuaweicloud.com;
+
+# download CES-Agent
+mkdir -p /etc/ces
+cd /etc/ces && curl -k -O https://obs.${REGION}.myhuaweicloud.com/uniagent-${REGION}/script/agent_install.sh && bash agent_install.sh
 
 shutdown
+
