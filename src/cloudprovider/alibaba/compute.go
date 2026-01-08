@@ -232,20 +232,69 @@ func (s *AlibabaComputeService) ListAvailabilityZones(ctx context.Context) ([]st
 
 // ListFlavors 列出规格
 func (s *AlibabaComputeService) ListFlavors(ctx context.Context) (map[string][]string, error) {
-	request := &ecs.DescribeInstanceTypesRequest{}
+	// 阿里云 DescribeInstanceTypes 需要指定 RegionId 来获取当前地域可用的实例规格
+	request := &ecs.DescribeAvailableResourceRequest{
+		RegionId:            tea.String(s.provider.config.Region),
+		DestinationResource: tea.String("InstanceType"),
+		InstanceChargeType:  tea.String("PostPaid"),
+	}
 
-	resp, err := s.client.DescribeInstanceTypes(request)
+	resp, err := s.client.DescribeAvailableResource(request)
 	if err != nil {
 		return nil, fmt.Errorf("list flavors failed: %w", err)
 	}
 
 	result := make(map[string][]string)
-	if resp.Body.InstanceTypes != nil {
-		for _, flavor := range resp.Body.InstanceTypes.InstanceType {
-			result[*flavor.InstanceTypeId] = []string{*flavor.InstanceTypeId}
+	if resp.Body.AvailableZones != nil {
+		for _, zone := range resp.Body.AvailableZones.AvailableZone {
+			if zone.AvailableResources == nil {
+				continue
+			}
+			for _, resource := range zone.AvailableResources.AvailableResource {
+				if resource.SupportedResources == nil {
+					continue
+				}
+				for _, supported := range resource.SupportedResources.SupportedResource {
+					if supported.Status != nil && *supported.Status == "Available" {
+						instanceTypeId := tea.StringValue(supported.Value)
+						if instanceTypeId != "" {
+							// 按规格系列分组 (如 ecs.c6 -> c6 系列)
+							series := s.extractInstanceSeries(instanceTypeId)
+							result[series] = append(result[series], instanceTypeId)
+						}
+					}
+				}
+			}
 		}
 	}
+
+	// 如果结果为空，尝试使用 DescribeInstanceTypes 获取所有规格
+	if len(result) == 0 {
+		request2 := &ecs.DescribeInstanceTypesRequest{}
+		resp2, err := s.client.DescribeInstanceTypes(request2)
+		if err != nil {
+			return nil, fmt.Errorf("list instance types failed: %w", err)
+		}
+		if resp2.Body.InstanceTypes != nil {
+			for _, flavor := range resp2.Body.InstanceTypes.InstanceType {
+				instanceTypeId := tea.StringValue(flavor.InstanceTypeId)
+				series := s.extractInstanceSeries(instanceTypeId)
+				result[series] = append(result[series], instanceTypeId)
+			}
+		}
+	}
+
 	return result, nil
+}
+
+// extractInstanceSeries 提取实例规格系列名称
+// 例如: ecs.c6.large -> ecs.c6, ecs.g7.xlarge -> ecs.g7
+func (s *AlibabaComputeService) extractInstanceSeries(instanceTypeId string) string {
+	parts := strings.Split(instanceTypeId, ".")
+	if len(parts) >= 2 {
+		return parts[0] + "." + parts[1]
+	}
+	return instanceTypeId
 }
 
 // GetJob 获取异步任务状态 (阿里云通常是同步接口)

@@ -179,7 +179,8 @@ func (p *AlibabaProvider) newEssClient() (*ess.Client, error) {
 
 // newVpcClient 创建VPC客户端
 func (p *AlibabaProvider) newVpcClient() (*vpc.Client, error) {
-	config := &openapiv1.Config{
+	// VPC SDK v2.0.117 需要 openapiv2.Config
+	config := &openapiv2.Config{
 		AccessKeyId:     tea.String(p.config.AccessKey),
 		AccessKeySecret: tea.String(p.config.SecretKey),
 		Endpoint:        tea.String(p.getEndpoint("vpc")),

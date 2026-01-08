@@ -397,9 +397,10 @@ func (s *AlibabaNetworkService) ListSecurityGroups(ctx context.Context) ([]cloud
 // GetSecurityGroupById 根据ID获取安全组详情
 func (s *AlibabaNetworkService) GetSecurityGroupById(ctx context.Context, id string) (*cloudprovider.SecurityGroup, error) {
 	ecsClient := s.provider.ecsClient
+	// 阿里云 DescribeSecurityGroups 需要使用 SecurityGroupIds 数组来查询
 	request := &ecs.DescribeSecurityGroupsRequest{
-		RegionId:        tea.String(s.provider.config.Region),
-		SecurityGroupId: tea.String(id),
+		RegionId:         tea.String(s.provider.config.Region),
+		SecurityGroupIds: tea.String(fmt.Sprintf("[\"%s\"]", id)),
 	}
 
 	resp, err := ecsClient.DescribeSecurityGroups(request)
@@ -424,12 +425,18 @@ func (s *AlibabaNetworkService) CreateSecurityGroupRule(ctx context.Context, req
 	// 阿里云使用 AuthorizeSecurityGroup 添加入站规则
 	portRange := fmt.Sprintf("%d/%d", req.FromPort, req.ToPort)
 	
+	// 如果 IpRange 为空，使用默认值 0.0.0.0/0（允许所有 IP）
+	ipRange := req.IpRange
+	if ipRange == "" {
+		ipRange = "0.0.0.0/0"
+	}
+	
 	request := &ecs.AuthorizeSecurityGroupRequest{
 		RegionId:        tea.String(s.provider.config.Region),
 		SecurityGroupId: tea.String(req.SecurityGroupId),
 		IpProtocol:      tea.String(strings.ToLower(req.Protocol)),
 		PortRange:       tea.String(portRange),
-		SourceCidrIp:    tea.String(req.IpRange),
+		SourceCidrIp:    tea.String(ipRange),
 	}
 
 	_, err := ecsClient.AuthorizeSecurityGroup(request)

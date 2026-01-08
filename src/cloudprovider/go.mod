@@ -8,7 +8,7 @@ require (
 	github.com/alibabacloud-go/ecs-20140526/v3 v3.0.3
 	github.com/alibabacloud-go/ess-20220222 v1.0.0
 	github.com/alibabacloud-go/tea v1.2.1
-	github.com/alibabacloud-go/vpc-20160428/v2 v2.0.1
+	github.com/alibabacloud-go/vpc-20160428/v2 v2.0.117
 	github.com/aliyun/aliyun-oss-go-sdk v3.0.2+incompatible
 	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.77
 )
