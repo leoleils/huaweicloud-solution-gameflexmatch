@@ -6,6 +6,7 @@ package huawei
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"scase.io/cloudprovider"
 
@@ -46,6 +47,21 @@ func (s *HuaweiStorageService) DeleteObject(ctx context.Context, bucketName, obj
 
 // GetObjectMetadata 获取对象元数据
 func (s *HuaweiStorageService) GetObjectMetadata(ctx context.Context, bucketName, objectKey string) (*cloudprovider.ObjectMetadata, error) {
+	return nil, fmt.Errorf("not implemented: use obs client")
+}
+
+// UploadObject 上传对象
+func (s *HuaweiStorageService) UploadObject(ctx context.Context, bucketName, objectKey string, data []byte) error {
+	return fmt.Errorf("not implemented: use obs client")
+}
+
+// CreateSignedUrl 创建签名URL用于下载对象
+func (s *HuaweiStorageService) CreateSignedUrl(ctx context.Context, bucketName, objectKey string, expireSeconds int64) (string, error) {
+	return "", fmt.Errorf("not implemented: use obs client")
+}
+
+// ListBuckets 列出所有存储桶
+func (s *HuaweiStorageService) ListBuckets(ctx context.Context) ([]string, error) {
 	return nil, fmt.Errorf("not implemented: use obs client")
 }
 
@@ -244,4 +260,86 @@ func (s *HuaweiImageService) ListImages(ctx context.Context, imageType string) (
 		}
 	}
 	return images, nil
+}
+
+// GetImageById 根据ID获取镜像详情
+func (s *HuaweiImageService) GetImageById(ctx context.Context, imageId string) (*cloudprovider.Image, error) {
+	request := &imsmodel.ListImagesRequest{
+		Id: &imageId,
+	}
+
+	resp, err := s.client.ListImages(request)
+	if err != nil {
+		return nil, fmt.Errorf("get image by id failed: %w", err)
+	}
+
+	if resp.Images == nil || len(*resp.Images) == 0 {
+		return nil, fmt.Errorf("image not found: %s", imageId)
+	}
+
+	img := (*resp.Images)[0]
+	return &cloudprovider.Image{
+		Id:       img.Id,
+		Name:     img.Name,
+		Status:   img.Status.Value(),
+		Platform: img.Platform.Value(),
+		OsType:   img.OsType.Value(),
+	}, nil
+}
+
+// CreateImage 从ECS实例创建镜像
+func (s *HuaweiImageService) CreateImage(ctx context.Context, instanceId, imageName string) (string, error) {
+	request := &imsmodel.CreateImageRequest{
+		Body: &imsmodel.CreateImageRequestBody{
+			Name:       imageName,
+			InstanceId: &instanceId,
+		},
+	}
+
+	resp, err := s.client.CreateImage(request)
+	if err != nil {
+		return "", fmt.Errorf("create image failed: %w", err)
+	}
+	return *resp.JobId, nil
+}
+
+// WaitImageReady 等待镜像创建完成并返回镜像ID
+func (s *HuaweiImageService) WaitImageReady(ctx context.Context, jobId string) (string, error) {
+	request := &imsmodel.ShowJobRequest{
+		JobId: jobId,
+	}
+
+	for {
+		resp, err := s.client.ShowJob(request)
+		if err != nil {
+			return "", fmt.Errorf("show job failed: %w", err)
+		}
+
+		if *resp.Status == imsmodel.GetShowJobResponseStatusEnum().SUCCESS {
+			return *resp.Entities.ImageId, nil
+		}
+
+		if *resp.Status == imsmodel.GetShowJobResponseStatusEnum().FAIL {
+			return "", fmt.Errorf("create image job failed")
+		}
+
+		select {
+		case <-ctx.Done():
+			return "", ctx.Err()
+		case <-time.After(10 * time.Second):
+		}
+	}
+}
+
+// DeleteImage 删除镜像
+func (s *HuaweiImageService) DeleteImage(ctx context.Context, imageId string) error {
+	request := &imsmodel.GlanceDeleteImageRequest{
+		ImageId: imageId,
+	}
+
+	_, err := s.client.GlanceDeleteImage(request)
+	if err != nil {
+		return fmt.Errorf("delete image failed: %w", err)
+	}
+	return nil
 }

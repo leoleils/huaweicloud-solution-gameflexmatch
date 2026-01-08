@@ -15,6 +15,7 @@ import (
 	ecs "github.com/alibabacloud-go/ecs-20140526/v3/client"
 	"github.com/alibabacloud-go/tea/tea"
 	vpc "github.com/alibabacloud-go/vpc-20160428/v2/client"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 )
 
 const defaultWaitInterval = 5 * time.Second
@@ -90,6 +91,31 @@ func (s *AlibabaNetworkService) GetVpcByName(ctx context.Context, name string) (
 		}
 	}
 	return nil, nil
+}
+
+// ListVpcs 列出所有VPC
+func (s *AlibabaNetworkService) ListVpcs(ctx context.Context) ([]cloudprovider.Vpc, error) {
+	request := &vpc.DescribeVpcsRequest{
+		RegionId: tea.String(s.provider.config.Region),
+	}
+
+	resp, err := s.client.DescribeVpcs(request)
+	if err != nil {
+		return nil, fmt.Errorf("list vpcs failed: %w", err)
+	}
+
+	var vpcs []cloudprovider.Vpc
+	if resp.Body.Vpcs != nil {
+		for _, v := range resp.Body.Vpcs.Vpc {
+			vpcs = append(vpcs, cloudprovider.Vpc{
+				Id:     *v.VpcId,
+				Name:   *v.VpcName,
+				Cidr:   *v.CidrBlock,
+				Status: *v.Status,
+			})
+		}
+	}
+	return vpcs, nil
 }
 
 // DeleteVpc 删除VPC
@@ -399,6 +425,41 @@ func (s *AlibabaNetworkService) DeleteEip(ctx context.Context, eipId string) err
 	return nil
 }
 
+// BindEipToInstance 将EIP绑定到ECS实例 (阿里云特有逻辑)
+func (s *AlibabaNetworkService) BindEipToInstance(ctx context.Context, eipId, instanceId string) error {
+	request := &vpc.AssociateEipAddressRequest{
+		RegionId:     tea.String(s.provider.config.Region),
+		AllocationId: tea.String(eipId),
+		InstanceId:   tea.String(instanceId),
+		InstanceType: tea.String("EcsInstance"),
+	}
+
+	_, err := s.client.AssociateEipAddress(request)
+	if err != nil {
+		return fmt.Errorf("bind eip to instance failed: %w", err)
+	}
+	return nil
+}
+
+// UnbindEipFromInstance 解绑EIP
+func (s *AlibabaNetworkService) UnbindEipFromInstance(ctx context.Context, eipId, instanceId string) error {
+	request := &vpc.UnassociateEipAddressRequest{
+		RegionId:     tea.String(s.provider.config.Region),
+		AllocationId: tea.String(eipId),
+		InstanceId:   tea.String(instanceId),
+		InstanceType: tea.String("EcsInstance"),
+	}
+
+	_, err := s.client.UnassociateEipAddress(request)
+	if err != nil {
+		if strings.Contains(err.Error(), "NotFound") {
+			return nil
+		}
+		return fmt.Errorf("unbind eip from instance failed: %w", err)
+	}
+	return nil
+}
+
 // CreateBandwidth 创建带宽 (阿里云通过共享带宽包实现)
 func (s *AlibabaNetworkService) CreateBandwidth(ctx context.Context, req *cloudprovider.CreateBandwidthRequest) (string, error) {
 	request := &vpc.CreateCommonBandwidthPackageRequest{
@@ -449,29 +510,138 @@ type AlibabaStorageService struct {
 	provider *AlibabaProvider
 }
 
+// getOSSClient 获取OSS客户端
+func (s *AlibabaStorageService) getOSSClient() (*oss.Client, error) {
+	endpoint := fmt.Sprintf("oss-%s.aliyuncs.com", s.provider.config.Region)
+	return oss.New(endpoint, s.provider.config.AccessKey, s.provider.config.SecretKey)
+}
+
 // CreateBucket 创建存储桶
 func (s *AlibabaStorageService) CreateBucket(ctx context.Context, bucketName string) error {
-	return fmt.Errorf("not implemented: use oss client")
+	client, err := s.getOSSClient()
+	if err != nil {
+		return fmt.Errorf("create oss client failed: %w", err)
+	}
+	return client.CreateBucket(bucketName)
 }
 
 // DeleteBucket 删除存储桶
 func (s *AlibabaStorageService) DeleteBucket(ctx context.Context, bucketName string) error {
-	return fmt.Errorf("not implemented: use oss client")
+	client, err := s.getOSSClient()
+	if err != nil {
+		return fmt.Errorf("create oss client failed: %w", err)
+	}
+	return client.DeleteBucket(bucketName)
 }
 
 // HeadBucket 检查存储桶是否存在
 func (s *AlibabaStorageService) HeadBucket(ctx context.Context, bucketName string) (bool, error) {
-	return false, fmt.Errorf("not implemented: use oss client")
+	client, err := s.getOSSClient()
+	if err != nil {
+		return false, fmt.Errorf("create oss client failed: %w", err)
+	}
+	return client.IsBucketExist(bucketName)
 }
 
 // DeleteObject 删除对象
 func (s *AlibabaStorageService) DeleteObject(ctx context.Context, bucketName, objectKey string) error {
-	return fmt.Errorf("not implemented: use oss client")
+	client, err := s.getOSSClient()
+	if err != nil {
+		return fmt.Errorf("create oss client failed: %w", err)
+	}
+	bucket, err := client.Bucket(bucketName)
+	if err != nil {
+		return fmt.Errorf("get bucket failed: %w", err)
+	}
+	return bucket.DeleteObject(objectKey)
 }
 
 // GetObjectMetadata 获取对象元数据
 func (s *AlibabaStorageService) GetObjectMetadata(ctx context.Context, bucketName, objectKey string) (*cloudprovider.ObjectMetadata, error) {
-	return nil, fmt.Errorf("not implemented: use oss client")
+	client, err := s.getOSSClient()
+	if err != nil {
+		return nil, fmt.Errorf("create oss client failed: %w", err)
+	}
+
+	// 获取 bucket
+	bucket, err := client.Bucket(bucketName)
+	if err != nil {
+		return nil, fmt.Errorf("get bucket failed: %w", err)
+	}
+
+	// 获取对象元数据
+	header, err := bucket.GetObjectMeta(objectKey)
+	if err != nil {
+		return nil, fmt.Errorf("get object metadata failed: %w", err)
+	}
+
+	// 获取 Content-Length
+	contentLength := int64(0)
+	if cl := header.Get("Content-Length"); cl != "" {
+		fmt.Sscanf(cl, "%d", &contentLength)
+	}
+
+	return &cloudprovider.ObjectMetadata{
+		ContentLength: contentLength,
+		ContentType:   header.Get("Content-Type"),
+		ETag:          header.Get("ETag"),
+	}, nil
+}
+
+// UploadObject 上传对象
+func (s *AlibabaStorageService) UploadObject(ctx context.Context, bucketName, objectKey string, data []byte) error {
+	client, err := s.getOSSClient()
+	if err != nil {
+		return fmt.Errorf("create oss client failed: %w", err)
+	}
+
+	bucket, err := client.Bucket(bucketName)
+	if err != nil {
+		return fmt.Errorf("get bucket failed: %w", err)
+	}
+
+	reader := strings.NewReader(string(data))
+	return bucket.PutObject(objectKey, reader)
+}
+
+// CreateSignedUrl 创建签名URL用于下载对象
+func (s *AlibabaStorageService) CreateSignedUrl(ctx context.Context, bucketName, objectKey string, expireSeconds int64) (string, error) {
+	client, err := s.getOSSClient()
+	if err != nil {
+		return "", fmt.Errorf("create oss client failed: %w", err)
+	}
+
+	bucket, err := client.Bucket(bucketName)
+	if err != nil {
+		return "", fmt.Errorf("get bucket failed: %w", err)
+	}
+
+	// 生成签名URL
+	signedUrl, err := bucket.SignURL(objectKey, oss.HTTPGet, expireSeconds)
+	if err != nil {
+		return "", fmt.Errorf("create signed url failed: %w", err)
+	}
+
+	return signedUrl, nil
+}
+
+// ListBuckets 列出所有存储桶
+func (s *AlibabaStorageService) ListBuckets(ctx context.Context) ([]string, error) {
+	client, err := s.getOSSClient()
+	if err != nil {
+		return nil, fmt.Errorf("create oss client failed: %w", err)
+	}
+
+	result, err := client.ListBuckets()
+	if err != nil {
+		return nil, fmt.Errorf("list buckets failed: %w", err)
+	}
+
+	var buckets []string
+	for _, bucket := range result.Buckets {
+		buckets = append(buckets, bucket.Name)
+	}
+	return buckets, nil
 }
 
 // ListVolumeTypes 列出卷类型
@@ -562,6 +732,59 @@ type AlibabaImageService struct {
 
 // GetPublicImageId 获取公共镜像ID
 func (s *AlibabaImageService) GetPublicImageId(ctx context.Context, imageName string) (string, error) {
+	// 支持三种格式：
+	// 1. 简化名称格式（以 acs: 开头），如 acs:centos_7_9_x64 -> 通过 ImageId 前缀匹配
+	// 2. 镜像 ID 格式（包含 _alibase_ 或以 .vhd 结尾）
+	// 3. 镜像名称
+
+	// 简化名称格式（acs:centos_7_9_x64）：通过 ImageId 前缀匹配获取最新镜像
+	if strings.HasPrefix(imageName, "acs:") {
+		// 提取镜像名称前缀，如 centos_7_9_x64
+		namePrefix := strings.TrimPrefix(imageName, "acs:")
+		// 查询公有镜像，然后遍历匹配 ImageId 前缀
+		// 阿里云公有镜像的 ImageId 格式：centos_7_9_x64_20G_alibase_20230816.vhd
+		request := &ecs.DescribeImagesRequest{
+			RegionId:        tea.String(s.provider.config.Region),
+			ImageOwnerAlias: tea.String("system"),
+			Status:          tea.String("Available"),
+			PageSize:        tea.Int32(100),
+		}
+
+		resp, err := s.client.DescribeImages(request)
+		if err != nil {
+			return "", fmt.Errorf("get public image failed: %w", err)
+		}
+
+		if resp.Body.Images != nil && len(resp.Body.Images.Image) > 0 {
+			// 遍历查找 ImageId 前缀匹配的镜像
+			for _, img := range resp.Body.Images.Image {
+				if img.ImageId != nil && strings.HasPrefix(*img.ImageId, namePrefix) {
+					return *img.ImageId, nil
+				}
+			}
+		}
+		return "", fmt.Errorf("image not found for prefix: %s", namePrefix)
+	}
+
+	// 镜像 ID 格式：直接通过 ID 查询
+	if strings.Contains(imageName, "_alibase_") || strings.HasSuffix(imageName, ".vhd") {
+		request := &ecs.DescribeImagesRequest{
+			RegionId: tea.String(s.provider.config.Region),
+			ImageId:  tea.String(imageName),
+		}
+
+		resp, err := s.client.DescribeImages(request)
+		if err != nil {
+			return "", fmt.Errorf("get public image failed: %w", err)
+		}
+
+		if resp.Body.Images != nil && len(resp.Body.Images.Image) > 0 {
+			return *resp.Body.Images.Image[0].ImageId, nil
+		}
+		return "", fmt.Errorf("image not found: %s", imageName)
+	}
+
+	// 否则通过名称查询
 	request := &ecs.DescribeImagesRequest{
 		RegionId:        tea.String(s.provider.config.Region),
 		ImageName:       tea.String(imageName),
@@ -587,7 +810,20 @@ func (s *AlibabaImageService) ListImages(ctx context.Context, imageType string) 
 	}
 
 	if imageType != "" {
-		request.ImageOwnerAlias = tea.String(imageType)
+		// 将通用类型转换为阿里云支持的 ImageOwnerAlias 值
+		// 阿里云支持: self(私有镜像), system(公共镜像), others(共享镜像), marketplace(市场镜像)
+		aliasMap := map[string]string{
+			"private": "self",
+			"public":  "system",
+			"shared":  "others",
+			"self":    "self",
+			"system":  "system",
+		}
+		if alias, ok := aliasMap[imageType]; ok {
+			request.ImageOwnerAlias = tea.String(alias)
+		} else {
+			request.ImageOwnerAlias = tea.String("self")
+		}
 	}
 
 	resp, err := s.client.DescribeImages(request)
@@ -608,4 +844,96 @@ func (s *AlibabaImageService) ListImages(ctx context.Context, imageType string) 
 		}
 	}
 	return images, nil
+}
+
+// GetImageById 根据ID获取镜像详情
+func (s *AlibabaImageService) GetImageById(ctx context.Context, imageId string) (*cloudprovider.Image, error) {
+	request := &ecs.DescribeImagesRequest{
+		RegionId: tea.String(s.provider.config.Region),
+		ImageId:  tea.String(imageId),
+	}
+
+	resp, err := s.client.DescribeImages(request)
+	if err != nil {
+		return nil, fmt.Errorf("get image by id failed: %w", err)
+	}
+
+	if resp.Body.Images == nil || len(resp.Body.Images.Image) == 0 {
+		return nil, fmt.Errorf("image not found: %s", imageId)
+	}
+
+	img := resp.Body.Images.Image[0]
+	return &cloudprovider.Image{
+		Id:       *img.ImageId,
+		Name:     *img.ImageName,
+		Status:   *img.Status,
+		Platform: *img.Platform,
+		OsType:   *img.OSType,
+	}, nil
+}
+
+// CreateImage 从ECS实例创建镜像
+func (s *AlibabaImageService) CreateImage(ctx context.Context, instanceId, imageName string) (string, error) {
+	request := &ecs.CreateImageRequest{
+		RegionId:   tea.String(s.provider.config.Region),
+		InstanceId: tea.String(instanceId),
+		ImageName:  tea.String(imageName),
+	}
+
+	resp, err := s.client.CreateImage(request)
+	if err != nil {
+		return "", fmt.Errorf("create image failed: %w", err)
+	}
+	// 阿里云CreateImage返回的是镜像ID，不是jobId
+	return *resp.Body.ImageId, nil
+}
+
+// WaitImageReady 等待镜像创建完成并返回镜像ID
+// 阿里云的CreateImage直接返回镜像ID，这里taskId就是镜像ID
+func (s *AlibabaImageService) WaitImageReady(ctx context.Context, imageId string) (string, error) {
+	request := &ecs.DescribeImagesRequest{
+		RegionId: tea.String(s.provider.config.Region),
+		ImageId:  tea.String(imageId),
+	}
+
+	for {
+		resp, err := s.client.DescribeImages(request)
+		if err != nil {
+			return "", fmt.Errorf("describe images failed: %w", err)
+		}
+
+		if resp.Body.Images != nil && len(resp.Body.Images.Image) > 0 {
+			img := resp.Body.Images.Image[0]
+			if *img.Status == "Available" {
+				return imageId, nil
+			}
+			if *img.Status == "CreateFailed" {
+				return "", fmt.Errorf("create image failed")
+			}
+		}
+
+		select {
+		case <-ctx.Done():
+			return "", ctx.Err()
+		case <-time.After(10 * time.Second):
+		}
+	}
+}
+
+// DeleteImage 删除镜像
+func (s *AlibabaImageService) DeleteImage(ctx context.Context, imageId string) error {
+	request := &ecs.DeleteImageRequest{
+		RegionId: tea.String(s.provider.config.Region),
+		ImageId:  tea.String(imageId),
+		Force:    tea.Bool(true),
+	}
+
+	_, err := s.client.DeleteImage(request)
+	if err != nil {
+		if strings.Contains(err.Error(), "NotFound") {
+			return nil
+		}
+		return fmt.Errorf("delete image failed: %w", err)
+	}
+	return nil
 }

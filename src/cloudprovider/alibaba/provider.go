@@ -4,6 +4,8 @@
 package alibaba
 
 import (
+	"strings"
+
 	"scase.io/cloudprovider"
 
 	openapiv1 "github.com/alibabacloud-go/darabonba-openapi/client"
@@ -145,6 +147,9 @@ func (p *AlibabaProvider) Image() cloudprovider.ImageService {
 func (p *AlibabaProvider) getEndpoint(serviceName string) string {
 	if p.config.Endpoints != nil {
 		if endpoint, ok := p.config.Endpoints[serviceName]; ok {
+			// 去除 https:// 或 http:// 前缀，因为阿里云 SDK 会自动添加
+			endpoint = strings.TrimPrefix(endpoint, "https://")
+			endpoint = strings.TrimPrefix(endpoint, "http://")
 			return endpoint
 		}
 	}

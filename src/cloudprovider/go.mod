@@ -1,6 +1,6 @@
 module scase.io/cloudprovider
 
-go 1.19
+go 1.24.0
 
 require (
 	github.com/alibabacloud-go/darabonba-openapi v0.1.18
@@ -9,6 +9,7 @@ require (
 	github.com/alibabacloud-go/ess-20220222 v1.0.0
 	github.com/alibabacloud-go/tea v1.2.1
 	github.com/alibabacloud-go/vpc-20160428/v2 v2.0.1
+	github.com/aliyun/aliyun-oss-go-sdk v3.0.2+incompatible
 	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.77
 )
 
@@ -29,6 +30,7 @@ require (
 	go.mongodb.org/mongo-driver v1.12.0 // indirect
 	golang.org/x/crypto v0.10.0 // indirect
 	golang.org/x/net v0.11.0 // indirect
+	golang.org/x/time v0.14.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

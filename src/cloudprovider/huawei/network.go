@@ -83,6 +83,28 @@ func (s *HuaweiNetworkService) GetVpcByName(ctx context.Context, name string) (*
 	return nil, nil
 }
 
+// ListVpcs 列出所有VPC
+func (s *HuaweiNetworkService) ListVpcs(ctx context.Context) ([]cloudprovider.Vpc, error) {
+	request := &vpcmodel.ListVpcsRequest{}
+	resp, err := s.vpcClient.ListVpcs(request)
+	if err != nil {
+		return nil, fmt.Errorf("list vpcs failed: %w", err)
+	}
+
+	var vpcs []cloudprovider.Vpc
+	if resp.Vpcs != nil {
+		for _, v := range *resp.Vpcs {
+			vpcs = append(vpcs, cloudprovider.Vpc{
+				Id:     v.Id,
+				Name:   v.Name,
+				Cidr:   v.Cidr,
+				Status: v.Status.Value(),
+			})
+		}
+	}
+	return vpcs, nil
+}
+
 // DeleteVpc 删除VPC
 func (s *HuaweiNetworkService) DeleteVpc(ctx context.Context, vpcId string) error {
 	request := &vpcmodel.DeleteVpcRequest{VpcId: vpcId}
@@ -390,6 +412,19 @@ func (s *HuaweiNetworkService) CreateEip(ctx context.Context, req *cloudprovider
 
 // DeleteEip 删除弹性公网IP
 func (s *HuaweiNetworkService) DeleteEip(ctx context.Context, eipId string) error {
+	// 此处需要使用EIP客户端，简化处理
+	return fmt.Errorf("not implemented: use eip client")
+}
+
+// BindEipToInstance 将EIP绑定到实例 (华为云在创建ECS时可以直接指定EIP)
+func (s *HuaweiNetworkService) BindEipToInstance(ctx context.Context, eipId, instanceId string) error {
+	// 华为云可以在创建ECS时直接指定EIP，不需要单独绑定
+	// 返回nil表示成功(或无需操作)
+	return nil
+}
+
+// UnbindEipFromInstance 解绑EIP
+func (s *HuaweiNetworkService) UnbindEipFromInstance(ctx context.Context, eipId, instanceId string) error {
 	// 此处需要使用EIP客户端，简化处理
 	return fmt.Errorf("not implemented: use eip client")
 }

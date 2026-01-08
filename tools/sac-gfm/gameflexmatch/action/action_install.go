@@ -198,6 +198,7 @@ func (a *InstallAction) generateFleetmanagerConfig(conf map[string]interface{}, 
 		"groupMaxSize":              fleetM["DefaultGroupMaxSize"],
 		"groupMinSize":              fleetM["DefaultGroupMinSize"],
 		"groupDesiredSize":          fleetM["DefaultGroupDesiredSize"],
+		"keypairName":               a.interface2String(fleetM["DefaultKeypairName"]),
 	}
 	serviceEndpoint := fleetM["ServiceEndpoint"].(map[string]interface{})
 	fmm.ServiceEndpoint = map[string]interface{}{

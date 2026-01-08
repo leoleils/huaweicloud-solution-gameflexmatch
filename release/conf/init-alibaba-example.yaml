@@ -64,7 +64,7 @@ fleetmanager:
   # Alibaba Cloud public images
   SupportPublicImage:
     - region: cn-hangzhou
-      image: "centos_7_9_x64_20G_alibase_20230816.vhd,ubuntu_22_04_x64_20G_alibase_20230613.vhd"
+      image: "aliyun_3_0_x64_20G_alibase_aiext_0.5.3_20251011.vhd"
       
   # 阿里云EIP类型
   # Alibaba Cloud EIP type
@@ -96,7 +96,7 @@ fleetmanager:
   DefaultBandwidthChargingMode: "PayByTraffic"
   DefaultDiskSize: 40
   # 阿里云云盘类型: cloud_efficiency(高效云盘), cloud_ssd(SSD云盘), cloud_essd(ESSD云盘)
-  DefaultVolumeType: "cloud_efficiency"
+  DefaultVolumeType: "cloud_essd"
   DefaultEipShareType: "PER"
   
   FleetCidr:
@@ -111,7 +111,7 @@ fleetmanager:
       fromPort: 60001
       toPort: 60001
       
-  BuildImageRef: "centos_7_9_x64_20G_alibase_20230816.vhd"
+  BuildImageRef: "aliyun_3_0_x64_20G_alibase_aiext_0.5.3_20251011.vhd"
   # 阿里云规格族: ecs.g6.large, ecs.c6.large 等
   # 参考: https://help.aliyun.com/document_detail/25378.html
   BuildFlavor: "ecs.g6.large"
@@ -126,6 +126,9 @@ fleetmanager:
   DefaultGroupMaxSize: 1
   DefaultGroupMinSize: 1
   DefaultGroupDesiredSize: 1
+  
+  # 默认密钥对名称 (Default keypair name for fleet instances)
+  DefaultKeypairName: "minifire"
   
   # ======================
   # 阿里云服务端点 / Alibaba Cloud Service Endpoints

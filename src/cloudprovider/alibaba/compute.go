@@ -298,8 +298,10 @@ func (s *AlibabaComputeService) convertVolumeType(volumeType string) string {
 		return "cloud_essd"
 	case cloudprovider.VolumeTypeGPSSD:
 		return "cloud_essd"
+	case "cloud_auto":
+		return "cloud_auto"
 	default:
-		return "cloud_efficiency"
+		return volumeType // 直接返回原始值
 	}
 }
 

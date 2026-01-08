@@ -65,6 +65,7 @@ type NetworkService interface {
 	CreateVpc(ctx context.Context, req *CreateVpcRequest) (string, error)
 	GetVpc(ctx context.Context, vpcId string) (*Vpc, error)
 	GetVpcByName(ctx context.Context, name string) (*Vpc, error)
+	ListVpcs(ctx context.Context) ([]Vpc, error)
 	DeleteVpc(ctx context.Context, vpcId string) error
 	WaitVpcReady(ctx context.Context, vpcId string) error
 	WaitVpcDeleted(ctx context.Context, vpcId string) error
@@ -86,6 +87,10 @@ type NetworkService interface {
 	// EIP/弹性公网IP操作
 	CreateEip(ctx context.Context, req *CreateEipRequest) (string, error)
 	DeleteEip(ctx context.Context, eipId string) error
+	// BindEipToInstance 将EIP绑定到实例 (阿里云需要单独调用)
+	BindEipToInstance(ctx context.Context, eipId, instanceId string) error
+	// UnbindEipFromInstance 解绑EIP
+	UnbindEipFromInstance(ctx context.Context, eipId, instanceId string) error
 	CreateBandwidth(ctx context.Context, req *CreateBandwidthRequest) (string, error)
 	ListBandwidths(ctx context.Context) ([]Bandwidth, error)
 }
@@ -123,6 +128,11 @@ type StorageService interface {
 	HeadBucket(ctx context.Context, bucketName string) (bool, error)
 	DeleteObject(ctx context.Context, bucketName, objectKey string) error
 	GetObjectMetadata(ctx context.Context, bucketName, objectKey string) (*ObjectMetadata, error)
+	UploadObject(ctx context.Context, bucketName, objectKey string, data []byte) error
+	// CreateSignedUrl 创建签名URL用于下载对象
+	CreateSignedUrl(ctx context.Context, bucketName, objectKey string, expireSeconds int64) (string, error)
+	// ListBuckets 列出所有存储桶
+	ListBuckets(ctx context.Context) ([]string, error)
 
 	// 块存储
 	ListVolumeTypes(ctx context.Context) ([]VolumeType, error)
@@ -167,4 +177,12 @@ type ImageService interface {
 	GetPublicImageId(ctx context.Context, imageName string) (string, error)
 	// ListImages 列出镜像
 	ListImages(ctx context.Context, imageType string) ([]Image, error)
+	// GetImageById 根据ID获取镜像详情
+	GetImageById(ctx context.Context, imageId string) (*Image, error)
+	// CreateImage 从ECS实例创建镜像
+	CreateImage(ctx context.Context, instanceId, imageName string) (string, error)
+	// WaitImageReady 等待镜像创建完成并返回镜像ID
+	WaitImageReady(ctx context.Context, taskId string) (string, error)
+	// DeleteImage 删除镜像
+	DeleteImage(ctx context.Context, imageId string) error
 }
