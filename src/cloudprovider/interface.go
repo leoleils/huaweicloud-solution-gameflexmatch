@@ -82,7 +82,11 @@ type NetworkService interface {
 	// 安全组操作
 	CreateSecurityGroup(ctx context.Context, req *CreateSecurityGroupRequest) (string, error)
 	GetSecurityGroup(ctx context.Context, name string) (string, error)
+	GetSecurityGroupById(ctx context.Context, id string) (*SecurityGroup, error)
 	ListSecurityGroups(ctx context.Context) ([]SecurityGroup, error)
+	// 安全组规则操作
+	CreateSecurityGroupRule(ctx context.Context, req *CreateSecurityGroupRuleRequest) (string, error)
+	DeleteSecurityGroupRule(ctx context.Context, ruleId string) error
 
 	// EIP/弹性公网IP操作
 	CreateEip(ctx context.Context, req *CreateEipRequest) (string, error)

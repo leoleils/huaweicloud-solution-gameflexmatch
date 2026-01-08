@@ -172,6 +172,17 @@ type CreateSecurityGroupRequest struct {
 	EnterpriseProjectId string
 }
 
+// CreateSecurityGroupRuleRequest 创建安全组规则请求
+type CreateSecurityGroupRuleRequest struct {
+	SecurityGroupId string // 安全组ID
+	Direction       string // ingress/egress
+	EtherType       string // IPv4/IPv6
+	Protocol        string // tcp/udp/icmp/all
+	FromPort        int32  // 起始端口
+	ToPort          int32  // 结束端口
+	IpRange         string // CIDR
+}
+
 // CreateEipRequest 创建弹性公网IP请求
 type CreateEipRequest struct {
 	Name                string

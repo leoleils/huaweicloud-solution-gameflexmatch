@@ -404,6 +404,61 @@ func (s *HuaweiNetworkService) ListSecurityGroups(ctx context.Context) ([]cloudp
 	return securityGroups, nil
 }
 
+// GetSecurityGroupById 根据ID获取安全组详情
+func (s *HuaweiNetworkService) GetSecurityGroupById(ctx context.Context, id string) (*cloudprovider.SecurityGroup, error) {
+	request := &vpcmodel.ShowSecurityGroupRequest{
+		SecurityGroupId: id,
+	}
+	resp, err := s.vpcClient.ShowSecurityGroup(request)
+	if err != nil {
+		return nil, fmt.Errorf("get security group by id failed: %w", err)
+	}
+
+	if resp.SecurityGroup != nil {
+		return &cloudprovider.SecurityGroup{
+			Id:   resp.SecurityGroup.Id,
+			Name: resp.SecurityGroup.Name,
+		}, nil
+	}
+	return nil, fmt.Errorf("security group not found: %s", id)
+}
+
+// CreateSecurityGroupRule 创建安全组规则
+func (s *HuaweiNetworkService) CreateSecurityGroupRule(ctx context.Context, req *cloudprovider.CreateSecurityGroupRuleRequest) (string, error) {
+	request := &vpcmodel.CreateSecurityGroupRuleRequest{
+		Body: &vpcmodel.CreateSecurityGroupRuleRequestBody{
+			SecurityGroupRule: &vpcmodel.CreateSecurityGroupRuleOption{
+				SecurityGroupId: req.SecurityGroupId,
+				Direction:       req.Direction,
+				Ethertype:       &req.EtherType,
+				Protocol:        &req.Protocol,
+				PortRangeMin:    &req.FromPort,
+				PortRangeMax:    &req.ToPort,
+				RemoteIpPrefix:  &req.IpRange,
+			},
+		},
+	}
+
+	resp, err := s.vpcClient.CreateSecurityGroupRule(request)
+	if err != nil {
+		return "", fmt.Errorf("create security group rule failed: %w", err)
+	}
+	return resp.SecurityGroupRule.Id, nil
+}
+
+// DeleteSecurityGroupRule 删除安全组规则
+func (s *HuaweiNetworkService) DeleteSecurityGroupRule(ctx context.Context, ruleId string) error {
+	request := &vpcmodel.DeleteSecurityGroupRuleRequest{
+		SecurityGroupRuleId: ruleId,
+	}
+
+	_, err := s.vpcClient.DeleteSecurityGroupRule(request)
+	if err != nil {
+		return fmt.Errorf("delete security group rule failed: %w", err)
+	}
+	return nil
+}
+
 // CreateEip 创建弹性公网IP
 func (s *HuaweiNetworkService) CreateEip(ctx context.Context, req *cloudprovider.CreateEipRequest) (string, error) {
 	// 此处需要使用EIP客户端，简化处理
