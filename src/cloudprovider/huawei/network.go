@@ -459,6 +459,19 @@ func (s *HuaweiNetworkService) DeleteSecurityGroupRule(ctx context.Context, rule
 	return nil
 }
 
+// DeleteSecurityGroup 删除安全组
+func (s *HuaweiNetworkService) DeleteSecurityGroup(ctx context.Context, securityGroupId string) error {
+	request := &vpcmodel.DeleteSecurityGroupRequest{
+		SecurityGroupId: securityGroupId,
+	}
+
+	_, err := s.vpcClient.DeleteSecurityGroup(request)
+	if err != nil {
+		return fmt.Errorf("delete security group failed: %w", err)
+	}
+	return nil
+}
+
 // CreateEip 创建弹性公网IP
 func (s *HuaweiNetworkService) CreateEip(ctx context.Context, req *cloudprovider.CreateEipRequest) (string, error) {
 	// 此处需要使用EIP客户端，简化处理

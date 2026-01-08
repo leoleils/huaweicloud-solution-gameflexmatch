@@ -84,6 +84,7 @@ type NetworkService interface {
 	GetSecurityGroup(ctx context.Context, name string) (string, error)
 	GetSecurityGroupById(ctx context.Context, id string) (*SecurityGroup, error)
 	ListSecurityGroups(ctx context.Context) ([]SecurityGroup, error)
+	DeleteSecurityGroup(ctx context.Context, securityGroupId string) error
 	// 安全组规则操作
 	CreateSecurityGroupRule(ctx context.Context, req *CreateSecurityGroupRuleRequest) (string, error)
 	DeleteSecurityGroupRule(ctx context.Context, ruleId string) error

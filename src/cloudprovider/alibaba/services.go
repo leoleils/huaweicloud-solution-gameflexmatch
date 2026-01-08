@@ -464,6 +464,24 @@ func (s *AlibabaNetworkService) DeleteSecurityGroupRule(ctx context.Context, rul
 	return nil
 }
 
+// DeleteSecurityGroup 删除安全组
+func (s *AlibabaNetworkService) DeleteSecurityGroup(ctx context.Context, securityGroupId string) error {
+	ecsClient := s.provider.ecsClient
+	request := &ecs.DeleteSecurityGroupRequest{
+		RegionId:        tea.String(s.provider.config.Region),
+		SecurityGroupId: tea.String(securityGroupId),
+	}
+
+	_, err := ecsClient.DeleteSecurityGroup(request)
+	if err != nil {
+		if strings.Contains(err.Error(), "NotFound") {
+			return nil
+		}
+		return fmt.Errorf("delete security group failed: %w", err)
+	}
+	return nil
+}
+
 // CreateEip 创建弹性公网IP
 func (s *AlibabaNetworkService) CreateEip(ctx context.Context, req *cloudprovider.CreateEipRequest) (string, error) {
 	request := &vpc.AllocateEipAddressRequest{
