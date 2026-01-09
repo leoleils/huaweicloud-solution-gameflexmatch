@@ -11,6 +11,13 @@ USER=$8
 GROUP=$9
 PWD=${10}
 
+# 安装必要的解压工具
+if command -v yum &> /dev/null; then
+    yum install -y unzip wget
+elif command -v apt-get &> /dev/null; then
+    apt-get update && apt-get install -y unzip wget
+fi
+
 # download rarlab
 mkdir /tmp/rar
 cd /tmp/rar
@@ -46,6 +53,11 @@ if [ "${AUX_FILE##*.}" = "zip" ]; then
 fi
 if [ "${AUX_FILE##*.}" = "rar" ]; then
 	unrar e  ${AUX_FILE}
+fi
+# 处理压缩包内有子目录的情况，将文件移动到 /etc/auxproxy/ 目录下
+if [ -d "/etc/auxproxy/auxproxy_pkg" ]; then
+	mv /etc/auxproxy/auxproxy_pkg/* /etc/auxproxy/
+	rmdir /etc/auxproxy/auxproxy_pkg
 fi
 chown -R ${USER}:${GROUP} /etc/auxproxy
 chmod -R 750 *
