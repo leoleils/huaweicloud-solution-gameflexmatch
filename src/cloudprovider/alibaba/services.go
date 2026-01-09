@@ -12,7 +12,7 @@ import (
 
 	"scase.io/cloudprovider"
 
-	ecs "github.com/alibabacloud-go/ecs-20140526/v3/client"
+	ecs "github.com/alibabacloud-go/ecs-20140526/v7/client"
 	"github.com/alibabacloud-go/tea/tea"
 	vpc "github.com/alibabacloud-go/vpc-20160428/v2/client"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -175,10 +175,24 @@ func (s *AlibabaNetworkService) WaitVpcDeleted(ctx context.Context, vpcId string
 
 // CreateSubnet 创建子网 (阿里云叫VSwitch)
 func (s *AlibabaNetworkService) CreateSubnet(ctx context.Context, req *cloudprovider.CreateSubnetRequest) (*cloudprovider.CreateSubnetResponse, error) {
+	zoneId := req.ZoneId
+	
+	// 如果 ZoneId 为空，自动获取一个可用区
+	if zoneId == "" {
+		zones, err := s.provider.Compute().ListAvailabilityZones(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("get availability zones failed: %w", err)
+		}
+		if len(zones) == 0 {
+			return nil, fmt.Errorf("no availability zones found in region %s", s.provider.config.Region)
+		}
+		zoneId = zones[0] // 使用第一个可用区
+	}
+	
 	request := &vpc.CreateVSwitchRequest{
 		RegionId:    tea.String(s.provider.config.Region),
 		VpcId:       tea.String(req.VpcId),
-		ZoneId:      tea.String(req.ZoneId),
+		ZoneId:      tea.String(zoneId),
 		CidrBlock:   tea.String(req.Cidr),
 		VSwitchName: tea.String(req.Name),
 	}

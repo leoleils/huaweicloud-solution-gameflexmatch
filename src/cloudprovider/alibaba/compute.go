@@ -10,7 +10,7 @@ import (
 
 	"scase.io/cloudprovider"
 
-	ecs "github.com/alibabacloud-go/ecs-20140526/v3/client"
+	ecs "github.com/alibabacloud-go/ecs-20140526/v7/client"
 	"github.com/alibabacloud-go/tea/tea"
 )
 
@@ -338,19 +338,27 @@ func (s *AlibabaComputeService) ParseInstanceIPs(ctx context.Context, instance *
 	return instance.PrivateIPs, nil
 }
 
-// convertVolumeType 转换卷类型
+// convertVolumeType 转换卷类型 - 将华为云磁盘类型转换为阿里云磁盘类型
 func (s *AlibabaComputeService) convertVolumeType(volumeType string) string {
 	switch volumeType {
+	// 华为云 SSD -> 阿里云 cloud_ssd
 	case cloudprovider.VolumeTypeSSD:
 		return "cloud_ssd"
+	// 华为云 ESSD -> 阿里云 cloud_essd
 	case cloudprovider.VolumeTypeESSD:
 		return "cloud_essd"
+	// 华为云 GPSSD -> 阿里云 cloud_essd
 	case cloudprovider.VolumeTypeGPSSD:
 		return "cloud_essd"
-	case "cloud_auto":
-		return "cloud_auto"
+	// 华为云 SATA/SAS -> 阿里云 cloud_essd
+	case cloudprovider.VolumeTypeSATA, cloudprovider.VolumeTypeSAS:
+		return "cloud_essd"
+	// 阿里云原生类型直接返回
+	case "cloud_efficiency", "cloud_ssd", "cloud_essd", "cloud_essd_entry", "cloud_auto":
+		return volumeType
 	default:
-		return volumeType // 直接返回原始值
+		// 默认使用ESSD云盘
+		return "cloud_essd"
 	}
 }
 

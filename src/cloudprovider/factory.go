@@ -5,7 +5,9 @@ package cloudprovider
 
 import (
 	"fmt"
+	"os"
 	"sync"
+	"time"
 )
 
 var (
@@ -44,9 +46,23 @@ var providerCache = struct {
 	cache map[string]CloudProvider
 }{cache: make(map[string]CloudProvider)}
 
+// factoryDebugLog 写入调试日志到文件
+func factoryDebugLog(format string, args ...interface{}) {
+	f, err := os.OpenFile("/tmp/alibaba_provider_debug.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+	msg := fmt.Sprintf("[%s][factory] ", time.Now().Format("2006-01-02 15:04:05"))
+	msg += fmt.Sprintf(format, args...)
+	msg += "\n"
+	f.WriteString(msg)
+}
+
 // GetProvider 获取已注册的云厂商(带缓存)
 func GetProvider(config *ProviderConfig) (CloudProvider, error) {
 	cacheKey := fmt.Sprintf("%s_%s_%s", config.ProviderName, config.Region, config.ProjectId)
+	factoryDebugLog("GetProvider called: key=%s", cacheKey)
 
 	providerCache.RLock()
 	if p, ok := providerCache.cache[cacheKey]; ok {
@@ -60,9 +76,11 @@ func GetProvider(config *ProviderConfig) (CloudProvider, error) {
 
 	// Double check
 	if p, ok := providerCache.cache[cacheKey]; ok {
+		factoryDebugLog("Cache hit (double check): key=%s", cacheKey)
 		return p, nil
 	}
 
+	factoryDebugLog("Cache miss, calling NewProvider: key=%s", cacheKey)
 	p, err := NewProvider(config)
 	if err != nil {
 		return nil, err

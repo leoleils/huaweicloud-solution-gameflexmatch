@@ -4,13 +4,16 @@
 package alibaba
 
 import (
+	"fmt"
+	"os"
 	"strings"
+	"time"
 
 	"scase.io/cloudprovider"
 
 	openapiv1 "github.com/alibabacloud-go/darabonba-openapi/client"
 	openapiv2 "github.com/alibabacloud-go/darabonba-openapi/v2/client"
-	ecs "github.com/alibabacloud-go/ecs-20140526/v3/client"
+	ecs "github.com/alibabacloud-go/ecs-20140526/v7/client"
 	ess "github.com/alibabacloud-go/ess-20220222/client"
 	"github.com/alibabacloud-go/tea/tea"
 	vpc "github.com/alibabacloud-go/vpc-20160428/v2/client"
@@ -47,9 +50,11 @@ func (p *AlibabaProvider) Name() string {
 
 // Initialize 初始化Provider
 func (p *AlibabaProvider) Initialize(cfg *cloudprovider.ProviderConfig) error {
+	debugLog("Initialize called: provider=%s, region=%s, projectId=%s", cfg.ProviderName, cfg.Region, cfg.ProjectId)
 	p.config = cfg
 
 	// 初始化ECS客户端
+	debugLog("Calling newEcsClient...")
 	ecsClient, err := p.newEcsClient()
 	if err != nil {
 		return err
@@ -157,33 +162,66 @@ func (p *AlibabaProvider) getEndpoint(serviceName string) string {
 	return serviceName + "." + p.config.Region + ".aliyuncs.com"
 }
 
+// debugLog 写入调试日志到文件
+func debugLog(format string, args ...interface{}) {
+	f, err := os.OpenFile("/tmp/alibaba_provider_debug.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+	msg := fmt.Sprintf("[%s] ", time.Now().Format("2006-01-02 15:04:05"))
+	msg += fmt.Sprintf(format, args...)
+	msg += "\n"
+	f.WriteString(msg)
+}
+
 // newEcsClient 创建ECS客户端
+// 根据阿里云官方示例直接使用 AccessKeyId 和 AccessKeySecret
 func (p *AlibabaProvider) newEcsClient() (*ecs.Client, error) {
+	// 构建 Endpoint: ecs.{region}.aliyuncs.com
+	endpoint := fmt.Sprintf("ecs.%s.aliyuncs.com", p.config.Region)
+
+	// 调试日志 - 写入文件
+	debugLog("Creating ECS client: endpoint=%s, region=%s, ak=%s...", endpoint, p.config.Region, p.config.AccessKey[:8])
+
 	config := &openapiv2.Config{
 		AccessKeyId:     tea.String(p.config.AccessKey),
 		AccessKeySecret: tea.String(p.config.SecretKey),
-		Endpoint:        tea.String(p.getEndpoint("ecs")),
+		Endpoint:        tea.String(endpoint),
 	}
-	return ecs.NewClient(config)
+
+	debugLog("Config: AK=%s, Endpoint=%s", *config.AccessKeyId, *config.Endpoint)
+
+	client, err := ecs.NewClient(config)
+	if err != nil {
+		debugLog("ECS client creation failed: %v", err)
+		return nil, err
+	}
+
+	debugLog("ECS client created successfully")
+	return client, nil
 }
 
 // newEssClient 创建ESS客户端
+// 注意：不要手动设置 Endpoint，让 SDK 根据 RegionId 自动选择正确的 endpoint
 func (p *AlibabaProvider) newEssClient() (*ess.Client, error) {
 	config := &openapiv1.Config{
 		AccessKeyId:     tea.String(p.config.AccessKey),
 		AccessKeySecret: tea.String(p.config.SecretKey),
-		Endpoint:        tea.String(p.getEndpoint("ess")),
+		RegionId:        tea.String(p.config.Region),
 	}
 	return ess.NewClient(config)
 }
 
 // newVpcClient 创建VPC客户端
+// 根据阿里云最佳实践，显式设置 HTTPS 协议和 SignatureAlgorithm
 func (p *AlibabaProvider) newVpcClient() (*vpc.Client, error) {
-	// VPC SDK v2.0.117 需要 openapiv2.Config
 	config := &openapiv2.Config{
-		AccessKeyId:     tea.String(p.config.AccessKey),
-		AccessKeySecret: tea.String(p.config.SecretKey),
-		Endpoint:        tea.String(p.getEndpoint("vpc")),
+		AccessKeyId:        tea.String(p.config.AccessKey),
+		AccessKeySecret:    tea.String(p.config.SecretKey),
+		RegionId:           tea.String(p.config.Region),
+		Protocol:           tea.String("HTTPS"),
+		SignatureAlgorithm: tea.String("v2"),
 	}
 	return vpc.NewClient(config)
 }
