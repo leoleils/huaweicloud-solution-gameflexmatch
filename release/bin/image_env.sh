@@ -36,10 +36,10 @@ mkdir -p /local/app/${APP_NAME}
 cd /local/app/${APP_NAME}
 wget ${APP_URL} -O ${APP_FILE}
 if [ "${APP_FILE##*.}" = "zip" ]; then
-	unzip -o ${APP_FILE}
+    unzip -o ${APP_FILE}
 fi
 if [ "${APP_FILE##*.}" = "rar" ]; then
-	unrar e  ${APP_FILE}
+    unrar e ${APP_FILE}
 fi
 chown -R ${USER}:${GROUP} /local/app/${APP_NAME}
 chmod -R 750 *
@@ -49,20 +49,20 @@ mkdir -p /etc/auxproxy
 cd /etc/auxproxy
 wget ${AUX_URL} -O ${AUX_FILE}
 if [ "${AUX_FILE##*.}" = "zip" ]; then
-	unzip -o ${AUX_FILE}
+    unzip -o ${AUX_FILE}
 fi
 if [ "${AUX_FILE##*.}" = "rar" ]; then
-	unrar e  ${AUX_FILE}
+    unrar e ${AUX_FILE}
 fi
-# 处理压缩包内有子目录的情况，将文件移动到 /etc/auxproxy/ 目录下
+# 处理压缩包内有子目录的情况
 if [ -d "/etc/auxproxy/auxproxy_pkg" ]; then
-	mv /etc/auxproxy/auxproxy_pkg/* /etc/auxproxy/
-	rmdir /etc/auxproxy/auxproxy_pkg
+    mv /etc/auxproxy/auxproxy_pkg/* /etc/auxproxy/
+    rmdir /etc/auxproxy/auxproxy_pkg
 fi
 chown -R ${USER}:${GROUP} /etc/auxproxy
 chmod -R 750 *
 
-cat > /etc/systemd/system/auxproxy.service <<- EOF
+cat > /etc/systemd/system/auxproxy.service << EOF
 [Unit]
 Description=auxproxy.service
 
@@ -79,7 +79,6 @@ StandardOutput=null
 
 [Install]
 WantedBy=multi-user.target
-
 EOF
 
 mkdir -p /etc/auxproxy/security
@@ -92,20 +91,5 @@ chown -R ${USER}:${GROUP} /etc/auxproxy/security
 chmod -R 750 *
 
 systemctl enable auxproxy.service
-
-# ============================================
-# 阿里云日志服务和云监控（可选安装）
-# ============================================
-# 阿里云日志服务Logtail安装（如需要）
-# mkdir -p /etc/logtail
-# cd /etc/logtail
-# wget http://logtail-release-${REGION}.oss-${REGION}.aliyuncs.com/linux64/logtail.sh -O logtail.sh
-# chmod 755 logtail.sh && ./logtail.sh install ${REGION}
-
-# 阿里云云监控插件安装（如需要）
-# ARGUS_VERSION=3.5.8
-# wget -O /tmp/cloudmonitor.tar.gz "http://cms-agent-${REGION}.oss-${REGION}-internal.aliyuncs.com/cms-go-agent/${ARGUS_VERSION}/cms-go-agent-${ARGUS_VERSION}.linux-amd64.tar.gz"
-# tar -xzf /tmp/cloudmonitor.tar.gz -C /usr/local/
-# /usr/local/cms-go-agent/install.sh
 
 shutdown
