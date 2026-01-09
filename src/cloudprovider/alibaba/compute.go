@@ -135,7 +135,12 @@ func (s *AlibabaComputeService) ListInstances(ctx context.Context, req *cloudpro
 		request.InstanceName = tea.String(req.Name)
 	}
 	if req.Status != "" {
-		request.Status = tea.String(req.Status)
+		// 将标准状态转换为阿里云状态
+		alibabaStatus := s.convertToAlibabaStatus(req.Status)
+		if alibabaStatus != "" {
+			request.Status = tea.String(alibabaStatus)
+		}
+		// 如果转换后为空，不设置Status参数，查询所有状态的实例
 	}
 	if req.VpcId != "" {
 		request.VpcId = tea.String(req.VpcId)
@@ -411,5 +416,25 @@ func (s *AlibabaComputeService) convertInstanceStatus(status string) string {
 		return "PENDING"
 	default:
 		return strings.ToUpper(status)
+	}
+}
+
+// convertToAlibabaStatus 将标准状态转换为阿里云ECS状态
+// 阿里云支持的状态值: Pending, Running, Starting, Stopping, Stopped
+func (s *AlibabaComputeService) convertToAlibabaStatus(status string) string {
+	switch strings.ToUpper(status) {
+	case "RUNNING", "ACTIVE":
+		return "Running"
+	case "STOPPED", "SHUTOFF":
+		return "Stopped"
+	case "STOPPING":
+		return "Stopping"
+	case "STARTING", "BUILD":
+		return "Starting"
+	case "PENDING":
+		return "Pending"
+	default:
+		// 未知状态返回空，不设置过滤条件
+		return ""
 	}
 }
