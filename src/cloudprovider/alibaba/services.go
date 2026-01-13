@@ -517,21 +517,32 @@ func (s *AlibabaNetworkService) CreateEip(ctx context.Context, req *cloudprovide
 	return *resp.Body.AllocationId, nil
 }
 
-// DeleteEip 删除弹性公网IP
+// DeleteEip 删除弹性公网IP（带重试逻辑，等待EIP状态变为Available）
 func (s *AlibabaNetworkService) DeleteEip(ctx context.Context, eipId string) error {
 	request := &vpc.ReleaseEipAddressRequest{
 		RegionId:     tea.String(s.provider.config.Region),
 		AllocationId: tea.String(eipId),
 	}
 
-	_, err := s.client.ReleaseEipAddress(request)
-	if err != nil {
+	// 重试多次，等待EIP状态从 InUse 变为 Available
+	var lastErr error
+	for retry := 0; retry < 10; retry++ {
+		_, err := s.client.ReleaseEipAddress(request)
+		if err == nil {
+			return nil
+		}
 		if strings.Contains(err.Error(), "NotFound") {
 			return nil
 		}
+		// EIP状态不对，等待后重试
+		if strings.Contains(err.Error(), "IncorrectEipStatus") {
+			lastErr = err
+			time.Sleep(2 * time.Second)
+			continue
+		}
 		return fmt.Errorf("delete eip failed: %w", err)
 	}
-	return nil
+	return fmt.Errorf("delete eip failed after retries: %w", lastErr)
 }
 
 // BindEipToInstance 将EIP绑定到ECS实例 (阿里云特有逻辑)
