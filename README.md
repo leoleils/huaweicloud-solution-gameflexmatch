@@ -269,5 +269,91 @@ appgatewayAddress: "192.168.1.22:60003"
 | RAM ReadOnlyAccess | 身份认证 |
 | SLS FullAccess | 日志服务（可选） |
 
-## 3.10. 联系我们
+### 3.9.5. EIP资源自动清理
+
+删除Fleet或VM时，系统会自动清理关联的EIP资源：
+
+1. **创建ECS时**：自动分配并绑定EIP，同时将EipId保存到数据库
+2. **删除VM时**：自动解绑并释放关联的EIP
+3. **删除Fleet时**：批量清理所有实例的EIP（包括已标记为Deleted的实例）
+
+> **注意**：阿里云EIP解绑是异步操作，系统会自动重试等待EIP状态变为Available后再删除
+
+## 3.10. 运维部署关键点
+
+### 3.10.1. 服务启动顺序
+
+```bash
+# 1. FleetManager (API服务)
+cd /home/gfm && ./sac-gfm start --service fleetmanager
+
+# 2. AppGateway (网关服务) 
+cd /home/gfm && ./sac-gfm start --service appgateway
+
+# 3. AASS (自动伸缩服务)
+cd /home/gfm && ./sac-gfm start --service aass
+
+# 4. Console (前端控制台)
+nginx  # 或 npm run dev
+```
+
+### 3.10.2. 关键配置文件
+
+| 服务 | 配置文件 | 关键配置项 |
+|------|----------|------------|
+| FleetManager | `conf/fleetmanager.yaml` | 数据库、Redis、云服务Endpoint |
+| AppGateway | `conf/appgateway.yaml` | InfluxDB、端口配置 |
+| AASS | `conf/aass.yaml` | `appgatewayAddress`、数据库 |
+| AuxProxy | `auxproxy-start.sh` | `-cloud-platform-address` 元数据地址 |
+
+### 3.10.3. 数据库配置
+
+需要初始化以下数据库：
+- `fleet_manager`: FleetManager主数据库
+- `aass`: AASS服务数据库
+
+如需添加EIP字段（旧版本升级）：
+```sql
+ALTER TABLE aass.ecs_info ADD COLUMN eip_id VARCHAR(64);
+```
+
+### 3.10.4. 阿里云平台特殊配置
+
+```yaml
+# auxproxy-start.sh - 元数据地址
+-cloud-platform-address http://100.100.100.200
+
+# aass.yaml - 网关地址配置为实际内网IP
+appgatewayAddress: "192.168.1.22:60003"
+
+# 云服务Endpoint配置示例
+aass:
+  endpoint:
+    cn-hangzhou: "ecs.cn-hangzhou.aliyuncs.com"
+```
+
+### 3.10.5. 常见问题排查
+
+| 问题 | 原因 | 解决方案 |
+|------|------|----------|
+| Fleet卡在WAIT_PROCESS_READY | auxproxy未启动或元数据获取失败 | 检查auxproxy日志和元数据地址配置 |
+| EIP未清理 | 旧版本无清理逻辑 | 升级代码并手动清理遗留EIP |
+| 创建镜像失败 | ECS未停止 | 确保实例处于Stopped状态 |
+| InvalidVersion错误 | SDK版本不匹配 | 清理Go模块缓存并重新构建 |
+| 密码解密失败 | 公私钥不匹配 | 检查public.pem和private.pem配对 |
+
+### 3.10.6. 日志查看
+
+```bash
+# FleetManager日志
+tail -f /home/gfm/logs/fleetmanager.log
+
+# AASS日志
+tail -f /home/gfm/logs/aass.log
+
+# 按请求ID过滤
+grep "request_id" /home/gfm/logs/aass.log | grep "<请求ID>"
+```
+
+## 3.11. 联系我们
 若你有任何疑问，请联系：hwcloudsolution@163.com
