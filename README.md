@@ -12,7 +12,8 @@
   - [3.6. 使用指南](#36-使用指南)
   - [3.7. 开发指南](#37-开发指南)
   - [3.8. Reference](#38-reference)
-  - [3.9. 联系我们](#39-联系我们)
+  - [3.9. 阿里云平台适配说明](#39-阿里云平台适配说明)
+  - [3.10. 联系我们](#310-联系我们)
 
 
 # 1. huaweicloud-solution-gameflexmatch
@@ -29,22 +30,7 @@
 
 
 # 3. 逻辑架构
-<img src="doc/img/architecture.jpg" width="80%">- [1. huaweicloud-solution-gameflexmatch](#1-huaweicloud-solution-gameflexmatch)
-- [目录](#目录)
-- [1. huaweicloud-solution-gameflexmatch](#1-huaweicloud-solution-gameflexmatch)
-- [2. 简介](#2-简介)
-- [3. 逻辑架构](#3-逻辑架构)
-  - [3.1. 仓库目录](#31-仓库目录)
-  - [3.2. 资源规划](#32-资源规划)
-  - [3.3. 云账号资源](#33-云账号资源)
-  - [3.4. 涉及云服务](#34-涉及云服务)
-  - [3.5. 部署指南](#35-部署指南)
-    - [3.5.1. 基于发布的应用包进行部署](#351-基于发布的应用包进行部署)
-  - [3.6. 使用指南](#36-使用指南)
-  - [3.7. 开发指南](#37-开发指南)
-  - [3.8. Reference](#38-reference)
-  - [3.9. 联系我们](#39-联系我们)
-
+<img src="doc/img/architecture.jpg" width="80%">
 
 `GameFlexMatch`平台由五个服务组件组成：
 
@@ -222,5 +208,66 @@ huaweicloud-solution-gameflexmatch
 + 管理面`API`参考文档 [doc/api/FleetManager.yaml](doc/api/FleetManager.yaml)
 + 你可以使用[swagger](https://editor.swagger.io/)进行打开，在菜单栏中选择`File->Import URL`导入API文档进行查看
 
-## 3.9. 联系我们
+## 3.9. 阿里云平台适配说明
+
+本项目已支持阿里云平台部署，以下是适配过程中的关键修改和注意事项：
+
+### 3.9.1. 元数据服务差异
+
+| 功能 | 华为云 | 阿里云 |
+|------|--------|--------|
+| 元数据地址 | `169.254.169.254` | `100.100.100.200` |
+| user_data | `/openstack/latest/user_data` | `/latest/user-data` |
+| instance-id | `/openstack/latest/meta_data.json` (JSON格式) | `/latest/meta-data/instance-id` (纯文本) |
+| 公网IP | - | `/latest/meta-data/eipv4` |
+| 私网IP | - | `/latest/meta-data/private-ipv4` |
+
+### 3.9.2. 已知问题与解决方案
+
+#### 1. ECS 创建镜像失败 (IncorrectInstanceStatus)
+- **问题**: 阿里云创建镜像要求 ECS 实例必须处于 `Stopped` 状态
+- **解决**: FleetManager 在创建镜像前自动检查并停止实例
+- **文件**: `workflow/components/fleet/build/create_build_image.go`
+
+#### 2. auxproxy 元数据获取失败
+- **问题**: 华为云和阿里云的元数据路径不同
+- **解决**: 修改 `config_manager.go` 支持多路径重试，优先尝试阿里云路径
+- **涉及函数**: `getInstanceID()`, `getFleetIDAndGWAddrAndScalingGroupID()`, `getPublicIPOrPrivateIP()`
+
+#### 3. AASS 网关地址配置
+- **问题**: 默认配置 `127.0.0.1:60003` 在分布式部署时无法通信
+- **解决**: 修改 `aass.yaml` 中 `appgatewayAddress` 为实际内网地址
+
+#### 4. 阿里云 ImageID 格式
+- **问题**: 阿里云 ImageID 不是 UUID 格式（如 `m-bp1xxx`），UUID 校验会失败
+- **解决**: 禁用 ImageID 的 UUID 格式校验
+
+#### 5. 阿里云 SDK endpoint 配置
+- **问题**: SDK 会自动添加协议头，若 endpoint 包含 `https://` 会导致 URL 错误
+- **解决**: 使用 `strings.TrimPrefix` 移除协议前缀
+
+### 3.9.3. 配置文件修改清单
+
+```yaml
+# release/bin/auxproxy/auxproxy-start.sh
+# 元数据地址改为阿里云
+-cloud-platform-address http://100.100.100.200
+
+# src/huaweicloud-solution-gameflexmatch-aass/conf/aass.yaml  
+# 网关地址改为实际内网 IP
+appgatewayAddress: "192.168.1.22:60003"
+```
+
+### 3.9.4. 阿里云所需权限
+
+| 权限 | 用途 |
+|------|------|
+| ECS FullAccess | 创建/管理弹性云服务器 |
+| VPC FullAccess | 管理网络资源、安全组 |
+| EIP FullAccess | 绑定弹性公网 IP |
+| OSS FullAccess | 存储应用包和脚本 |
+| RAM ReadOnlyAccess | 身份认证 |
+| SLS FullAccess | 日志服务（可选） |
+
+## 3.10. 联系我们
 若你有任何疑问，请联系：hwcloudsolution@163.com
