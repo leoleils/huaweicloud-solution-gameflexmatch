@@ -325,12 +325,20 @@ ALTER TABLE aass.ecs_info ADD COLUMN eip_id VARCHAR(64);
 
 # aass.yaml - 网关地址配置为实际内网IP
 appgatewayAddress: "192.168.1.22:60003"
+# 使用私网IP连接auxproxy
+connectToAuxproxyIPType: privateIP
+
+# appgateway.yaml - 使用私网IP连接auxproxy
+envConfig:
+  auxproxyIPType: privateIP
 
 # 云服务Endpoint配置示例
 aass:
   endpoint:
     cn-hangzhou: "ecs.cn-hangzhou.aliyuncs.com"
 ```
+
+> **重要**: 在内网环境中，必须配置`auxproxyIPType`和`connectToAuxproxyIPType`为`privateIP`，否则会导致auxproxy连接超时。
 
 ### 3.10.5. 常见问题排查
 
@@ -341,6 +349,9 @@ aass:
 | 创建镜像失败 | ECS未停止 | 确保实例处于Stopped状态 |
 | InvalidVersion错误 | SDK版本不匹配 | 清理Go模块缓存并重新构建 |
 | 密码解密失败 | 公私钥不匹配 | 检查public.pem和private.pem配对 |
+| auxproxy连接超时 | 使用公网IP无法访问 | 配置`auxproxyIPType: privateIP` |
+| InfluxDB连接失败 | 协议或密码配置错误 | 使用http协议，空密码时无需加密 |
+| 删除VM状态检查失败 | 阿里云状态值为RUNNING | 已修复兼容ACTIVE和RUNNING状态 |
 
 ### 3.10.6. 日志查看
 
